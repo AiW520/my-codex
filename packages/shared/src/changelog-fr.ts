@@ -2,6 +2,17 @@ import type { ChangelogEntry } from "./changelog.js";
 
 export const frEntries: ChangelogEntry[] = [
   {
+    "version": "0.15.1",
+    "date": "2026-09-18",
+    "highlights": [
+      "Ajoute des espaces de travail persistants pour les flux Code, Quotidien, Créatif, Recherche et Personnalisé.",
+      "Changez d'espace de travail sans redémarrer ni modifier la configuration d'exécution d'une session active.",
+      "Gérez les noms, l'ordre, la suppression et le contexte mémorisé du projet, de la session et du tableau local.",
+      "Ajoute des thèmes par espace de travail, des contrôles de mouvement et l'opacité du fond, avec repli sûr pour les thèmes de plugins indisponibles.",
+      "La génération créative reste honnêtement désactivée tant qu'un véritable adaptateur média n'est pas configuré ; Quotidien et Recherche restent locaux.",
+    ],
+  },
+  {
     "version": "0.15.0",
     "date": "2026-09-17",
     "highlights": [

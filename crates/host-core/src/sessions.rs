@@ -1249,6 +1249,12 @@ pub fn create_session_with_options(
             permission_mode,
             now
         ])?;
+    if let Err(error) = db.associate_session_with_active_workbench(&id) {
+        let _ = db
+            .conn()
+            .execute("DELETE FROM sessions WHERE id = ?1", params![id]);
+        return Err(error);
+    }
     Ok(SessionSummary {
         id,
         title,

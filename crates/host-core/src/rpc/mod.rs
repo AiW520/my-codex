@@ -476,6 +476,23 @@ fn provider_rpc_err(error: impl ToString) -> JsonRpcError {
     rpc_err(1000, message, "INTERNAL")
 }
 
+fn workbench_rpc_err(error: anyhow::Error) -> JsonRpcError {
+    let message = error.to_string();
+    if error
+        .chain()
+        .any(|cause| cause.downcast_ref::<rusqlite::Error>().is_some())
+    {
+        return rpc_err(1000, message, "INTERNAL");
+    }
+    if message.contains("not found") {
+        return rpc_err(1007, message, "NOT_FOUND");
+    }
+    if message.contains("last workbench") {
+        return rpc_err(1008, message, "CONFLICT");
+    }
+    rpc_err(1002, message, "INVALID_PARAMS")
+}
+
 fn session_collaboration_rpc_err(error: impl ToString) -> JsonRpcError {
     let message = error.to_string();
     let code = message.split(':').next().unwrap_or("INTERNAL").trim();
@@ -1406,15 +1423,22 @@ async fn handle_request(
                 .get("name")
                 .and_then(Value::as_str)
                 .ok_or_else(|| rpc_err(1002, "name required", "INVALID_PARAMS"))?;
-            let template_id = params
-                .get("templateId")
-                .and_then(Value::as_str)
-                .unwrap_or("custom");
+            let template_id = match params.get("templateId") {
+                None => "custom",
+                Some(Value::String(value)) => value.as_str(),
+                Some(_) => {
+                    return Err(rpc_err(
+                        1002,
+                        "templateId must be a string",
+                        "INVALID_PARAMS",
+                    ));
+                }
+            };
             let st = state.lock().await;
             let workbench = st
                 .db
                 .create_workbench(name, template_id)
-                .map_err(|e| rpc_err(1002, e.to_string(), "INVALID_PARAMS"))?;
+                .map_err(workbench_rpc_err)?;
             Ok(json!({ "workbench": workbench }))
         }
         "workbenches.update" => {
@@ -1429,7 +1453,7 @@ async fn handle_request(
             let workbench = st
                 .db
                 .update_workbench(id, patch)
-                .map_err(|e| rpc_err(1002, e.to_string(), "INVALID_PARAMS"))?;
+                .map_err(workbench_rpc_err)?;
             Ok(json!({ "workbench": workbench }))
         }
         "workbenches.activate" => {
@@ -1437,13 +1461,33 @@ async fn handle_request(
                 .get("id")
                 .and_then(Value::as_str)
                 .ok_or_else(|| rpc_err(1002, "id required", "INVALID_PARAMS"))?;
-            let project_path = params.get("projectPath").and_then(Value::as_str);
-            let session_id = params.get("sessionId").and_then(Value::as_str);
+            let project_path = match params.get("projectPath") {
+                None | Some(Value::Null) => None,
+                Some(Value::String(value)) => Some(value.as_str()),
+                Some(_) => {
+                    return Err(rpc_err(
+                        1002,
+                        "projectPath must be a string or null",
+                        "INVALID_PARAMS",
+                    ));
+                }
+            };
+            let session_id = match params.get("sessionId") {
+                None | Some(Value::Null) => None,
+                Some(Value::String(value)) => Some(value.as_str()),
+                Some(_) => {
+                    return Err(rpc_err(
+                        1002,
+                        "sessionId must be a string or null",
+                        "INVALID_PARAMS",
+                    ));
+                }
+            };
             let st = state.lock().await;
             let workbench = st
                 .db
                 .activate_workbench(id, project_path, session_id)
-                .map_err(|e| rpc_err(1002, e.to_string(), "INVALID_PARAMS"))?;
+                .map_err(workbench_rpc_err)?;
             Ok(json!({ "workbench": workbench }))
         }
         "workbenches.reorder" => {
@@ -1452,14 +1496,14 @@ async fn handle_request(
                 .and_then(Value::as_array)
                 .ok_or_else(|| rpc_err(1002, "ids required", "INVALID_PARAMS"))?
                 .iter()
-                .filter_map(Value::as_str)
-                .map(str::to_string)
-                .collect::<Vec<_>>();
+                .map(|value| {
+                    value.as_str().map(str::to_string).ok_or_else(|| {
+                        rpc_err(1002, "ids must contain only strings", "INVALID_PARAMS")
+                    })
+                })
+                .collect::<Result<Vec<_>, _>>()?;
             let st = state.lock().await;
-            let workbenches = st
-                .db
-                .reorder_workbenches(&ids)
-                .map_err(|e| rpc_err(1002, e.to_string(), "INVALID_PARAMS"))?;
+            let workbenches = st.db.reorder_workbenches(&ids).map_err(workbench_rpc_err)?;
             Ok(json!({ "workbenches": workbenches }))
         }
         "workbenches.delete" => {
@@ -1468,9 +1512,7 @@ async fn handle_request(
                 .and_then(Value::as_str)
                 .ok_or_else(|| rpc_err(1002, "id required", "INVALID_PARAMS"))?;
             let st = state.lock().await;
-            st.db
-                .delete_workbench(id)
-                .map_err(|e| rpc_err(1002, e.to_string(), "INVALID_PARAMS"))?;
+            st.db.delete_workbench(id).map_err(workbench_rpc_err)?;
             Ok(json!({ "ok": true }))
         }
         "project.groups.list" => {
@@ -8125,6 +8167,40 @@ mod tests {
         let messages = detail["session"]["messages"].as_array().unwrap();
         assert_eq!(messages.len(), 1);
         assert_eq!(messages[0]["status"], json!("aborted"));
+    }
+
+    #[tokio::test]
+    async fn workbench_rpc_rejects_malformed_typed_fields() {
+        let data_dir = tempfile::tempdir().unwrap();
+        let mut app_state = AppState::open(data_dir.path()).unwrap();
+        app_state.handshook = true;
+        let state = Arc::new(Mutex::new(app_state));
+        let tx = mpsc::unbounded_channel().0;
+
+        for (method, params) in [
+            (
+                "workbenches.create",
+                json!({ "name": "Focus", "templateId": 42 }),
+            ),
+            (
+                "workbenches.activate",
+                json!({ "id": "coding", "projectPath": false }),
+            ),
+            (
+                "workbenches.activate",
+                json!({ "id": "coding", "sessionId": [] }),
+            ),
+            (
+                "workbenches.reorder",
+                json!({ "ids": ["coding", "daily", "creative", "research", 42] }),
+            ),
+        ] {
+            let error = handle_request(state.clone(), method, params, tx.clone())
+                .await
+                .unwrap_err();
+            assert_eq!(error.code, 1002);
+            assert_eq!(error.data.unwrap()["errorCode"], "INVALID_PARAMS");
+        }
     }
 
     #[tokio::test]

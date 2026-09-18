@@ -1,4 +1,5 @@
 import type { EnglishCatalog } from "../en/index.js";
+import { workbenchKo } from "../../workbench-copy.js";
 
 export const ko = {
   app: {
@@ -208,6 +209,7 @@ export const ko = {
     referenceUnavailable: "세션을 사용할 수 없음",
     sessionMissing: "해당 세션이 더 이상 존재하지 않습니다",
   },
+  workbench: workbenchKo,
   chat: {
     emptyTitle: "무엇을 만들어 볼까요?",
     emptyTitleInProject: "{{project}}에서 무엇을 만들어 볼까요?",

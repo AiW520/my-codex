@@ -288,8 +288,10 @@ impl Database {
     /// exists on disk (matching `WorkspaceState::set`) so symlinked spellings
     /// of the same directory share one row.
     pub fn ensure_project(&self, path: &str, touch: bool) -> Result<i64> {
-        upsert_project_row(&self.conn, path, touch)?
-            .ok_or_else(|| anyhow!("project path must not be blank"))
+        let id = upsert_project_row(&self.conn, path, touch)?
+            .ok_or_else(|| anyhow!("project path must not be blank"))?;
+        self.associate_project_with_active_workbench(id)?;
+        Ok(id)
     }
 
     pub fn project_path(&self, id: i64) -> Result<Option<String>> {

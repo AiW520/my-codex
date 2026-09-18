@@ -252,6 +252,36 @@ type ToolBudgetHealth = {
   paths under registered additional roots use the same canonical containment
   resolver and never become arbitrary external access.
 
+### Workbenches (ADR 0283)
+
+- `workbenches.list` — ensures the four default profiles exist and returns
+  `{ activeWorkbenchId, workbenches }` in durable position order.
+- `workbenches.create({ name, templateId? })` — creates one profile after the
+  current tail and returns `{ workbench }`. `templateId` defaults to `custom`
+  and must be `coding | daily | creative | research | custom`.
+- `workbenches.update({ id, patch })` — applies a bounded partial update and
+  returns `{ workbench }`. Allowed patch keys are `name`, `icon`, `themeId`,
+  `motionEnabled`, `motionIntensity`, `wallpaperOpacity`, `layoutPreset`,
+  `modelRoles`, and `dashboardState`; unknown keys and wrong value types are
+  rejected. `themeId` may be a built-in app theme, one of `polar-night`,
+  `sakura-day`, `fortune-gold`, `deep-study`, a `plugin:` theme id, or null.
+- `workbenches.activate({ id, projectPath?, sessionId? })` — makes the profile
+  active and optionally remembers navigation context. A supplied session must
+  exist and not be deleted. It returns `{ workbench }`; it does not alter the
+  session's working directory, model, permissions, running turn, or runtime
+  ownership.
+- `workbenches.reorder({ ids })` — requires every current workbench id exactly
+  once, persists the order transactionally, and returns `{ workbenches }`.
+- `workbenches.delete({ id })` — deletes the profile and association rows and
+  returns `{ ok: true }`. Projects and sessions remain intact. Deleting the
+  active profile chooses a remaining profile; deleting the last profile fails.
+
+These methods are additive within protocol v11. New projects and sessions are
+associated with the currently active profile by host-core, but remain owned by
+their existing project/session domains. Workbench model-role bindings are
+presentation and future-routing hints only; they never mutate a running
+session binding.
+
 ### Secrets
 - `secrets.set`
 - `secrets.delete`
@@ -1112,6 +1142,11 @@ numeric slot; the string is the contract, the number is transport detail.
 | -32601 | — | unknown method |
 | -32700 | — | unparseable request line |
 | 1002 | LIMIT_EXCEEDED | an NDJSON request line over 64 MiB; Electron rejects the write before it reaches the pipe; if the host still sees it, the remainder of the line is drained, the reply keeps the request id when it can be peeked from the prefix, and the stdin reader keeps running |
+
+Workbench methods use the shared codes without introducing a new family:
+malformed or out-of-range fields are `INVALID_PARAMS`; an unknown workbench or
+session is `NOT_FOUND`; deleting the final profile is `CONFLICT`; SQLite and
+persisted-data failures are `INTERNAL`.
 
 
 Tool outcomes (`TOOL_DENIED`, `TOOL_TIMEOUT`, `PATH_OUTSIDE_WORKSPACE`,

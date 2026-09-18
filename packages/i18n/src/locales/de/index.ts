@@ -1,4 +1,5 @@
 import type { EnglishCatalog } from "../en/index.js";
+import { workbenchDe } from "../../workbench-copy.js";
 
 export const de = {
   "app": {
@@ -199,6 +200,7 @@ export const de = {
     referenceUnavailable: "Sitzung nicht verfügbar",
     sessionMissing: "Diese Sitzung existiert nicht mehr",
   },
+  "workbench": workbenchDe,
   "chat": {
     "emptyTitle": "Was kann ich Ihnen beim Aufbau helfen?",
     "emptyTitleInProject": "Was können wir in {{project}} bauen?",

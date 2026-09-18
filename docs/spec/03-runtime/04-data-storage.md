@@ -220,6 +220,7 @@ CREATE TABLE kv (
 | `app` | the settings blob (`settings.get/set`), `currentProjectId`. Optional `networkProxy` (`mode`/`url`/`bypass`) is a JSON field in that blob; no schema version bump (D340) |
 | `ui` | non-critical UI state the renderer asks the host to keep |
 | `cache` | model-refresh stamps, recent model refs (spec 13 §3) |
+| `workbenches` | active workbench id under key `active`; profile data and associations live in schema-v19 tables |
 | `plugin:<id>` | per-plugin settings; uninstall = `DELETE WHERE ns = ?` |
 | `projectMemory` | durable user-authored context keyed by canonical project path; structured values contain `format: "entries-v1"`, visual `entries`, derived `content`, and `updatedAt` |
 
@@ -478,6 +479,66 @@ CREATE INDEX idx_session_import_origins_plugin
   message. Assistant Edit uses that child and records the original/edited
   response tails in the child's existing `message_revisions` store; the source
   transcript and source revisions are never rewritten.
+
+### 4.5a workbenches — persisted orchestration profiles (schema v19)
+
+```sql
+CREATE TABLE workbenches (
+  id                    TEXT PRIMARY KEY,
+  name                  TEXT NOT NULL,
+  template_id           TEXT NOT NULL,
+  icon                  TEXT NOT NULL,
+  position              INTEGER NOT NULL UNIQUE,
+  theme_id              TEXT,
+  motion_enabled        INTEGER NOT NULL,
+  motion_intensity      INTEGER NOT NULL,
+  wallpaper_opacity     INTEGER NOT NULL,
+  layout_preset         TEXT NOT NULL,
+  last_project_path     TEXT,
+  last_session_id       TEXT REFERENCES sessions(id) ON DELETE SET NULL,
+  model_roles_json      TEXT NOT NULL DEFAULT '{}',
+  dashboard_state_json  TEXT NOT NULL DEFAULT '{}',
+  data_version          INTEGER NOT NULL DEFAULT 1,
+  created_at            INTEGER NOT NULL,
+  updated_at            INTEGER NOT NULL
+);
+
+CREATE TABLE workbench_projects (
+  workbench_id TEXT NOT NULL REFERENCES workbenches(id) ON DELETE CASCADE,
+  project_id   INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  position     INTEGER NOT NULL,
+  PRIMARY KEY (workbench_id, project_id)
+) WITHOUT ROWID;
+
+CREATE TABLE workbench_sessions (
+  session_id   TEXT PRIMARY KEY REFERENCES sessions(id) ON DELETE CASCADE,
+  workbench_id TEXT NOT NULL REFERENCES workbenches(id) ON DELETE CASCADE
+) WITHOUT ROWID;
+```
+
+- A workbench groups and presents existing projects and sessions; it does not
+  own their runtime, transcript, project folder, provider/model selection, or
+  permission state. Deleting a profile cascades only its association rows.
+- `template_id` is one of `coding`, `daily`, `creative`, `research`, or
+  `custom`. Templates seed presentation and dashboard behavior; Custom remains
+  a valid product profile rather than an error fallback.
+- Names are trimmed, non-empty, and at most 48 characters. Icon and layout ids
+  are bounded. Motion and wallpaper values remain within 0–100.
+  `model_roles_json` accepts only `primary`, `assistant`, `vision`, `image`, and
+  `video` bindings with bounded non-empty provider/model ids.
+  `model_roles_json` and `dashboard_state_json` must each decode to a JSON
+  object and are limited to 64 KiB. Corrupt persisted JSON fails the read; it
+  is never silently replaced with `{}`.
+- On first initialization, host-core creates Coding, Daily, Creative, and
+  Research in that order and associates every existing project and non-deleted
+  session with Coding. Reopening is idempotent. New projects and sessions are
+  associated with the active workbench without changing their existing owner.
+- Activating a profile may atomically remember an existing project path and a
+  non-deleted session id. The active id is stored at `workbenches/active` in
+  `kv`. A missing/stale active id falls back to the first ordered profile.
+- Reorder requires every current id exactly once and updates positions in one
+  transaction. The last remaining workbench cannot be deleted. Deleting the
+  active profile selects the first remaining profile.
 
 ### 4.6 turns — one row per agent run
 
@@ -1202,7 +1263,7 @@ truncating at a guessed position.
 - JSON columns are read blind on hot paths (shipped to the renderer as-is);
   anything filtered or summed is a promoted column by rule.
 
-## 7. Versioning, v7 reset, and v8-to-v15 migration
+## 7. Versioning, v7 reset, and v8-to-v19 migration
 
 - `PRAGMA user_version` stays the schema authority; future structural changes
   add ordered Rust migration fns again, each in one transaction, with a
@@ -1213,9 +1274,9 @@ truncating at a guessed position.
   Sessions, providers, and settings from the old file are not carried over;
   the archive remains for manual recovery. All pre-v7 migration code
   (v1 `settings.sqlite` import, v2→v6 chain) is deleted.
-- Fresh installs run the full v15 DDL directly.
+- Fresh installs run the full v19 DDL directly.
 - **Schema v7 first reaches v8, then uses the guarded path.** The v7→v8
-  migration is followed by the same guarded v8→v15 migration; schema-v9 and
+  migration is followed by the same guarded v8→v19 migration; schema-v9 and
   schema-v10 databases take the same guarded path and receive an exact readable
   `pi.sqlite.v9.bak` / `pi.sqlite.v10.bak` before destructive work.
 - **The historical v8-to-v11 core migration is in-place and transactional.** Before migration,
@@ -1267,6 +1328,15 @@ truncating at a guessed position.
   step. The v15→v16 session-collaboration step now stamps `16` (its own version)
   instead of the latest schema constant, so a v15 file can walk both steps in one
   launch.
+- **Schema v18 is additive.** It adds nullable `turn_queue.priority` for the
+  durable Send now block (ADR 0265). Existing queue rows remain NULL and keep
+  their position order. A `pi.sqlite.v17.bak` copy precedes the migration.
+- **Schema v19 is additive.** It adds the three workbench tables and indexes
+  described in §4.5a (ADR 0283). After migration, idempotent initialization
+  creates the four defaults and associates existing projects and non-deleted
+  sessions with Coding. Projects, sessions, transcripts, turns, providers,
+  permissions, and plugin data are not rewritten. A `pi.sqlite.v18.bak` copy
+  precedes the migration.
 - **Schema v14 is additive.** It adds nullable `sessions.deleted_at`, the
   partial deletion index, and `session_import_origins`. Existing sessions stay
   active and have no origin rows. The migration runs in the same guarded

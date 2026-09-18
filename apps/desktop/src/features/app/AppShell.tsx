@@ -18,6 +18,9 @@ import { WindowControls } from "../../components/WindowControls";
 import { api } from "../../lib/api";
 import { CollapsedTitlebarActions, RoutePending } from "./chrome";
 import { useAppShellRuntime } from "./useAppShellRuntime";
+import { WorkbenchSwitcher } from "../../components/WorkbenchSwitcher";
+import { WorkbenchSurface } from "../../components/WorkbenchSurface";
+import { useWorkbenchStore } from "../../stores/workbench-store";
 
 const SettingsPage = lazy(() =>
   import("../../pages/SettingsPage").then((module) => ({
@@ -41,6 +44,10 @@ const PluginsPage = lazy(() =>
 );
 
 export function AppShell() {
+  const workbenchState = useWorkbenchStore((state) => state.state);
+  const activeWorkbench = workbenchState?.workbenches.find(
+    (workbench) => workbench.id === workbenchState.activeWorkbenchId,
+  );
   const {
     t,
     ready,
@@ -139,6 +146,7 @@ export function AppShell() {
                   <IconNewSession size={15} />
                 </TooltipButton>
               )}
+              <WorkbenchSwitcher />
               <div className="window-chrome-drag" aria-hidden />
               <WindowControls contained />
             </div>
@@ -171,6 +179,7 @@ export function AppShell() {
                     />
                   </div>
                 )}
+                <WorkbenchSwitcher />
               </div>
             )}
             <UpdateBanner />
@@ -243,6 +252,8 @@ export function AppShell() {
                 <div className="route-surface route-page">
                   <PluginsPage />
                 </div>
+              ) : activeWorkbench && activeWorkbench.templateId !== "coding" && activeWorkbench.templateId !== "custom" ? (
+                <WorkbenchSurface workbench={activeWorkbench} />
               ) : (
                 <ChatSurface />
               )}

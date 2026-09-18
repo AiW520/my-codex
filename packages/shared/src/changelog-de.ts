@@ -2,6 +2,17 @@ import type { ChangelogEntry } from "./changelog.js";
 
 export const deEntries: ChangelogEntry[] = [
   {
+    "version": "0.15.1",
+    "date": "2026-09-18",
+    "highlights": [
+      "Persistente Arbeitsbereiche für Programmieren, Alltag, Kreativ, Recherche und benutzerdefinierte Workflows.",
+      "Arbeitsbereiche wechseln, ohne laufende Sitzungen neu zu starten oder ihre Laufzeitkonfiguration zu ändern.",
+      "Namen, Reihenfolge, Löschung sowie gemerkten Projekt-, Sitzungs- und lokalen Dashboard-Kontext verwalten.",
+      "Arbeitsbereichs-Themes, Bewegungssteuerung und Wallpaper-Deckkraft mit sicherem Fallback für fehlende Plugin-Themes.",
+      "Die kreative Generierung bleibt ehrlich deaktiviert, bis ein echter Medienadapter eingerichtet ist; Daily und Research bleiben lokal nutzbar.",
+    ],
+  },
+  {
     "version": "0.15.0",
     "date": "2026-09-17",
     "highlights": [

@@ -90,6 +90,16 @@ destination, chat as the home surface, tools and permissions inline.
   `--ds-window-lead-inset` token — the cluster's 76px right edge (from
   `@pi-desktop/shared`) plus a 12px gap — and the main process positions the
   buttons from that same shared geometry.
+- **Workbench switcher**: a stable, responsive control centered in the shared
+  top chrome lists the host-owned profiles. It supports selection, creation,
+  inline rename, ordered movement, and a two-click destructive confirmation;
+  the last profile cannot be deleted. Long names truncate without moving the
+  surrounding title or window controls, and the compact trigger remains usable
+  in a narrow MainChat column, route titlebar, and maximized work-panel chrome.
+  Switching first remembers the current project/session navigation context and
+  restores the destination profile's surviving context. Rapid selection is
+  latest-intent-wins. The switch never stops, reparents, or reconfigures a
+  running session.
 - **Work panel**: docked right column (not an overlay) opened by an artifact,
   the viewport-fixed toggle, or `Cmd/Ctrl + J`. File, URL, browser-preview, and
   successful workspace-edit artifacts create their resources atomically. The
@@ -176,6 +186,32 @@ destination, chat as the home surface, tools and permissions inline.
   offers guarded rollback; it is not a global transcript entry. A background
   session's message, tool, and permission events never replace or cover the
   visible conversation.
+
+### 3.1a Workbench surfaces
+
+- **Coding** and **Custom** retain the production Chat home/transcript,
+  Sidebar, Composer, and WorkPanel path. A template is an initializer, not a
+  second execution mode.
+- **Daily** replaces the chat body with a local task list and notes backed by
+  the active profile's bounded `dashboardState`. New profiles contain no sample
+  tasks or pre-completed work.
+- **Creative** provides a prompt, image/video model-role bindings, and an asset
+  empty state. Model bindings do not mutate a running chat. Generate is disabled
+  with an explicit not-configured state until a real media job adapter supports
+  submission, cancellation, recovery, credentials, cost controls, and durable
+  artifacts; the UI never simulates a successful result.
+- **Research** provides an explicit local source list and research notes. Source
+  URLs open only through the main-process external-URL allowlist. No sample
+  citation, PDF, or completed finding is fabricated.
+- Template-local fields save through host-core and surface write failures. A
+  switch between two profiles using the same template resets transient input
+  state to the destination profile rather than carrying draft controls across.
+- Effective appearance is
+  `activeWorkbench.themeId ?? globalSettings.theme`. The four seeded visual
+  profiles use `polar-night`, `sakura-day`, `fortune-gold`, and `deep-study`.
+  Missing plugin themes fall back to the global preference; switching does not
+  persist a new global theme. Motion and wallpaper intensity are profile-owned,
+  and `prefers-reduced-motion` always disables decorative travel.
 
 ### 3.2 Sidebar project groups
 
