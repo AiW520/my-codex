@@ -28,6 +28,7 @@ import {
   saveSidebarWidth,
 } from "../../lib/sidebar-preferences";
 import { StartupSplash } from "../../components/StartupSplash";
+import { useWorkbenchStore } from "../../stores/workbench-store";
 
 const MODIFIER_ONLY_KEYS = new Set([
   "Alt",
@@ -38,6 +39,12 @@ const MODIFIER_ONLY_KEYS = new Set([
 ]);
 
 const PLUGIN_THEME_STYLE_ID = "pi-plugin-theme";
+const WORKBENCH_THEME_BASE: Record<string, "light" | "dark"> = {
+  "polar-night": "dark",
+  "sakura-day": "light",
+  "fortune-gold": "dark",
+  "deep-study": "dark",
+};
 
 export function useAppShellRuntime() {
   const { t } = useTranslation();
@@ -64,6 +71,10 @@ export function useAppShellRuntime() {
   const refreshPluginThemes = useAppStore((s) => s.refreshPluginThemes);
   const plugins = useAppStore((s) => s.plugins);
   const projectPath = useAppStore((s) => s.workspace?.path ?? null);
+  const workbenchState = useWorkbenchStore((s) => s.state);
+  const activeWorkbench = workbenchState?.workbenches.find(
+    (workbench) => workbench.id === workbenchState.activeWorkbenchId,
+  );
   const workPanelVisible = workPanelOpen || subagentPanelOpen;
 
   const [searchOpen, setSearchOpen] = useState(false);
@@ -446,16 +457,45 @@ export function useAppShellRuntime() {
 
   useEffect(() => {
     const preference = settings?.theme ?? "system";
-    const pluginTheme = preference.startsWith("plugin:")
-      ? pluginThemes.find((entry) => entry.id === preference)
+    const globalPreference =
+      preference.startsWith("plugin:") &&
+      !pluginThemes.some((entry) => entry.id === preference)
+        ? "system"
+        : preference;
+    const requestedPreference = activeWorkbench?.themeId ?? globalPreference;
+    const effectivePreference =
+      requestedPreference.startsWith("plugin:") &&
+      !pluginThemes.some((entry) => entry.id === requestedPreference)
+        ? globalPreference
+        : requestedPreference;
+    const pluginTheme = effectivePreference.startsWith("plugin:")
+      ? pluginThemes.find((entry) => entry.id === effectivePreference)
       : undefined;
     // A plugin theme whose provider was disabled or uninstalled falls back to
     // `system` instead of leaving the shell on a half-applied palette.
-    const base: "system" | "light" | "dark" = pluginTheme
+    const base: "system" | "light" | "dark" = WORKBENCH_THEME_BASE[effectivePreference]
+      ? WORKBENCH_THEME_BASE[effectivePreference]
+      : pluginTheme
       ? pluginTheme.base
-      : isThemeColorScheme(preference)
-        ? preference
+      : isThemeColorScheme(effectivePreference)
+        ? effectivePreference
         : "system";
+
+    if (WORKBENCH_THEME_BASE[effectivePreference]) {
+      document.documentElement.dataset.workbenchTheme = effectivePreference;
+    } else {
+      delete document.documentElement.dataset.workbenchTheme;
+    }
+    document.documentElement.dataset.workbenchMotion =
+      activeWorkbench?.motionEnabled === false ? "off" : "on";
+    document.documentElement.style.setProperty(
+      "--workbench-motion-intensity",
+      String((activeWorkbench?.motionIntensity ?? 70) / 100),
+    );
+    document.documentElement.style.setProperty(
+      "--workbench-wallpaper-opacity",
+      String((activeWorkbench?.wallpaperOpacity ?? 18) / 100),
+    );
 
     let style = document.getElementById(PLUGIN_THEME_STYLE_ID) as HTMLStyleElement | null;
     if (pluginTheme) {
@@ -491,7 +531,7 @@ export function useAppShellRuntime() {
     const onChange = () => apply();
     mq.addEventListener("change", onChange);
     return () => mq.removeEventListener("change", onChange);
-  }, [settings?.theme, pluginThemes]);
+  }, [activeWorkbench, settings?.theme, pluginThemes]);
 
   // Global UI font: the Settings picker stores a CSS `font-family` stack in
   // `AppSettings.fontFamily`; absent means the built-in token stack.
@@ -518,6 +558,11 @@ export function useAppShellRuntime() {
     bootstrapStartedRef.current = true;
     void bootstrap();
   }, [bootstrap]);
+
+  useEffect(() => {
+    if (!ready) return;
+    void useWorkbenchStore.getState().bootstrap();
+  }, [ready]);
 
   // The Host owns the prompt queue (D375); mirror it whenever the visible
   // session changes so a reload or a switch shows the durable entries.

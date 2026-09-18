@@ -29,6 +29,17 @@ export type ChangelogEntry = {
 
 const enEntries: ChangelogEntry[] = [
   {
+    version: "0.15.1",
+    date: "2026-09-18",
+    highlights: [
+      "Add persisted workbench profiles for Coding, Daily, Creative, Research, and Custom workflows.",
+      "Switch workbenches without restarting or changing the runtime configuration of a running session.",
+      "Manage workbench names, order, deletion, remembered project and session context, and local dashboard state.",
+      "Add workbench-scoped themes, motion controls, wallpaper opacity, and safe fallback for unavailable plugin themes.",
+      "Keep Creative generation honest until a real durable media adapter is configured, with local Daily and Research surfaces.",
+    ],
+  },
+  {
     version: "0.15.0",
     date: "2026-09-17",
     highlights: [
@@ -793,6 +804,17 @@ const enEntries: ChangelogEntry[] = [
 
 const zhCNEntries: ChangelogEntry[] = [
   {
+    version: "0.15.1",
+    date: "2026-09-18",
+    highlights: [
+      "新增可持久化的工作台配置，覆盖编程、日常、创作、研究和自定义工作流。",
+      "切换工作台时不会重启运行中的会话，也不会改写会话的运行配置。",
+      "支持管理工作台名称、顺序、删除操作，以及记住的项目、会话上下文和本地看板状态。",
+      "新增工作台级主题、动效控制和壁纸透明度；不可用的插件主题会安全回退。",
+      "真实媒体适配器配置完成前，创作工作台不会伪造生成结果，同时提供本地日常和研究工作区。",
+    ],
+  },
+  {
     version: "0.15.0",
     date: "2026-09-17",
     highlights: [
@@ -1556,6 +1578,17 @@ const zhCNEntries: ChangelogEntry[] = [
 ];
 
 const zhTWEntries: ChangelogEntry[] = [
+  {
+    version: "0.15.1",
+    date: "2026-09-18",
+    highlights: [
+      "新增可持久化的工作台設定，涵蓋程式設計、日常、創作、研究與自訂工作流程。",
+      "切換工作台時不會重啟執行中的工作階段，也不會改寫工作階段的執行設定。",
+      "支援管理工作台名稱、順序、刪除操作，以及記住的專案、工作階段上下文和本機儀表板狀態。",
+      "新增工作台層級主題、動效控制和桌布透明度；無法使用的外掛主題會安全回退。",
+      "真實媒體適配器配置完成前，創作工作台不會偽造生成結果，同時提供本機日常和研究工作區。",
+    ],
+  },
   {
     version: "0.15.0",
     date: "2026-09-17",

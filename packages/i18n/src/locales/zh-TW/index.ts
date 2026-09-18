@@ -1,4 +1,5 @@
 import type { EnglishCatalog } from "../en/index.js";
+import { workbenchZhTW } from "../../workbench-copy.js";
 
 export const zhTW = {
   app: {
@@ -201,6 +202,7 @@ export const zhTW = {
     referenceUnavailable: "對話無法使用",
     sessionMissing: "該對話已不存在",
   },
+  workbench: workbenchZhTW,
   chat: {
     emptyTitle: "今天想做點什麼？",
     emptyTitleInProject: "今天想在 {{project}} 裡做點什麼？",

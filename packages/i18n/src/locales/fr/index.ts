@@ -1,4 +1,5 @@
 import type { EnglishCatalog } from "../en/index.js";
+import { workbenchFr } from "../../workbench-copy.js";
 
 export const fr = {
   "app": {
@@ -199,6 +200,7 @@ export const fr = {
     referenceUnavailable: "Session indisponible",
     sessionMissing: "Cette session n'existe plus",
   },
+  "workbench": workbenchFr,
   "chat": {
     "emptyTitle": "Que puis-je vous aider à créer ?",
     "emptyTitleInProject": "Que pouvons-nous construire dans {{project}} ?",

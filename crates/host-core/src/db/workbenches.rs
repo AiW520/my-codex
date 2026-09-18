@@ -6,7 +6,23 @@ use uuid::Uuid;
 const ACTIVE_NAMESPACE: &str = "workbenches";
 const ACTIVE_KEY: &str = "active";
 const MAX_NAME_CHARS: usize = 48;
+const MAX_ICON_CHARS: usize = 48;
+const MAX_THEME_CHARS: usize = 160;
+const MAX_LAYOUT_CHARS: usize = 48;
+const MAX_MODEL_ID_CHARS: usize = 256;
 const MAX_JSON_BYTES: usize = 64 * 1024;
+const UPDATE_FIELDS: &[&str] = &[
+    "name",
+    "icon",
+    "themeId",
+    "motionEnabled",
+    "motionIntensity",
+    "wallpaperOpacity",
+    "layoutPreset",
+    "modelRoles",
+    "dashboardState",
+];
+const MODEL_ROLES: &[&str] = &["primary", "assistant", "vision", "image", "video"];
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
@@ -86,6 +102,82 @@ fn validate_json(value: &Value, field: &str) -> Result<String> {
     Ok(encoded)
 }
 
+fn validate_model_roles(value: &Value) -> Result<String> {
+    let object = value
+        .as_object()
+        .ok_or_else(|| anyhow!("modelRoles must be an object"))?;
+    for (role, binding) in object {
+        if !MODEL_ROLES.contains(&role.as_str()) {
+            return Err(anyhow!("modelRoles contains an unknown role"));
+        }
+        let binding = binding
+            .as_object()
+            .ok_or_else(|| anyhow!("modelRoles.{role} must be an object"))?;
+        if binding
+            .keys()
+            .any(|key| key != "providerId" && key != "modelId")
+        {
+            return Err(anyhow!("modelRoles.{role} contains an unknown field"));
+        }
+        for key in ["providerId", "modelId"] {
+            let value = binding
+                .get(key)
+                .and_then(Value::as_str)
+                .map(str::trim)
+                .filter(|value| !value.is_empty())
+                .ok_or_else(|| anyhow!("modelRoles.{role}.{key} is invalid"))?;
+            if value.chars().count() > MAX_MODEL_ID_CHARS {
+                return Err(anyhow!("modelRoles.{role}.{key} is too long"));
+            }
+        }
+    }
+    validate_json(value, "modelRoles")
+}
+
+fn validate_bounded_text(value: &Value, field: &str, max_chars: usize) -> Result<String> {
+    let value = value
+        .as_str()
+        .ok_or_else(|| anyhow!("{field} must be a string"))?
+        .trim();
+    if value.is_empty() || value.chars().count() > max_chars {
+        return Err(anyhow!("{field} is invalid"));
+    }
+    Ok(value.to_string())
+}
+
+fn validate_theme(value: &Value) -> Result<Option<String>> {
+    if value.is_null() {
+        return Ok(None);
+    }
+    let theme = validate_bounded_text(value, "themeId", MAX_THEME_CHARS)?;
+    let valid = matches!(
+        theme.as_str(),
+        "system" | "light" | "dark" | "polar-night" | "sakura-day" | "fortune-gold" | "deep-study"
+    ) || theme.starts_with("plugin:");
+    if !valid {
+        return Err(anyhow!("themeId is invalid"));
+    }
+    Ok(Some(theme))
+}
+
+fn decode_json_object(raw: String, column: usize, field: &str) -> rusqlite::Result<Value> {
+    let value: Value = serde_json::from_str(&raw).map_err(|error| {
+        rusqlite::Error::FromSqlConversionFailure(
+            column,
+            rusqlite::types::Type::Text,
+            Box::new(error),
+        )
+    })?;
+    if !value.is_object() {
+        return Err(rusqlite::Error::FromSqlConversionFailure(
+            column,
+            rusqlite::types::Type::Text,
+            anyhow!("{field} must be a JSON object").into(),
+        ));
+    }
+    Ok(value)
+}
+
 fn template_defaults(template_id: &str) -> (&'static str, &'static str) {
     match template_id {
         "coding" => ("code-2", "polar-night"),
@@ -143,7 +235,8 @@ impl Database {
              WHERE wp.workbench_id = ?1 ORDER BY wp.position",
         )?;
         let rows = stmt.query_map(params![id], |row| row.get(0))?;
-        rows.collect::<rusqlite::Result<Vec<_>>>().map_err(Into::into)
+        rows.collect::<rusqlite::Result<Vec<_>>>()
+            .map_err(Into::into)
     }
 
     fn workbench_sessions(&self, id: &str) -> Result<Vec<String>> {
@@ -154,7 +247,8 @@ impl Database {
              ORDER BY s.updated_at DESC",
         )?;
         let rows = stmt.query_map(params![id], |row| row.get(0))?;
-        rows.collect::<rusqlite::Result<Vec<_>>>().map_err(Into::into)
+        rows.collect::<rusqlite::Result<Vec<_>>>()
+            .map_err(Into::into)
     }
 
     fn row_to_profile(&self, row: WorkbenchRow) -> Result<WorkbenchProfile> {
@@ -214,9 +308,8 @@ impl Database {
                 layout_preset: row.get(9)?,
                 last_project_path: row.get(10)?,
                 last_session_id: row.get(11)?,
-                model_roles: serde_json::from_str(&model_roles_raw).unwrap_or_else(|_| json!({})),
-                dashboard_state: serde_json::from_str(&dashboard_state_raw)
-                    .unwrap_or_else(|_| json!({})),
+                model_roles: decode_json_object(model_roles_raw, 12, "modelRoles")?,
+                dashboard_state: decode_json_object(dashboard_state_raw, 13, "dashboardState")?,
                 data_version: row.get(14)?,
                 created_at: row.get(15)?,
                 updated_at: row.get(16)?,
@@ -229,7 +322,8 @@ impl Database {
                 .map_err(Into::into);
         }
         let rows = stmt.query_map([], read)?;
-        rows.collect::<rusqlite::Result<Vec<_>>>().map_err(Into::into)
+        rows.collect::<rusqlite::Result<Vec<_>>>()
+            .map_err(Into::into)
     }
 
     pub fn list_workbenches(&self) -> Result<WorkbenchState> {
@@ -254,6 +348,56 @@ impl Database {
     pub fn get_workbench(&self, id: &str) -> Result<Option<WorkbenchProfile>> {
         let row = self.select_workbench_rows(Some(id))?.into_iter().next();
         row.map(|value| self.row_to_profile(value)).transpose()
+    }
+
+    fn active_workbench_id(&self) -> Result<String> {
+        self.ensure_default_workbenches()?;
+        let stored = self
+            .kv_get(ACTIVE_NAMESPACE, ACTIVE_KEY)?
+            .and_then(|value| value.as_str().map(str::to_string));
+        if let Some(id) = stored {
+            let exists: bool = self.conn.query_row(
+                "SELECT EXISTS(SELECT 1 FROM workbenches WHERE id = ?1)",
+                params![id],
+                |row| row.get(0),
+            )?;
+            if exists {
+                return Ok(id);
+            }
+        }
+        self.conn
+            .query_row(
+                "SELECT id FROM workbenches ORDER BY position, created_at LIMIT 1",
+                [],
+                |row| row.get(0),
+            )
+            .map_err(Into::into)
+    }
+
+    pub(crate) fn associate_project_with_active_workbench(&self, project_id: i64) -> Result<()> {
+        let workbench_id = self.active_workbench_id()?;
+        let position: i64 = self.conn.query_row(
+            "SELECT COALESCE(MAX(position), -1) + 1
+             FROM workbench_projects WHERE workbench_id = ?1",
+            params![workbench_id],
+            |row| row.get(0),
+        )?;
+        self.conn.execute(
+            "INSERT INTO workbench_projects (workbench_id, project_id, position)
+             VALUES (?1, ?2, ?3) ON CONFLICT(workbench_id, project_id) DO NOTHING",
+            params![workbench_id, project_id, position],
+        )?;
+        Ok(())
+    }
+
+    pub(crate) fn associate_session_with_active_workbench(&self, session_id: &str) -> Result<()> {
+        let workbench_id = self.active_workbench_id()?;
+        self.conn.execute(
+            "INSERT INTO workbench_sessions (session_id, workbench_id) VALUES (?1, ?2)
+             ON CONFLICT(session_id) DO UPDATE SET workbench_id = excluded.workbench_id",
+            params![session_id, workbench_id],
+        )?;
+        Ok(())
     }
 
     pub fn create_workbench(&self, name: &str, template_id: &str) -> Result<WorkbenchProfile> {
@@ -286,37 +430,50 @@ impl Database {
         let object = patch
             .as_object()
             .ok_or_else(|| anyhow!("workbench patch must be an object"))?;
-        if let Some(value) = object.get("name").and_then(Value::as_str) {
-            current.name = validate_name(value)?;
+        if object
+            .keys()
+            .any(|key| !UPDATE_FIELDS.contains(&key.as_str()))
+        {
+            return Err(anyhow!("workbench patch contains an unknown field"));
         }
-        if let Some(value) = object.get("icon").and_then(Value::as_str) {
-            current.icon = value.trim().chars().take(48).collect();
+        if let Some(value) = object.get("name") {
+            current.name = validate_name(
+                value
+                    .as_str()
+                    .ok_or_else(|| anyhow!("name must be a string"))?,
+            )?;
         }
-        if object.contains_key("themeId") {
-            current.theme_id = object
-                .get("themeId")
-                .and_then(Value::as_str)
-                .map(str::trim)
-                .filter(|value| !value.is_empty())
-                .map(|value| value.chars().take(160).collect());
+        if let Some(value) = object.get("icon") {
+            current.icon = validate_bounded_text(value, "icon", MAX_ICON_CHARS)?;
         }
-        if let Some(value) = object.get("motionEnabled").and_then(Value::as_bool) {
-            current.motion_enabled = value;
+        if let Some(value) = object.get("themeId") {
+            current.theme_id = validate_theme(value)?;
         }
-        if let Some(value) = object.get("motionIntensity").and_then(Value::as_i64) {
-            current.motion_intensity = value.clamp(0, 100);
+        if let Some(value) = object.get("motionEnabled") {
+            current.motion_enabled = value
+                .as_bool()
+                .ok_or_else(|| anyhow!("motionEnabled must be a boolean"))?;
         }
-        if let Some(value) = object.get("wallpaperOpacity").and_then(Value::as_i64) {
-            current.wallpaper_opacity = value.clamp(0, 100);
+        if let Some(value) = object.get("motionIntensity") {
+            current.motion_intensity = value
+                .as_i64()
+                .ok_or_else(|| anyhow!("motionIntensity must be an integer"))?
+                .clamp(0, 100);
         }
-        if let Some(value) = object.get("layoutPreset").and_then(Value::as_str) {
-            current.layout_preset = value.trim().chars().take(48).collect();
+        if let Some(value) = object.get("wallpaperOpacity") {
+            current.wallpaper_opacity = value
+                .as_i64()
+                .ok_or_else(|| anyhow!("wallpaperOpacity must be an integer"))?
+                .clamp(0, 100);
+        }
+        if let Some(value) = object.get("layoutPreset") {
+            current.layout_preset = validate_bounded_text(value, "layoutPreset", MAX_LAYOUT_CHARS)?;
         }
         let model_roles = object.get("modelRoles").unwrap_or(&current.model_roles);
         let dashboard_state = object
             .get("dashboardState")
             .unwrap_or(&current.dashboard_state);
-        let model_roles_json = validate_json(model_roles, "modelRoles")?;
+        let model_roles_json = validate_model_roles(model_roles)?;
         let dashboard_state_json = validate_json(dashboard_state, "dashboardState")?;
         self.conn.execute(
             "UPDATE workbenches SET name = ?2, icon = ?3, theme_id = ?4,

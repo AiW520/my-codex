@@ -6,6 +6,7 @@ import {
   IconSearch,
 } from "./icons";
 import { TooltipButton } from "./ui";
+import { WorkbenchSwitcher } from "./WorkbenchSwitcher";
 
 function projectName(path?: string | null, name?: string | null) {
   if (name) return name;
@@ -88,6 +89,8 @@ export function ConversationTopbar({
           <span className="ct-title">{taskTitle}</span>
         </div>
       </div>
+
+      <WorkbenchSwitcher />
 
       <div className="ct-right">
         <div className="ct-actions">

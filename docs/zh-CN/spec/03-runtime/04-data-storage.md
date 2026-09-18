@@ -202,6 +202,7 @@ CREATE TABLE kv (
 | `app` | 设置 blob (`settings.get/set`)、`currentProjectId` |
 | `ui` | 渲染器要求主机保留的非关键 UI 状态 |
 | `cache` | 模型刷新标记，最近的模型参考（规范 13 §3） |
+| `workbenches` | 键 `active` 下的当前工作台 id；配置与关联存放在 schema v19 表中 |
 | `plugin:<id>` | 每个插件的设置；卸载=`DELETE WHERE ns = ?` |
 | `projectMemory` | 按规范项目路径键控的持久用户创作上下文；结构化值包含 `format: "entries-v1"`、视觉 `entries`、派生 `content` 与 `updatedAt` |
 
@@ -434,6 +435,55 @@ CREATE INDEX idx_session_import_origins_plugin
   消息。 Assistant Edit 使用该子项并记录 original/edited
   子级现有 `message_revisions` 存储中的响应尾部；来源
   抄本和源版本的修订永远不会被重写。
+
+### 4.5a workbenches — 持久编排配置（schema v19）
+
+```sql
+CREATE TABLE workbenches (
+  id                    TEXT PRIMARY KEY,
+  name                  TEXT NOT NULL,
+  template_id           TEXT NOT NULL,
+  icon                  TEXT NOT NULL,
+  position              INTEGER NOT NULL UNIQUE,
+  theme_id              TEXT,
+  motion_enabled        INTEGER NOT NULL,
+  motion_intensity      INTEGER NOT NULL,
+  wallpaper_opacity     INTEGER NOT NULL,
+  layout_preset         TEXT NOT NULL,
+  last_project_path     TEXT,
+  last_session_id       TEXT REFERENCES sessions(id) ON DELETE SET NULL,
+  model_roles_json      TEXT NOT NULL DEFAULT '{}',
+  dashboard_state_json  TEXT NOT NULL DEFAULT '{}',
+  data_version          INTEGER NOT NULL DEFAULT 1,
+  created_at            INTEGER NOT NULL,
+  updated_at            INTEGER NOT NULL
+);
+
+CREATE TABLE workbench_projects (
+  workbench_id TEXT NOT NULL REFERENCES workbenches(id) ON DELETE CASCADE,
+  project_id   INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  position     INTEGER NOT NULL,
+  PRIMARY KEY (workbench_id, project_id)
+) WITHOUT ROWID;
+
+CREATE TABLE workbench_sessions (
+  session_id   TEXT PRIMARY KEY REFERENCES sessions(id) ON DELETE CASCADE,
+  workbench_id TEXT NOT NULL REFERENCES workbenches(id) ON DELETE CASCADE
+) WITHOUT ROWID;
+```
+
+- 工作台只对既有项目与会话进行分组和展示，不拥有其运行时、转录、项目目录、
+  provider/model 绑定或权限。删除工作台只级联删除关联行。
+- `template_id` 取值为 `coding`、`daily`、`creative`、`research` 或
+  `custom`。名称、图标、布局和模型绑定均有边界；
+  `model_roles_json` 与 `dashboard_state_json` 必须是最大 64 KiB 的 JSON
+  对象，损坏数据会明确报错，不会静默替换为 `{}`。
+- 首次初始化按顺序创建 Coding、Daily、Creative、Research，并把已有项目与
+  未删除会话关联到 Coding；重复打开保持幂等。新项目和会话关联到当前工作台，
+  但原有所有权不变。
+- 当前 id 存于 `kv` 的 `workbenches/active`。激活可记住仍存在的项目路径与
+  未删除会话。重排必须精确包含全部 id；最后一个工作台不能删除，删除当前工作台
+  后选择第一个剩余配置。
 
 ### 4.6 turns — 每次 agent 运行一行
 
@@ -1081,7 +1131,7 @@ outbox 排空。渲染器侧的停止绝不重写已有已开始回复的转录
 - JSON 列在热路径上盲读（按原样发送到渲染器）；
   任何过滤或求和的内容都是按规则提升的列。
 
-## 7. 版本控制、v7 重置和 v8 到 v16 迁移
+## 7. 版本控制、v7 重置和 v8 到 v19 迁移
 
 - `PRAGMA user_version` 保留模式权限；未来的结构性变化
   再次添加有序的 Rust 迁移 fns，每个都在一个事务中，并带有一个
@@ -1092,7 +1142,7 @@ outbox 排空。渲染器侧的停止绝不重写已有已开始回复的转录
   旧文件中的会话、提供程序和设置不会保留；
   存档仍保留以供手动恢复。所有 v7 之前的迁移代码
   （v1 `settings.sqlite` 导入，v2→v6 链）被删除。
-- 全新安装直接运行完整的 v16 DDL。
+- 全新安装直接运行完整的 v19 DDL。
 - **架构 v15 是增量的。** 它增加 `turn_queue` 表及其两个索引（D386 / ADR 0213），使 Host
   拥有的回合队列在重启后存活；不改动任何已有行，迁移前保留 `pi.sqlite.v14.bak`。
 - **架构 v16 是增量的。** 它增加会话协作 link 和投递表、生命周期索引，以及可为空的
@@ -1103,8 +1153,15 @@ outbox 排空。渲染器侧的停止绝不重写已有已开始回复的转录
   —— 所有 v17 之前的行保持 NULL 归属。该步骤之前保留 `pi.sqlite.v16.bak` 副本。
   v15→v16 会话协作步骤现在写入 `16`（它自己的版本）而不是最新的架构常量，
   因此 v15 文件可以在一次启动中走完两个步骤。
+- **架构 v18 是增量的。** 它为持久 Send now 队列块增加可为空的
+  `turn_queue.priority`（ADR 0265）。旧条目保持 NULL 和原有 position 顺序，
+  迁移前保留 `pi.sqlite.v17.bak`。
+- **架构 v19 是增量的。** 它增加 §4.5a 的三张工作台表与索引（ADR 0283）。
+  迁移后通过幂等初始化创建四个默认配置，并把已有项目和未删除会话关联到 Coding。
+  项目、会话、转录、回合、provider、权限与插件数据均不重写；迁移前保留
+  `pi.sqlite.v18.bak`。
 - **架构 v7 首先到达 v8，然后使用受保护的路径。** v7→v8
-  迁移之后是相同的受保护的 v8→v15 迁移；架构-v9 和
+  迁移之后是相同的受保护的 v8→v19 迁移；架构-v9 和
   schema-v10 数据库采用相同的受保护路径并接收精确的可读数据
   破坏性工作之前的 `pi.sqlite.v9.bak` / `pi.sqlite.v10.bak`。
 - **v8-to-v11 是就地事务迁移。** 在迁移之前，

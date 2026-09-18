@@ -1,3 +1,5 @@
+import { workbenchEn } from "../../workbench-copy.js";
+
 export const en = {
   app: {
     shellName: "PI-Desktop",
@@ -206,6 +208,7 @@ export const en = {
     referenceUnavailable: "Session unavailable",
     sessionMissing: "That session no longer exists",
   },
+  workbench: workbenchEn,
   chat: {
     emptyTitle: "What can I help you build?",
     emptyTitleInProject: "What can we build in {{project}}?",

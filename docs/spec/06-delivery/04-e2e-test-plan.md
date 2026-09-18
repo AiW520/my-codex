@@ -7529,6 +7529,68 @@ identify the platform validation still needed.
   because the host has no device backend yet, so this scenario stays Draft until
   audio lands.
 
+#### E2E-259: Workbench profiles persist and switching preserves runtime ownership
+
+- **Preconditions**: A migrated profile with an existing project/session and at
+  least three workbenches; one session has a running turn. The window can be
+  narrowed to the supported minimum and the work panel can be maximized.
+- **Steps**:
+  1. Open the workbench switcher from chat, create and rename a Custom profile,
+     move it earlier, and restart the app.
+  2. Select Coding, open a project/session, then rapidly select Daily,
+     Creative, and Research.
+  3. Return to Coding and inspect the restored project/session and the still
+     running turn.
+  4. Exercise the switcher on a non-chat route, at the supported narrow width,
+     with the sidebar collapsed, and with the work panel maximized.
+  5. Arm deletion once, wait for it to expire, then arm twice and delete the
+     Custom profile. Attempt to delete the final remaining profile in a fixture.
+- **Expected**: Profile order, name, and active id survive restart. Only the
+  latest rapid selection commits, navigation is restored when its resources
+  still exist, and stale resources degrade without blocking the selected
+  profile. The running session keeps its directory, model, permissions, and
+  turn. The switcher never overlaps window or route controls. Deletion requires
+  two clicks, removes no project/session/transcript, and the final profile is
+  refused.
+- **Specs linked**: `03-runtime/04-data-storage.md`,
+  `03-runtime/06-host-rpc-protocol.md`, `04-ux/01-ui-ia.md`, ADR 0283
+- **Acceptance**: C (conversation & stream), D (workspace), F (persistence),
+  Quality
+- **Milestone**: M6+
+- **Status**: Unit/source-contract covered (`workbench-selection.test.mjs`,
+  `workbench-contract.test.mjs`, host-core workbench tests); rendered desktop
+  journey Draft
+
+#### E2E-260: Workbench surfaces are truthful, isolated, and theme-safe
+
+- **Preconditions**: Two Daily profiles plus Coding, Creative, and Research;
+  global light/dark and reduced-motion settings available; a missing plugin
+  theme id fixture available.
+- **Steps**:
+  1. Add, complete, and delete a Daily task; enter notes. Switch to the second
+     Daily profile and back, then restart.
+  2. Save a Creative prompt and image/video model-role bindings. Inspect the
+     generation action and asset area.
+  3. Add a Research source and notes, open the source, and try a disallowed URL
+     fixture.
+  4. Cycle `polar-night`, `sakura-day`, `fortune-gold`, and `deep-study`, then a
+     missing plugin theme. Compare the stored global theme before and after.
+  5. Disable workbench motion and enable OS reduced motion; collapse/expand the
+     sidebar at desktop and narrow supported widths.
+- **Expected**: Each profile shows only its own persisted dashboard data and
+  transient text never leaks between same-template profiles. Creative remains
+  explicitly unconfigured and produces no fake job or asset. Research URLs
+  pass through the main-process http(s)/mailto allowlist. Effective workbench
+  themes never rewrite the global preference; a missing plugin theme falls back
+  to it. Reduced motion wins, wallpaper intensity remains separate, and no
+  themed layer overlaps the collapsed sidebar or controls.
+- **Specs linked**: `03-runtime/04-data-storage.md`, `04-ux/01-ui-ia.md`,
+  ADR 0283, ADR 0168
+- **Acceptance**: F (persistence), Security, Quality
+- **Milestone**: M6+
+- **Status**: Unit/source-contract covered (`workbench-contract.test.mjs`,
+  host-core workbench tests); rendered desktop journey Draft
+
 ## 8. Traceability Matrix
 
 | Acceptance | Scenarios |
@@ -7586,6 +7648,8 @@ identify the platform validation still needed.
 | E — Tools & permissions (capability level move) | E2E-CAPABILITY-move-across-levels |
 | F — Persistence (capability level move) | E2E-CAPABILITY-move-across-levels |
 | Quality (capability level move) | E2E-CAPABILITY-move-across-levels |
+| C / D / F / Quality — Workbench profile orchestration | E2E-259 |
+| F / Security / Quality — Workbench surfaces and effective themes | E2E-260 |
 
 | Milestone | Scenarios |
 |---|---|
@@ -7626,6 +7690,7 @@ identify the platform validation still needed.
 | F — Persistence (catalog window provenance) | E2E-MODEL-catalog-window-correction-reaches-saved-bindings |
 | Quality (catalog window provenance) | E2E-MODEL-catalog-window-correction-reaches-saved-bindings |
 | M6+ (catalog window provenance) | E2E-MODEL-catalog-window-correction-reaches-saved-bindings |
+| M6+ (workbench profiles) | E2E-259, E2E-260 |
 
 The `US-UI-*` visual scenarios (§UI shell visual scenarios) trace to the
 Codex parity decisions in [decisions-log §D](../08-meta/decisions-log.md)

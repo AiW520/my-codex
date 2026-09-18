@@ -5016,6 +5016,39 @@ IPC 请求无法关闭。
   确认来源仍为 Responses 和原别名，副本保存了 Anthropic Messages 与新
   别名。未测试携带凭据的网络发现、外部模型请求及 OpenCode Go UI 分支。
 
+#### E2E-259：工作台配置持久化，切换不改变运行时所有权
+
+- **前提条件**：从旧库迁移出的项目/会话、至少三个工作台，其中一个会话有运行中回合；
+  窗口可缩到支持的最小尺寸，工作面板可最大化。
+- **步骤**：1）从聊天顶栏创建并重命名 Custom，调整顺序并重启。2）在 Coding
+  打开项目/会话，快速连续选择 Daily、Creative、Research。3）回到 Coding 检查
+  上下文和运行中回合。4）在非聊天路由、窄窗口、侧栏折叠与工作面板最大化状态检查
+  切换器。5）验证删除首次点击只布防、超时解除、二次点击才删除，并尝试删除最后一项。
+- **预期**：名称、顺序和当前 id 重启后保留；快速切换只提交最新意图，资源仍存在时
+  恢复导航，资源失效时安全降级。运行中会话的目录、模型、权限和回合不变；切换器不与
+  窗口控件重叠。删除不移除任何项目、会话或转录，最后一项被拒绝。
+- **链接规格**：`03-runtime/04-data-storage.md`、`03-runtime/06-host-rpc-protocol.md`、
+  `04-ux/01-ui-ia.md`、ADR 0283
+- **验收**：C（对话与流）、D（工作区）、F（持久化）、品质
+- **里程碑**：M6+
+- **状态**：单元/源码契约覆盖；渲染桌面旅程为草稿。
+
+#### E2E-260：工作台表面真实、隔离且不污染全局主题
+
+- **前提条件**：两个 Daily，加上 Coding、Creative、Research；可切换全局明暗主题与
+  reduced motion，并有一个缺失插件主题 fixture。
+- **步骤**：1）操作 Daily 任务与笔记，在两个 Daily 间切换并重启。2）保存 Creative
+  提示词与图片/视频模型绑定，检查生成和资产状态。3）保存 Research 来源与笔记，打开
+  来源并尝试不允许的 URL。4）循环四个内置工作台主题及缺失插件主题，比较切换前后的
+  全局主题值。5）关闭工作台运动、启用系统 reduced motion，并折叠侧栏和调整窗口。
+- **预期**：配置数据互相隔离，同模板切换不泄漏临时输入；Creative 明确显示未配置，
+  不产生虚假任务或资产；Research 外链经过主进程白名单。有效主题不写全局偏好，缺失
+  插件主题回退；reduced motion 优先，壁纸层不覆盖折叠侧栏或顶栏控件。
+- **链接规格**：`03-runtime/04-data-storage.md`、`04-ux/01-ui-ia.md`、ADR 0283、ADR 0168
+- **验收**：F（持久化）、安全、品质
+- **里程碑**：M6+
+- **状态**：单元/源码契约覆盖；渲染桌面旅程为草稿。
+
 ## 8. 可追溯性矩阵
 
 
@@ -5077,6 +5110,8 @@ IPC 请求无法关闭。
 | E — 工具与权限（能力跨级别迁移） | E2E-CAPABILITY-move-across-levels |
 | F — 持久化（能力跨级别迁移） | E2E-CAPABILITY-move-across-levels |
 | 品质（能力跨级别迁移） | E2E-CAPABILITY-move-across-levels |
+| C / D / F / 品质 — 工作台配置编排 | E2E-259 |
+| F / 安全 / 品质 — 工作台表面与有效主题 | E2E-260 |
 
 | 里程碑 | 应用场景 |
 |---|---|
@@ -5117,6 +5152,7 @@ IPC 请求无法关闭。
 | F — 持久化（目录窗口来源） | E2E-MODEL-catalog-window-correction-reaches-saved-bindings |
 | 品质（目录窗口来源） | E2E-MODEL-catalog-window-correction-reaches-saved-bindings |
 | M6+（目录窗口来源） | E2E-MODEL-catalog-window-correction-reaches-saved-bindings |
+| M6+（工作台配置） | E2E-259、E2E-260 |
 
 `US-UI-*` 视觉场景（§UI shell 视觉场景）追踪到
 [决策日志 §D](/zh-CN/spec/08-meta/decisions-log) 中的法典平价决策

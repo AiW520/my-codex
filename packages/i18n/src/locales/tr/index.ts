@@ -1,4 +1,5 @@
 import type { EnglishCatalog } from "../en/index.js";
+import { workbenchTr } from "../../workbench-copy.js";
 
 export const tr = {
   app: {
@@ -208,6 +209,7 @@ export const tr = {
     referenceUnavailable: "Oturum kullanılamıyor",
     sessionMissing: "Bu oturum artık mevcut değil",
   },
+  workbench: workbenchTr,
   chat: {
     emptyTitle: "Neyi birlikte oluşturalım?",
     emptyTitleInProject: "{{project}} içinde ne oluşturalım?",

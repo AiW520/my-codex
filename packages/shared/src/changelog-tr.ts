@@ -2,6 +2,17 @@ import type { ChangelogEntry } from "./changelog.js";
 
 export const trEntries: ChangelogEntry[] = [
   {
+    "version": "0.15.1",
+    "date": "2026-09-18",
+    "highlights": [
+      "Kodlama, Günlük, Yaratıcı, Araştırma ve Özel iş akışları için kalıcı çalışma alanları ekler.",
+      "Çalışan bir oturumu yeniden başlatmadan veya çalışma zamanı ayarlarını değiştirmeden çalışma alanları arasında geçiş yapın.",
+      "Çalışma alanı adlarını, sırasını, silinmesini ve hatırlanan proje, oturum ve yerel pano bağlamını yönetin.",
+      "Çalışma alanına özel temalar, hareket denetimleri ve duvar kağıdı opaklığı ekler; kullanılamayan eklenti temaları güvenle geri alınır.",
+      "Gerçek bir medya adaptörü yapılandırılana kadar yaratıcı üretimi dürüstçe devre dışı bırakır; Günlük ve Araştırma yerel kalır.",
+    ],
+  },
+  {
     "version": "0.15.0",
     "date": "2026-09-17",
     "highlights": [

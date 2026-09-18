@@ -254,6 +254,16 @@ fn v18_database_migrates_to_v19_with_default_workbenches() {
     let path = dir.path().join("pi.sqlite");
     {
         let db = Database::open(&path).unwrap();
+        db.ensure_project("/tmp/migrated-workbench", false).unwrap();
+        db.conn()
+            .execute(
+                "INSERT INTO sessions (
+                    id, title, mode, thinking_level, permission_mode,
+                    created_at, updated_at
+                 ) VALUES ('migrated-session', 'Kept', 'agent', 'off', 'inherit', 1, 1)",
+                [],
+            )
+            .unwrap();
         db.conn()
             .execute_batch(
                 "DROP INDEX idx_workbench_sessions_workbench;
@@ -269,6 +279,11 @@ fn v18_database_migrates_to_v19_with_default_workbenches() {
     let db = Database::open(&path).unwrap();
     assert_eq!(schema_version(db.conn()), SCHEMA_VERSION);
     assert!(table_exists(db.conn(), "workbenches"));
+    assert_eq!(db.list_workbenches().unwrap().workbenches.len(), 4);
+    let coding = db.get_workbench("coding").unwrap().unwrap();
+    assert_eq!(coding.project_paths, vec!["/tmp/migrated-workbench"]);
+    assert_eq!(coding.session_ids, vec!["migrated-session"]);
+    db.ensure_default_workbenches().unwrap();
     assert_eq!(db.list_workbenches().unwrap().workbenches.len(), 4);
     assert_readable_migration_backup(&path, 18);
 }
@@ -323,6 +338,94 @@ fn workbench_profiles_persist_and_delete_only_their_links() {
         .unwrap();
     assert!(session_exists);
     assert!(!link_exists);
+}
+
+#[test]
+fn workbench_updates_reject_unknown_and_malformed_fields() {
+    let dir = tempfile::tempdir().unwrap();
+    let db = Database::open(&dir.path().join("pi.sqlite")).unwrap();
+    let workbench = db.create_workbench("Focus", "custom").unwrap();
+
+    for patch in [
+        serde_json::json!({ "unknown": true }),
+        serde_json::json!({ "motionEnabled": "yes" }),
+        serde_json::json!({ "icon": "" }),
+        serde_json::json!({ "themeId": "remote:https://example.com" }),
+        serde_json::json!({ "modelRoles": { "unknown": { "providerId": "p", "modelId": "m" } } }),
+        serde_json::json!({ "modelRoles": { "image": { "providerId": "", "modelId": "m" } } }),
+    ] {
+        assert!(
+            db.update_workbench(&workbench.id, &patch).is_err(),
+            "{patch}"
+        );
+    }
+}
+
+#[test]
+fn workbench_reorder_and_delete_preserve_a_valid_active_profile() {
+    let dir = tempfile::tempdir().unwrap();
+    let db = Database::open(&dir.path().join("pi.sqlite")).unwrap();
+    let initial = db.list_workbenches().unwrap();
+    let duplicate = vec![initial.workbenches[0].id.clone(); initial.workbenches.len()];
+    assert!(db.reorder_workbenches(&duplicate).is_err());
+
+    db.activate_workbench("daily", None, None).unwrap();
+    db.delete_workbench("daily").unwrap();
+    let after_delete = db.list_workbenches().unwrap();
+    assert_ne!(after_delete.active_workbench_id, "daily");
+    assert!(after_delete
+        .workbenches
+        .iter()
+        .any(|workbench| workbench.id == after_delete.active_workbench_id));
+
+    for id in ["creative", "research"] {
+        db.delete_workbench(id).unwrap();
+    }
+    assert!(db.delete_workbench("coding").is_err());
+}
+
+#[test]
+fn workbench_activation_rejects_missing_sessions_and_corrupt_json() {
+    let dir = tempfile::tempdir().unwrap();
+    let db = Database::open(&dir.path().join("pi.sqlite")).unwrap();
+    assert!(db
+        .activate_workbench("coding", None, Some("missing-session"))
+        .is_err());
+
+    db.conn()
+        .execute(
+            "UPDATE workbenches SET dashboard_state_json = '[]' WHERE id = 'coding'",
+            [],
+        )
+        .unwrap();
+    assert!(db.list_workbenches().is_err());
+}
+
+#[test]
+fn new_projects_and_sessions_join_the_active_workbench() {
+    let dir = tempfile::tempdir().unwrap();
+    let db = Database::open(&dir.path().join("pi.sqlite")).unwrap();
+    db.activate_workbench("research", None, None).unwrap();
+    db.ensure_project("/tmp/research-project", false).unwrap();
+    let session = crate::sessions::create_session(
+        &db,
+        Some("Research".into()),
+        None,
+        None,
+        None,
+        Some("/tmp/research-project".into()),
+    )
+    .unwrap();
+
+    let research = db.get_workbench("research").unwrap().unwrap();
+    assert_eq!(research.project_paths, vec!["/tmp/research-project"]);
+    assert_eq!(research.session_ids, vec![session.id.clone()]);
+    assert!(!db
+        .get_workbench("coding")
+        .unwrap()
+        .unwrap()
+        .session_ids
+        .contains(&session.id));
 }
 
 #[test]
