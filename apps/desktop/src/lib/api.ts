@@ -81,6 +81,10 @@ import type {
   SessionSearchContext,
   SessionSearchContextRequest,
   SessionSummary,
+  WorkbenchProfile,
+  WorkbenchState,
+  WorkbenchTemplateId,
+  WorkbenchUpdate,
   SessionCollaborationSummary,
   ToolPermissionResolution,
   UserSkillInput,
@@ -435,6 +439,20 @@ export const api = {
   getSettings: () => invoke<AppSettings>(IPC.invoke.settingsGet).then(normalizeSettings),
   setSettings: (settings: AppSettings) =>
     invoke(IPC.invoke.settingsSet, validateSettingsWrite(settings)),
+  listWorkbenches: () => invoke<WorkbenchState>(IPC.invoke.workbenchList),
+  createWorkbench: (input: { name: string; templateId: WorkbenchTemplateId }) =>
+    invoke<{ workbench: WorkbenchProfile }>(IPC.invoke.workbenchCreate, input),
+  updateWorkbench: (id: string, patch: WorkbenchUpdate) =>
+    invoke<{ workbench: WorkbenchProfile }>(IPC.invoke.workbenchUpdate, { id, patch }),
+  activateWorkbench: (input: {
+    id: string;
+    projectPath?: string | null;
+    sessionId?: string | null;
+  }) => invoke<{ workbench: WorkbenchProfile }>(IPC.invoke.workbenchActivate, input),
+  reorderWorkbenches: (ids: string[]) =>
+    invoke<{ workbenches: WorkbenchProfile[] }>(IPC.invoke.workbenchReorder, { ids }),
+  deleteWorkbench: (id: string) =>
+    invoke<{ ok: boolean }>(IPC.invoke.workbenchDelete, { id }),
   testNetworkProxy: (settings: unknown) =>
     invoke<{ ok: boolean; error?: string }>(IPC.invoke.networkProxyTest, settings),
   /** Installed system font families (Electron main, cached briefly). */

@@ -169,6 +169,9 @@ fn fresh_open_creates_latest_schema() {
         "artifacts",
         "scheduled_tasks",
         "task_runs",
+        "workbenches",
+        "workbench_projects",
+        "workbench_sessions",
         "secrets_meta",
         "audit_log",
         "plan_approvals",
@@ -243,6 +246,83 @@ fn fresh_open_creates_latest_schema() {
             .unwrap();
         assert_eq!(n, 0, "{table}.{column} must not exist in v7");
     }
+}
+
+#[test]
+fn v18_database_migrates_to_v19_with_default_workbenches() {
+    let dir = tempfile::tempdir().unwrap();
+    let path = dir.path().join("pi.sqlite");
+    {
+        let db = Database::open(&path).unwrap();
+        db.conn()
+            .execute_batch(
+                "DROP INDEX idx_workbench_sessions_workbench;
+                 DROP TABLE workbench_sessions;
+                 DROP INDEX idx_workbench_projects_project;
+                 DROP TABLE workbench_projects;
+                 DROP INDEX idx_workbenches_position;
+                 DROP TABLE workbenches;",
+            )
+            .unwrap();
+        db.conn().pragma_update(None, "user_version", 18).unwrap();
+    }
+    let db = Database::open(&path).unwrap();
+    assert_eq!(schema_version(db.conn()), SCHEMA_VERSION);
+    assert!(table_exists(db.conn(), "workbenches"));
+    assert_eq!(db.list_workbenches().unwrap().workbenches.len(), 4);
+    assert_readable_migration_backup(&path, 18);
+}
+
+#[test]
+fn workbench_profiles_persist_and_delete_only_their_links() {
+    let dir = tempfile::tempdir().unwrap();
+    let db = Database::open(&dir.path().join("pi.sqlite")).unwrap();
+    let created = db.create_workbench("Focus", "custom").unwrap();
+    let updated = db
+        .update_workbench(
+            &created.id,
+            &serde_json::json!({
+                "themeId": "deep-study",
+                "motionEnabled": false,
+                "motionIntensity": 12,
+                "dashboardState": { "note": "kept" }
+            }),
+        )
+        .unwrap();
+    assert_eq!(updated.theme_id.as_deref(), Some("deep-study"));
+    assert!(!updated.motion_enabled);
+    assert_eq!(updated.dashboard_state["note"], "kept");
+
+    db.conn()
+        .execute(
+            "INSERT INTO sessions (
+                id, title, mode, thinking_level, permission_mode,
+                created_at, updated_at
+             ) VALUES ('workbench-session', 'Kept', 'agent', 'off', 'inherit', 1, 1)",
+            [],
+        )
+        .unwrap();
+    db.activate_workbench(&created.id, None, Some("workbench-session"))
+        .unwrap();
+    db.delete_workbench(&created.id).unwrap();
+    let session_exists: bool = db
+        .conn()
+        .query_row(
+            "SELECT EXISTS(SELECT 1 FROM sessions WHERE id = 'workbench-session')",
+            [],
+            |row| row.get(0),
+        )
+        .unwrap();
+    let link_exists: bool = db
+        .conn()
+        .query_row(
+            "SELECT EXISTS(SELECT 1 FROM workbench_sessions WHERE session_id = 'workbench-session')",
+            [],
+            |row| row.get(0),
+        )
+        .unwrap();
+    assert!(session_exists);
+    assert!(!link_exists);
 }
 
 #[test]

@@ -219,6 +219,42 @@ CREATE TABLE task_runs (
 );
 CREATE INDEX idx_task_runs ON task_runs(task_id, started_at DESC);
 
+CREATE TABLE workbenches (
+  id                    TEXT PRIMARY KEY,
+  name                  TEXT NOT NULL,
+  template_id           TEXT NOT NULL DEFAULT 'custom'
+                          CHECK (template_id IN ('coding', 'daily', 'creative', 'research', 'custom')),
+  icon                  TEXT NOT NULL DEFAULT 'layout-dashboard',
+  position              INTEGER NOT NULL,
+  theme_id              TEXT,
+  motion_enabled        INTEGER NOT NULL DEFAULT 1 CHECK (motion_enabled IN (0, 1)),
+  motion_intensity      INTEGER NOT NULL DEFAULT 35 CHECK (motion_intensity BETWEEN 0 AND 100),
+  wallpaper_opacity     INTEGER NOT NULL DEFAULT 22 CHECK (wallpaper_opacity BETWEEN 0 AND 100),
+  layout_preset         TEXT NOT NULL DEFAULT 'balanced',
+  last_project_path     TEXT,
+  last_session_id       TEXT REFERENCES sessions(id) ON DELETE SET NULL,
+  model_roles_json      TEXT NOT NULL DEFAULT '{}',
+  dashboard_state_json  TEXT NOT NULL DEFAULT '{}',
+  data_version          INTEGER NOT NULL DEFAULT 1,
+  created_at            INTEGER NOT NULL,
+  updated_at            INTEGER NOT NULL
+);
+CREATE UNIQUE INDEX idx_workbenches_position ON workbenches(position);
+
+CREATE TABLE workbench_projects (
+  workbench_id TEXT NOT NULL REFERENCES workbenches(id) ON DELETE CASCADE,
+  project_id   INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  position     INTEGER NOT NULL,
+  PRIMARY KEY (workbench_id, project_id)
+) WITHOUT ROWID;
+CREATE INDEX idx_workbench_projects_project ON workbench_projects(project_id);
+
+CREATE TABLE workbench_sessions (
+  session_id   TEXT PRIMARY KEY REFERENCES sessions(id) ON DELETE CASCADE,
+  workbench_id TEXT NOT NULL REFERENCES workbenches(id) ON DELETE CASCADE
+) WITHOUT ROWID;
+CREATE INDEX idx_workbench_sessions_workbench ON workbench_sessions(workbench_id);
+
 CREATE TABLE secrets_meta (
   secret_ref TEXT PRIMARY KEY,
   owner_kind TEXT NOT NULL DEFAULT 'provider',

@@ -22,6 +22,7 @@ import { registerSettingsIpc } from "./settings-ipc";
 import { registerSkillsIpc } from "./skills-ipc";
 import { fetchSkillMarketDocument, searchSkillMarket } from "../skill-market-catalog";
 import { registerWindowIpc } from "./window-ipc";
+import { registerWorkbenchIpc } from "./workbench-ipc";
 import { createComposerTemplateLoader, registerWorkspaceIpc } from "./workspace-ipc";
 import { registerComposerIpc } from "./composer-ipc";
 import { registerSpeechIpc } from "./speech-ipc";
@@ -223,6 +224,7 @@ export function registerIpcHandlers(dependencies: RegisterIpcDependencies) {
     applyDeveloperMode,
     resolveEffectiveCommandShell,
   });
+  registerWorkbenchIpc({ registrar, getHost });
   registerProviderIpc({
     registrar,
     getHost,

@@ -1393,6 +1393,87 @@ async fn handle_request(
                 .map_err(|e| rpc_err(1000, e.to_string(), "INTERNAL"))?;
             Ok(json!({ "projects": projects }))
         }
+        "workbenches.list" => {
+            let st = state.lock().await;
+            let result = st
+                .db
+                .list_workbenches()
+                .map_err(|e| rpc_err(1000, e.to_string(), "INTERNAL"))?;
+            serde_json::to_value(result)
+                .map_err(|e| rpc_err(1000, e.to_string(), "INTERNAL"))
+        }
+        "workbenches.create" => {
+            let name = params
+                .get("name")
+                .and_then(Value::as_str)
+                .ok_or_else(|| rpc_err(1002, "name required", "INVALID_PARAMS"))?;
+            let template_id = params
+                .get("templateId")
+                .and_then(Value::as_str)
+                .unwrap_or("custom");
+            let st = state.lock().await;
+            let workbench = st
+                .db
+                .create_workbench(name, template_id)
+                .map_err(|e| rpc_err(1002, e.to_string(), "INVALID_PARAMS"))?;
+            Ok(json!({ "workbench": workbench }))
+        }
+        "workbenches.update" => {
+            let id = params
+                .get("id")
+                .and_then(Value::as_str)
+                .ok_or_else(|| rpc_err(1002, "id required", "INVALID_PARAMS"))?;
+            let patch = params
+                .get("patch")
+                .ok_or_else(|| rpc_err(1002, "patch required", "INVALID_PARAMS"))?;
+            let st = state.lock().await;
+            let workbench = st
+                .db
+                .update_workbench(id, patch)
+                .map_err(|e| rpc_err(1002, e.to_string(), "INVALID_PARAMS"))?;
+            Ok(json!({ "workbench": workbench }))
+        }
+        "workbenches.activate" => {
+            let id = params
+                .get("id")
+                .and_then(Value::as_str)
+                .ok_or_else(|| rpc_err(1002, "id required", "INVALID_PARAMS"))?;
+            let project_path = params.get("projectPath").and_then(Value::as_str);
+            let session_id = params.get("sessionId").and_then(Value::as_str);
+            let st = state.lock().await;
+            let workbench = st
+                .db
+                .activate_workbench(id, project_path, session_id)
+                .map_err(|e| rpc_err(1002, e.to_string(), "INVALID_PARAMS"))?;
+            Ok(json!({ "workbench": workbench }))
+        }
+        "workbenches.reorder" => {
+            let ids = params
+                .get("ids")
+                .and_then(Value::as_array)
+                .ok_or_else(|| rpc_err(1002, "ids required", "INVALID_PARAMS"))?
+                .iter()
+                .filter_map(Value::as_str)
+                .map(str::to_string)
+                .collect::<Vec<_>>();
+            let st = state.lock().await;
+            let workbenches = st
+                .db
+                .reorder_workbenches(&ids)
+                .map_err(|e| rpc_err(1002, e.to_string(), "INVALID_PARAMS"))?;
+            Ok(json!({ "workbenches": workbenches }))
+        }
+        "workbenches.delete" => {
+            let id = params
+                .get("id")
+                .and_then(Value::as_str)
+                .ok_or_else(|| rpc_err(1002, "id required", "INVALID_PARAMS"))?;
+            let st = state.lock().await;
+            st.db
+                .delete_workbench(id)
+                .map_err(|e| rpc_err(1002, e.to_string(), "INVALID_PARAMS"))?;
+            Ok(json!({ "ok": true }))
+        }
         "project.groups.list" => {
             let st = state.lock().await;
             let groups = st

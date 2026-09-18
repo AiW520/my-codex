@@ -573,6 +573,65 @@ pub(crate) fn migrate_v17_to_v18_tx(tx: &rusqlite::Transaction<'_>) -> Result<()
     Ok(())
 }
 
+/// v19 introduces user-owned workbench profiles. Sessions and projects keep
+/// their existing ownership; these links only organize presentation.
+pub(crate) fn migrate_v18_to_v19_tx(tx: &rusqlite::Transaction<'_>) -> Result<()> {
+    tx.execute_batch(
+        r#"
+        CREATE TABLE IF NOT EXISTS workbenches (
+          id                    TEXT PRIMARY KEY,
+          name                  TEXT NOT NULL,
+          template_id           TEXT NOT NULL DEFAULT 'custom'
+                                  CHECK (template_id IN ('coding', 'daily', 'creative', 'research', 'custom')),
+          icon                  TEXT NOT NULL DEFAULT 'layout-dashboard',
+          position              INTEGER NOT NULL,
+          theme_id              TEXT,
+          motion_enabled        INTEGER NOT NULL DEFAULT 1 CHECK (motion_enabled IN (0, 1)),
+          motion_intensity      INTEGER NOT NULL DEFAULT 35 CHECK (motion_intensity BETWEEN 0 AND 100),
+          wallpaper_opacity     INTEGER NOT NULL DEFAULT 22 CHECK (wallpaper_opacity BETWEEN 0 AND 100),
+          layout_preset         TEXT NOT NULL DEFAULT 'balanced',
+          last_project_path     TEXT,
+          last_session_id       TEXT REFERENCES sessions(id) ON DELETE SET NULL,
+          model_roles_json      TEXT NOT NULL DEFAULT '{}',
+          dashboard_state_json  TEXT NOT NULL DEFAULT '{}',
+          data_version          INTEGER NOT NULL DEFAULT 1,
+          created_at            INTEGER NOT NULL,
+          updated_at            INTEGER NOT NULL
+        );
+        CREATE UNIQUE INDEX IF NOT EXISTS idx_workbenches_position ON workbenches(position);
+        CREATE TABLE IF NOT EXISTS workbench_projects (
+          workbench_id TEXT NOT NULL REFERENCES workbenches(id) ON DELETE CASCADE,
+          project_id   INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+          position     INTEGER NOT NULL,
+          PRIMARY KEY (workbench_id, project_id)
+        ) WITHOUT ROWID;
+        CREATE INDEX IF NOT EXISTS idx_workbench_projects_project
+          ON workbench_projects(project_id);
+        CREATE TABLE IF NOT EXISTS workbench_sessions (
+          session_id   TEXT PRIMARY KEY REFERENCES sessions(id) ON DELETE CASCADE,
+          workbench_id TEXT NOT NULL REFERENCES workbenches(id) ON DELETE CASCADE
+        ) WITHOUT ROWID;
+        CREATE INDEX IF NOT EXISTS idx_workbench_sessions_workbench
+          ON workbench_sessions(workbench_id);
+        "#,
+    )?;
+    tx.pragma_update(None, "user_version", 19i64)?;
+    Ok(())
+}
+
+pub(crate) fn migrate_v18_to_v19(conn: &Connection, path: &Path) -> Result<()> {
+    let backup = create_migration_backup(conn, path, 18)?;
+    let tx = conn.unchecked_transaction()?;
+    migrate_v18_to_v19_tx(&tx)?;
+    tx.commit().with_context(|| {
+        format!(
+            "apply schema v18 to v19 migration; backup {} remains",
+            backup.display()
+        )
+    })?;
+    Ok(())
+}
+
 pub(crate) fn migration_backup_path(path: &Path, version: i64) -> PathBuf {
     path.with_extension(format!("sqlite.v{version}.bak"))
 }
