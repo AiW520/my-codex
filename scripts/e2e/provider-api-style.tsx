@@ -11,6 +11,14 @@ import { api } from "../../apps/desktop/src/lib/api";
 declare global { var providerApiStyleProbe: () => Promise<unknown>; }
 const assert = (value: unknown, message: string) => { if (!value) throw new Error(message); };
 const pause = (ms = 0) => new Promise((resolve) => setTimeout(resolve, ms));
+const API_STYLE_LABEL_KEYS: Record<string, string> = {
+  chat_completions: "settings.apiStyleChatCompletions",
+  responses: "settings.apiStyleResponses",
+  anthropic_messages: "settings.apiStyleAnthropic",
+  google_generative_ai: "settings.apiStyleGoogle",
+  openai_codex_responses: "settings.apiStyleCodexResponses",
+  pi_messages: "settings.apiStylePiMessages",
+};
 const fixture = (apiStyle: string): ProviderPublic => ({
   id: "legacy", name: "Legacy custom", vendorKey: "custom", type: "openai_compatible",
   protocol: "openai_compatible", enabled: true, authKind: "api_key_and_base_url",
@@ -56,36 +64,48 @@ globalThis.providerApiStyleProbe = async () => {
     assert(element, "missing click target");
     flushSync(() => element!.click());
   };
-  const button = (key: string) => [...host.querySelectorAll<HTMLButtonElement>("button")]
+  // ProviderSetupDialog uses portalOverlay, and both pickers portal their
+  // menus too. Query the document to exercise the production interaction.
+  const dialog = () => document.querySelector<HTMLElement>(".provider-setup-dialog")!;
+  const button = (key: string) => [...dialog().querySelectorAll<HTMLButtonElement>("button")]
     .find((element) => element.textContent?.trim() === i18n.t(key))!;
-  const select = () => host.querySelector<HTMLSelectElement>(".provider-setup-custom-auth-row select")!;
+  const apiStyleTrigger = () => dialog().querySelector<HTMLButtonElement>(
+    ".provider-setup-custom-auth-row .settings-menu-select-trigger",
+  )!;
+  const apiStyleOption = (style: string) => [...document.querySelectorAll<HTMLButtonElement>(
+    ".settings-menu-select-option",
+  )].find((element) => element.textContent?.trim() === i18n.t(API_STYLE_LABEL_KEYS[style]!))!;
   const choose = (style: string) => {
-    const element = select();
-    flushSync(() => {
-      element.value = style;
-      element.dispatchEvent(new Event("change", { bubbles: true }));
-    });
+    click(apiStyleTrigger());
+    click(apiStyleOption(style));
   };
   const results: string[] = [];
   try {
     for (const locale of ["en", "zh-CN"]) {
       await i18n.changeLanguage(locale);
       render();
-      click(host.querySelector(".provider-service-trigger"));
+      click(document.querySelector(".provider-service-trigger"));
       click(document.querySelector(".provider-service-option"));
-      const options = [...select().options].map((option) => option.value);
+      click(apiStyleTrigger());
+      const options = [...document.querySelectorAll<HTMLButtonElement>(".settings-menu-select-option")]
+        .map((option) => option.textContent?.trim());
       assert(JSON.stringify(options) === JSON.stringify([
-        "chat_completions", "responses", "anthropic_messages", "google_generative_ai",
-      ]), `${locale}: new custom form exposes an account format`);
+        i18n.t("settings.apiStyleChatCompletions"),
+        i18n.t("settings.apiStyleResponses"),
+        i18n.t("settings.apiStyleAnthropic"),
+        i18n.t("settings.apiStyleGoogle"),
+      ]), `${locale}: new custom form exposes a common API format`);
+      click(apiStyleTrigger());
       results.push(`${locale}:new-custom-options`);
 
       for (const style of ["openai_codex_responses", "pi_messages"]) {
         const original = fixture(style);
         const before = JSON.stringify(original);
         render({ provider: original });
-        assert(select().value === style && select().selectedOptions[0].disabled,
-          "legacy format must remain visible without being a new choice");
-        assert(host.textContent?.includes(i18n.t("settings.apiStyleLegacyAccount")), "legacy explanation missing");
+        assert(apiStyleTrigger().textContent?.trim() === i18n.t(
+          API_STYLE_LABEL_KEYS[style]!,
+        ), "legacy format must remain visible without being a new choice");
+        assert(dialog().textContent?.includes(i18n.t("settings.apiStyleLegacyAccount")), "legacy explanation missing");
         assert(!button("settings.saveProvider").disabled, "legacy unchanged save blocked");
         click(button("settings.saveProvider")); await pause();
         const update = updates.at(-1)!;
@@ -101,9 +121,11 @@ globalThis.providerApiStyleProbe = async () => {
 
         const draft = copyProviderConfiguration(original, "Copy fixture");
         render({ initialDraft: draft });
-        assert(select().value === style, "copy silently converted protocol");
+        assert(apiStyleTrigger().textContent?.trim() === i18n.t(
+          API_STYLE_LABEL_KEYS[style]!,
+        ), "copy silently converted protocol");
         assert(button("settings.saveProvider").disabled, "copy accepts account-only protocol");
-        assert(host.textContent?.includes(i18n.t("settings.apiStyleChooseCustom")), "copy choice explanation missing");
+        assert(dialog().textContent?.includes(i18n.t("settings.apiStyleChooseCustom")), "copy choice explanation missing");
         const discoveryCount = discoveries.length;
         await pause(650);
         assert(discoveries.length === discoveryCount, "unsupported copy triggered discovery");
