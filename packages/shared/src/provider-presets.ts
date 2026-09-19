@@ -33,12 +33,10 @@ export const NAMED_ENDPOINT_PRESETS: readonly NamedEndpointPreset[] = [
     vendorKey: "tuzi-api",
     name: "兔子 API",
     baseUrl: "https://api.tu-zi.com/v1",
-    apiStyle: "chat_completions",
+    apiStyle: "responses",
     labelKey: "settings.presetTuziApi",
     aliases: ["tuzi", "兔子", "api.tu-zi.com"],
     product: "tuzi",
-    autoDetectApiStyle: true,
-    apiStyleCandidates: ["chat_completions", "responses"],
     website: "https://api.tu-zi.com/",
   },
   {
@@ -50,8 +48,6 @@ export const NAMED_ENDPOINT_PRESETS: readonly NamedEndpointPreset[] = [
     labelKey: "settings.presetTuziCodex",
     aliases: ["兔小店", "codex", "coding"],
     product: "tuzi",
-    autoDetectApiStyle: true,
-    apiStyleCandidates: ["responses", "chat_completions"],
     website: "https://store.tu-zi.com/cat/11",
   },
   {
@@ -63,8 +59,6 @@ export const NAMED_ENDPOINT_PRESETS: readonly NamedEndpointPreset[] = [
     labelKey: "settings.presetGacCodex",
     aliases: ["gac", "gaccode", "gac code"],
     product: "tuzi",
-    autoDetectApiStyle: true,
-    apiStyleCandidates: ["responses", "chat_completions"],
     website: "https://gaccode.com/",
   },
   {

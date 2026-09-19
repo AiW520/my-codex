@@ -187,7 +187,7 @@ describe("named endpoint presets", () => {
         expect.objectContaining({
           id: "tuzi-api",
           baseUrl: "https://api.tu-zi.com/v1",
-          apiStyle: "chat_completions",
+          apiStyle: "responses",
         }),
         expect.objectContaining({
           id: "tuzi-codex",
@@ -205,14 +205,13 @@ describe("named endpoint presets", () => {
     expect(matchNamedPreset({ baseUrl: "https://gaccode.com/codex/v1" })?.id).toBe(
       "gac-codex",
     );
-    expect(matchNamedPreset({ vendorKey: "tuzi-api" })).toMatchObject({
-      autoDetectApiStyle: true,
-      apiStyleCandidates: ["chat_completions", "responses"],
-    });
-    expect(matchNamedPreset({ vendorKey: "gac-codex" })).toMatchObject({
-      autoDetectApiStyle: true,
-      apiStyleCandidates: ["responses", "chat_completions"],
-    });
+    for (const vendorKey of ["tuzi-api", "tuzi-codex", "gac-codex"]) {
+      expect(matchNamedPreset({ vendorKey })).toMatchObject({
+        apiStyle: "responses",
+      });
+      expect(matchNamedPreset({ vendorKey })).not.toHaveProperty("autoDetectApiStyle");
+      expect(matchNamedPreset({ vendorKey })).not.toHaveProperty("apiStyleCandidates");
+    }
   });
 
   it("maps DashScope and Doubao aliases to China catalog keys", () => {
