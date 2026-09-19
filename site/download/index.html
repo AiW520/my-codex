@@ -37,7 +37,10 @@
       <section class="hero" aria-labelledby="hero-title">
         <div class="hero-backdrop" aria-hidden="true"></div>
         <div class="hero-content">
-          <p class="eyebrow">LOCAL-FIRST AI WORKSPACE</p>
+          <div class="hero-kicker-row">
+            <p class="eyebrow">LOCAL-FIRST AI WORKSPACE</p>
+            <span class="hero-build-tag">PREVIEW · v0.15.1-beta.1</span>
+          </div>
           <h1 id="hero-title">PI-Desktop</h1>
           <p class="hero-lead">
             一个真正属于你的 AI 编程工作台。连接自己的模型，打开本地项目，让长任务持续推进。
@@ -62,6 +65,7 @@
             <span class="separator" aria-hidden="true"></span>
             <span>Windows · macOS · Linux</span>
           </div>
+          <p class="hero-proof"><span>本地优先</span><span>模型无关</span><span>可扩展</span></p>
         </div>
       </section>
 
@@ -98,11 +102,17 @@
       </section>
 
       <section class="product-view" aria-label="PI-Desktop 应用界面预览">
-        <img
-          src="./assets/pi-desktop.webp"
-          alt="PI-Desktop 中文应用界面，包含项目侧栏、对话区与工作面板"
-          loading="lazy"
-        />
+        <div class="product-frame">
+          <img
+            src="./assets/pi-desktop.webp"
+            alt="PI-Desktop 中文应用界面，包含项目侧栏、对话区与工作面板"
+            loading="lazy"
+          />
+          <div class="product-caption">
+            <span>PI-DESKTOP / WORKSPACE VIEW</span>
+            <span>项目、会话与看板保持在同一上下文中</span>
+          </div>
+        </div>
       </section>
 
       <section class="download-section" id="downloads" aria-labelledby="download-title">
@@ -115,13 +125,13 @@
         </div>
 
         <div class="platform-tabs" role="tablist" aria-label="选择操作系统">
-          <button type="button" role="tab" id="tab-windows" aria-controls="panel-windows" data-platform="windows">
+          <button type="button" role="tab" id="tab-windows" aria-selected="true" aria-controls="panel-windows" data-platform="windows">
             Windows
           </button>
-          <button type="button" role="tab" id="tab-macos" aria-controls="panel-macos" data-platform="macos">
+          <button type="button" role="tab" id="tab-macos" aria-selected="false" aria-controls="panel-macos" data-platform="macos">
             macOS
           </button>
-          <button type="button" role="tab" id="tab-linux" aria-controls="panel-linux" data-platform="linux">
+          <button type="button" role="tab" id="tab-linux" aria-selected="false" aria-controls="panel-linux" data-platform="linux">
             Linux
           </button>
         </div>
