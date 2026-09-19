@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="下载 PI-Desktop，适用于 Windows、macOS 与 Linux 的本地优先 AI 编程工作台。"
+    />
+    <meta name="theme-color" content="#f4f5f2" />
+    <meta property="og:title" content="PI-Desktop 下载" />
+    <meta
+      property="og:description"
+      content="本地优先、模型无关、面向长任务的 AI 编程工作台。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="./assets/pi-desktop.webp" />
+    <link rel="icon" href="./assets/logo.png" />
+    <link rel="stylesheet" href="./styles.css" />
+    <title>下载 PI-Desktop</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="PI-Desktop 首页">
+        <img src="./assets/logo.png" width="36" height="36" alt="" />
+        <span>PI-Desktop</span>
+      </a>
+      <nav aria-label="主导航">
+        <a href="#workbenches">工作台</a>
+        <a href="#downloads">下载</a>
+        <a href="#install">安装说明</a>
+        <a href="https://github.com/AiW520/my-codex" rel="noreferrer">GitHub</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-backdrop" aria-hidden="true"></div>
+        <div class="hero-content">
+          <p class="eyebrow">LOCAL-FIRST AI WORKSPACE</p>
+          <h1 id="hero-title">PI-Desktop</h1>
+          <p class="hero-lead">
+            一个真正属于你的 AI 编程工作台。连接自己的模型，打开本地项目，让长任务持续推进。
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary" id="primary-download" href="#downloads">
+              选择下载版本
+            </a>
+            <a
+              class="button button-secondary"
+              id="release-link"
+              href="https://github.com/AiW520/my-codex/releases/tag/v0.15.1-beta.1"
+              rel="noreferrer"
+            >
+              查看发布说明
+            </a>
+          </div>
+          <div class="release-summary" aria-live="polite">
+            <span id="release-version">v0.15.1-beta.1</span>
+            <span class="separator" aria-hidden="true"></span>
+            <span id="release-channel">预发布</span>
+            <span class="separator" aria-hidden="true"></span>
+            <span>Windows · macOS · Linux</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="workbench-section" id="workbenches" aria-labelledby="workbench-title">
+        <div class="section-heading">
+          <p class="eyebrow">MULTI-WORKBENCH PREVIEW</p>
+          <h2 id="workbench-title">一套运行时，多个专注空间</h2>
+          <p>
+            工作台会记住项目、会话和本地看板状态。切换工作台不会重启正在运行的会话，也不会改写其模型配置。
+          </p>
+        </div>
+        <div class="workbench-list" role="list">
+          <article class="workbench-item workbench-code" role="listitem">
+            <span>01</span>
+            <h3>编程</h3>
+            <p>项目、会话与代码审查集中在同一工作区。</p>
+          </article>
+          <article class="workbench-item workbench-daily" role="listitem">
+            <span>02</span>
+            <h3>日常</h3>
+            <p>把轻量任务、记录与每日上下文留在独立空间。</p>
+          </article>
+          <article class="workbench-item workbench-creative" role="listitem">
+            <span>03</span>
+            <h3>创作</h3>
+            <p>为内容和媒体工作流保留清晰、可信的入口。</p>
+          </article>
+          <article class="workbench-item workbench-research" role="listitem">
+            <span>04</span>
+            <h3>研究</h3>
+            <p>组织资料、会话和需要持续推进的探索任务。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="product-view" aria-label="PI-Desktop 应用界面预览">
+        <img
+          src="./assets/pi-desktop.webp"
+          alt="PI-Desktop 中文应用界面，包含项目侧栏、对话区与工作面板"
+          loading="lazy"
+        />
+      </section>
+
+      <section class="download-section" id="downloads" aria-labelledby="download-title">
+        <div class="section-heading">
+          <p class="eyebrow">DOWNLOAD</p>
+          <h2 id="download-title">选择你的平台</h2>
+          <p id="release-status" aria-live="polite">
+            正在检查最新构建；如果网络不可用，将继续提供已验证的预发布版本。
+          </p>
+        </div>
+
+        <div class="platform-tabs" role="tablist" aria-label="选择操作系统">
+          <button type="button" role="tab" id="tab-windows" aria-controls="panel-windows" data-platform="windows">
+            Windows
+          </button>
+          <button type="button" role="tab" id="tab-macos" aria-controls="panel-macos" data-platform="macos">
+            macOS
+          </button>
+          <button type="button" role="tab" id="tab-linux" aria-controls="panel-linux" data-platform="linux">
+            Linux
+          </button>
+        </div>
+
+        <div class="download-panels">
+          <section class="download-panel" role="tabpanel" id="panel-windows" aria-labelledby="tab-windows" data-panel="windows">
+            <div class="platform-copy">
+              <p class="platform-kicker">WINDOWS 10 / 11 · X64</p>
+              <h3>Windows</h3>
+              <p>推荐安装版。需要免安装运行时，也可以选择便携版。</p>
+            </div>
+            <div class="artifact-actions">
+              <a class="button button-primary" data-asset="windowsInstaller" href="#">下载安装版</a>
+              <a class="button button-secondary" data-asset="windowsPortable" href="#">下载便携版</a>
+            </div>
+          </section>
+
+          <section class="download-panel" role="tabpanel" id="panel-macos" aria-labelledby="tab-macos" data-panel="macos" hidden>
+            <div class="platform-copy">
+              <p class="platform-kicker">MACOS 12+ · APPLE SILICON / INTEL</p>
+              <h3>macOS</h3>
+              <p>根据 Mac 芯片选择版本。当前预发布包未签名、未公证，首次打开需要在系统设置中确认。</p>
+            </div>
+            <div class="artifact-groups">
+              <div>
+                <strong>Apple Silicon</strong>
+                <div class="artifact-actions">
+                  <a class="button button-primary" data-asset="macArmDmg" href="#">下载 DMG</a>
+                  <a class="text-link" data-asset="macArmZip" href="#">下载 ZIP</a>
+                </div>
+              </div>
+              <div>
+                <strong>Intel</strong>
+                <div class="artifact-actions">
+                  <a class="button button-secondary" data-asset="macIntelDmg" href="#">下载 DMG</a>
+                  <a class="text-link" data-asset="macIntelZip" href="#">下载 ZIP</a>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="download-panel" role="tabpanel" id="panel-linux" aria-labelledby="tab-linux" data-panel="linux" hidden>
+            <div class="platform-copy">
+              <p class="platform-kicker">LINUX · X64</p>
+              <h3>Linux</h3>
+              <p>AppImage 适合直接运行；Debian/Ubuntu 选择 DEB，Fedora/RHEL 选择 RPM。</p>
+            </div>
+            <div class="artifact-actions artifact-actions-wrap">
+              <a class="button button-primary" data-asset="linuxAppImage" href="#">下载 AppImage</a>
+              <a class="button button-secondary" data-asset="linuxDeb" href="#">下载 DEB</a>
+              <a class="button button-secondary" data-asset="linuxRpm" href="#">下载 RPM</a>
+              <a class="text-link" data-asset="linuxAsar" href="#">下载 ASAR</a>
+            </div>
+          </section>
+        </div>
+
+        <p class="all-assets">
+          找不到需要的格式？
+          <a id="all-assets-link" href="https://github.com/AiW520/my-codex/releases/tag/v0.15.1-beta.1" rel="noreferrer">
+            查看本版本全部构建产物
+          </a>
+        </p>
+      </section>
+
+      <section class="install-section" id="install" aria-labelledby="install-title">
+        <div class="section-heading">
+          <p class="eyebrow">GET STARTED</p>
+          <h2 id="install-title">三步开始工作</h2>
+        </div>
+        <ol class="install-steps">
+          <li>
+            <span>01</span>
+            <div><strong>安装并启动</strong><p>下载适合当前系统的构建包，完成安装或直接运行便携版本。</p></div>
+          </li>
+          <li>
+            <span>02</span>
+            <div><strong>连接模型</strong><p>添加 OpenAI、Anthropic、本地模型或任意兼容端点。</p></div>
+          </li>
+          <li>
+            <span>03</span>
+            <div><strong>打开项目</strong><p>选择本地目录，新建会话，并决定 Agent 可以执行哪些操作。</p></div>
+          </li>
+        </ol>
+        <aside class="preview-note">
+          <strong>预发布提示</strong>
+          <p>此版本用于体验多工作台功能。测试前建议备份重要本地数据；遇到问题时请附上操作系统、下载的文件名和复现步骤。</p>
+        </aside>
+      </section>
+    </main>
+
+    <footer>
+      <div>
+        <strong>PI-Desktop</strong>
+        <p>Local-first · Model-agnostic · Extensible</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/AiW520/my-codex" rel="noreferrer">源代码</a>
+        <a href="https://github.com/AiW520/my-codex/issues" rel="noreferrer">问题反馈</a>
+        <a href="https://github.com/AiW520/my-codex/releases" rel="noreferrer">历史版本</a>
+      </div>
+    </footer>
+
+    <script type="module" src="./app.mjs"></script>
+  </body>
+</html>

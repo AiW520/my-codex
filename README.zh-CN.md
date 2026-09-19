@@ -20,7 +20,7 @@
 
 <br />
 
-**[立即下载](https://github.com/vastsa/PI-Desktop/releases/latest)** ·
+**[立即下载](https://aiw520.github.io/my-codex/)** ·
 [使用文档](https://pi-docs.aiuo.net/) ·
 [界面预览](docs/guide/screenshots.md) ·
 [开发插件](docs/plugin-development.md) ·

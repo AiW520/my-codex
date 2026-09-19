@@ -29,6 +29,7 @@ disagrees, so a green `check:release-docs` is a precondition, not a substitute.
 | `check-linux-host-glibc.mjs` | `node scripts/check-linux-host-glibc.mjs [bin]` | Fail a Linux host-core binary whose needed glibc is above 2.35 |
 | `make-icon.py` | `python3 scripts/make-icon.py` | Derive the package PNG, the macOS tray template, and the iconset/ICNS from the canonical PNG |
 | `publish-screenshots.py` | `python3 scripts/publish-screenshots.py` | Publish documentation screenshots |
+| `build-download-page.mjs` | `pnpm page:build` | Assemble the standalone GitHub Pages download site with the checked-in brand and product assets |
 
 ## Development
 
@@ -82,3 +83,8 @@ the publish job assembles the GitHub Release. The release workflow defaults to
 unsigned macOS artifacts; manually dispatch it with `sign_macos: true` to opt
 into signing and notarization. See the [release
 runbook](../docs/spec/06-delivery/06-release-runbook.md).
+
+`.github/workflows/pages.yml` validates, builds, and deploys the standalone
+download page to GitHub Pages after its sources land on `main`. The page reads
+the public GitHub Releases API in the browser and retains verified fallback
+links for the current preview when that API is unavailable.

