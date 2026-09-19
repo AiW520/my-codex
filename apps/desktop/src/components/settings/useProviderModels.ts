@@ -19,6 +19,8 @@ export type ProviderModelsState = {
   /** Message from the failed live call; cached rows stay visible alongside it. */
   error?: string;
   source?: ProviderModelsSource;
+  /** Protocol selected by the host when auto-detection was requested. */
+  apiStyle?: string;
 };
 
 export type ProviderModelsDiscovery = ProviderModelsState & {
@@ -61,7 +63,14 @@ function canDiscover(baseUrl: string): boolean {
  */
 export function useProviderModels(
   active: boolean,
-  form: { baseUrl: string; apiKey: string; apiStyle: string; headers?: Record<string, string> },
+  form: {
+    baseUrl: string;
+    apiKey: string;
+    apiStyle: string;
+    apiStyleCandidates?: readonly string[];
+    autoDetectApiStyle?: boolean;
+    headers?: Record<string, string>;
+  },
   editingProvider?: ProviderPublic | null,
 ): ProviderModelsDiscovery {
   const [state, setState] = useState<ProviderModelsState>(IDLE);
@@ -70,11 +79,30 @@ export function useProviderModels(
   const requestSeq = useRef(0);
   const endpointRef = useRef<string | null>(null);
 
-  const { baseUrl, apiKey, apiStyle, headers } = form;
+  const { baseUrl, apiKey, apiStyle, apiStyleCandidates, autoDetectApiStyle, headers } = form;
+  const apiStyleCandidatesKey = JSON.stringify(apiStyleCandidates ?? []);
   const headersKey = JSON.stringify(headers ?? {});
   const providerId = editingProvider?.id;
-  const paramsRef = useRef({ active, baseUrl, apiKey, apiStyle, headers, providerId });
-  paramsRef.current = { active, baseUrl, apiKey, apiStyle, headers, providerId };
+  const paramsRef = useRef({
+    active,
+    baseUrl,
+    apiKey,
+    apiStyle,
+    apiStyleCandidates,
+    autoDetectApiStyle,
+    headers,
+    providerId,
+  });
+  paramsRef.current = {
+    active,
+    baseUrl,
+    apiKey,
+    apiStyle,
+    apiStyleCandidates,
+    autoDetectApiStyle,
+    headers,
+    providerId,
+  };
   const modelsRef = useRef(state.models);
   modelsRef.current = state.models;
 
@@ -84,6 +112,8 @@ export function useProviderModels(
       baseUrl: url,
       apiKey: key,
       apiStyle: style,
+      apiStyleCandidates: candidates,
+      autoDetectApiStyle: detectStyle,
       headers: hdrs,
       providerId: id,
     } = paramsRef.current;
@@ -124,6 +154,8 @@ export function useProviderModels(
         baseUrl: url.trim(),
         ...(key ? { apiKey: key } : {}),
         apiStyle: style,
+        ...(candidates ? { apiStyleCandidates: candidates } : {}),
+        ...(detectStyle ? { autoDetectApiStyle: true } : {}),
         ...(Object.keys(hdrs ?? {}).length > 0 ? { headers: hdrs } : {}),
       });
       if (requestSeq.current !== requestId) return;
@@ -132,6 +164,7 @@ export function useProviderModels(
           status: "ready",
           models: result.models,
           source: result.source,
+          ...(result.apiStyle ? { apiStyle: result.apiStyle } : {}),
           ...(result.error ? { error: result.error } : {}),
         });
       } else {
@@ -154,7 +187,9 @@ export function useProviderModels(
   };
 
   useEffect(() => {
-    const endpoint = `${baseUrl.trim()}|${apiStyle}`;
+    const endpoint = `${baseUrl.trim()}|${apiStyle}|${apiStyleCandidatesKey}|${
+      autoDetectApiStyle ? "auto" : "fixed"
+    }`;
     const first = endpointRef.current === null;
     const endpointChanged = !first && endpointRef.current !== endpoint;
     endpointRef.current = endpoint;
@@ -173,7 +208,16 @@ export function useProviderModels(
     const immediate = !!providerId && !apiKey && !endpointChanged;
     const timer = setTimeout(() => void run(requestId), immediate ? 0 : FETCH_DEBOUNCE_MS);
     return () => clearTimeout(timer);
-  }, [active, baseUrl, apiKey, apiStyle, headersKey, providerId]);
+  }, [
+    active,
+    baseUrl,
+    apiKey,
+    apiStyle,
+    apiStyleCandidatesKey,
+    autoDetectApiStyle,
+    headersKey,
+    providerId,
+  ]);
 
   const reload = () => {
     if (!paramsRef.current.active || !canDiscover(paramsRef.current.baseUrl)) return;

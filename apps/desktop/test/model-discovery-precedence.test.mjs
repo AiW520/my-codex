@@ -27,7 +27,7 @@ const handler = (() => {
 })();
 
 test("the live endpoint is probed before the bundled catalog is consulted", () => {
-  const discovery = handler.indexOf("await discoverProviderModels(");
+  const discovery = handler.indexOf("await discoverProviderModelsWithProtocol(");
   const catalog = handler.indexOf("modelsDevCatalog.modelsForProvider(");
   assert.notEqual(discovery, -1, "live discovery call missing");
   assert.notEqual(catalog, -1, "catalog fallback missing");
@@ -62,13 +62,13 @@ test("every returned model is enriched through models.dev regardless of origin",
   // `decorate` is what attaches published limits, modalities and thinking
   // levels, so all three branches must route through it.
   assert.match(handler, /const modelsDevModel = modelsDevCatalog\.findModel\(/);
-  assert.match(handler, /discovered\.map\(\(model\) => decorate\(model\)\)/);
+  assert.match(handler, /discovered\.models\.map\(\(model\) => decorate\(model/);
   assert.match(handler, /catalogModels\.map\(\(model\) => decorate\(model\)\)/);
 });
 
 test("the stored secret is resolved before probing, so edits need no retyped key", () => {
   const secret = handler.indexOf('"providers.getSecret"');
-  const discovery = handler.indexOf("await discoverProviderModels(");
+  const discovery = handler.indexOf("await discoverProviderModelsWithProtocol(");
   assert.notEqual(secret, -1, "stored secret lookup missing");
   assert.ok(secret < discovery, "the key must be resolved before the probe");
 });

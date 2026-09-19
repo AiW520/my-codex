@@ -71,6 +71,13 @@ entitled to it.
   mappings remain authoritative for providers that translate the level.
 - The wire API is derived from the provider's published `npm` adapter
   (`apiStyleForAdapter`) and is only editable inside **Advanced**.
+- Tuzi first-party presets opt into protocol detection. Before the first live
+  model request, the Host probes the candidate `/chat/completions` and
+  `/responses` operation routes with `OPTIONS` only; it never sends a prompt or
+  stores a credential in renderer state. A non-404 response selects that route
+  (in the preset's candidate order). If every probe is inconclusive, the
+  preset's declared fallback style is retained. The selected style is returned
+  with the discovered model list and is persisted with the provider.
 - A custom model ID is always accepted, so a gateway without a `/models` route
   stays usable.
 
@@ -82,7 +89,8 @@ entitled to it.
 2. `discoverProviderModels` asks the service (`/models` or the per-style
    equivalent). A non-empty answer wins, is enriched per model through
    `modelsDevCatalog.findModel`, is written back to the model cache, and is
-   reported as `source: "remote"`.
+   reported as `source: "remote"`. For auto-detected Tuzi presets the response
+   also carries the selected `apiStyle`, which the setup form saves.
 3. Only if the endpoint published nothing usable —no route, an auth error, or an
    empty list— does `modelsForProvider` supply the vendor's published models,
    reported as `source: "catalog"` together with any discovery error so the UI

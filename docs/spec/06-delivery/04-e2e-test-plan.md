@@ -449,6 +449,30 @@ identify the platform validation still needed.
 - **Milestone**: M2
 - **Status**: Manual UI + automated protocol smoke (provider create + secret, no plaintext echo)
 
+#### E2E-005-TUZI: Choose a Tuzi product and detect its protocol
+
+- **Preconditions**: Fresh profile with no configured provider; one deterministic
+  HTTP fixture exposes `/models` and exactly one of `/chat/completions` or
+  `/responses` (the other returns 404).
+- **Steps**: 1) Launch the app and observe the Tuzi product chooser. 2) Select
+  a product and enter an API key. 3) Confirm the normal provider form opens,
+  model discovery runs, and the key is not echoed to renderer persistence.
+  4) Save a discovered model. 5) Reopen the provider and inspect its stored
+  `apiStyle`.
+- **Expected**: The chooser offers the three first-party products, **Later**
+  and **Other provider**. Selecting a product preloads its endpoint and uses
+  the existing secret-store path. Protocol probing sends only `OPTIONS`; the
+  live model request wins, and the selected style is persisted. A gateway that
+  rejects or hides both probes keeps the preset fallback style. Saving a
+  provider dismisses the chooser and it does not reappear while a provider
+  exists.
+- **Specs linked**: `04-ux/05-onboarding.md`,
+  `03-runtime/13-model-catalog-and-selection.md`,
+  `03-runtime/14-secrets-storage.md`
+- **Acceptance**: A (first-run onboarding), B (provider/model configuration), Security
+- **Milestone**: M2
+- **Status**: Source-contract and protocol unit-covered; rendered Electron journey pending
+
 #### E2E-PROVIDER-configured-models-search: The chosen pane's search narrows the configured list
 
 - **Preconditions**: App running; one provider saved with at least three model bindings, one of them carrying an alias and another whose catalog display name differs from its id.

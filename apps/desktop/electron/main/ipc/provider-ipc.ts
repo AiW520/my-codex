@@ -7,7 +7,7 @@ import {
   type ThinkingLevel,
 } from "@pi-desktop/shared";
 import { OAUTH_AUTH_KIND, type VendorOAuth } from "../oauth";
-import { discoverProviderModels } from "../model-discovery";
+import { discoverProviderModelsWithProtocol } from "../model-discovery";
 import { genericModelConfig, modelConfigWithBinding, mergeProviderHeaders } from "@pi-desktop/agent-runtime";
 import { modelConfigFromModelsDev, modelInfoFromModelsDev, type ModelsDevCatalog } from "../models-dev-catalog";
 import type { HostProcess } from "../host-process";
@@ -220,6 +220,8 @@ export function registerProviderIpc({
             baseUrl?: string;
             apiKey?: string;
             apiStyle?: string;
+            apiStyleCandidates?: readonly string[];
+            autoDetectApiStyle?: boolean;
             headers?: Record<string, string>;
             source?: "cache" | "refresh";
           },
@@ -452,20 +454,24 @@ export function registerProviderIpc({
       let discoveryError: string | undefined;
       if (baseUrl) {
         try {
-          const discovered = await discoverProviderModels({
+          const discovered = await discoverProviderModelsWithProtocol({
             baseUrl,
             apiKey,
             apiStyle,
+            apiStyleCandidates: req.apiStyleCandidates,
+            autoDetectApiStyle: req.autoDetectApiStyle,
             headers: req.headers ?? provider?.headers,
           });
-          if (discovered.length > 0) {
-            const models = discovered.map((model) => decorate(model));
+          if (discovered.models.length > 0) {
+            const detectedApiStyle = discovered.apiStyle ?? apiStyle;
+            const models = discovered.models.map((model) => decorate(model, detectedApiStyle));
             // Only what the endpoint actually served is cached; a configured id
             // it never offered must not be recorded as discovered.
             await cacheForCurrentProvider(models);
             return {
               models: withConfiguredBindings(models),
               source: "remote" as const,
+              apiStyle: detectedApiStyle,
             };
           }
         } catch (e) {
