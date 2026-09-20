@@ -19,7 +19,7 @@ test("detectPlatform maps common browser platform strings", () => {
 test("fallbackRelease exposes trusted links for every supported artifact", () => {
   const release = fallbackRelease();
   const assets = selectDownloadAssets(release.assets);
-  assert.equal(release.tagName, "v0.15.1-beta.2");
+  assert.equal(release.tagName, "v0.15.1-beta.3");
   assert.equal(release.prerelease, true);
   assert.deepEqual(
     Object.entries(assets).filter(([, asset]) => asset === null),
@@ -37,10 +37,10 @@ test("selectDownloadAssets rejects untrusted URLs and ignores update metadata", 
     },
     {
       name: "latest.yml",
-      browser_download_url: "https://github.com/AiW520/my-codex/releases/download/v0.15.1-beta.2/latest.yml",
+      browser_download_url: "https://github.com/AiW520/my-codex/releases/download/v0.15.1-beta.3/latest.yml",
     },
   ]);
-  assert.match(assets.windowsInstaller.name, /0\.15\.1-beta\.2/);
+  assert.match(assets.windowsInstaller.name, /0\.15\.1-beta\.3/);
   assert.equal(isTrustedDownloadUrl("javascript:alert(1)"), false);
   assert.equal(isTrustedDownloadUrl("https://github.com/other/repo/releases/download/v1/file.exe"), false);
 });
@@ -52,11 +52,11 @@ test("selectPublishedRelease skips drafts and invalid release pages", () => {
     {
       draft: false,
       prerelease: true,
-      tag_name: "v0.15.1-beta.2",
-      html_url: "https://github.com/AiW520/my-codex/releases/tag/v0.15.1-beta.2",
+      tag_name: "v0.15.1-beta.3",
+      html_url: "https://github.com/AiW520/my-codex/releases/tag/v0.15.1-beta.3",
       assets: fallbackRelease().assets,
     },
   ]);
-  assert.equal(release.tagName, "v0.15.1-beta.2");
+  assert.equal(release.tagName, "v0.15.1-beta.3");
   assert.equal(normalizeRelease(null), null);
 });
