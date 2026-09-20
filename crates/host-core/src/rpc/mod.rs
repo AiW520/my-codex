@@ -1399,8 +1399,7 @@ async fn handle_request(
                 .db
                 .list_workbenches()
                 .map_err(|e| rpc_err(1000, e.to_string(), "INTERNAL"))?;
-            serde_json::to_value(result)
-                .map_err(|e| rpc_err(1000, e.to_string(), "INTERNAL"))
+            serde_json::to_value(result).map_err(|e| rpc_err(1000, e.to_string(), "INTERNAL"))
         }
         "workbenches.create" => {
             let name = params

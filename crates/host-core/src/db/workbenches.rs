@@ -143,7 +143,8 @@ impl Database {
              WHERE wp.workbench_id = ?1 ORDER BY wp.position",
         )?;
         let rows = stmt.query_map(params![id], |row| row.get(0))?;
-        rows.collect::<rusqlite::Result<Vec<_>>>().map_err(Into::into)
+        rows.collect::<rusqlite::Result<Vec<_>>>()
+            .map_err(Into::into)
     }
 
     fn workbench_sessions(&self, id: &str) -> Result<Vec<String>> {
@@ -154,7 +155,8 @@ impl Database {
              ORDER BY s.updated_at DESC",
         )?;
         let rows = stmt.query_map(params![id], |row| row.get(0))?;
-        rows.collect::<rusqlite::Result<Vec<_>>>().map_err(Into::into)
+        rows.collect::<rusqlite::Result<Vec<_>>>()
+            .map_err(Into::into)
     }
 
     fn row_to_profile(&self, row: WorkbenchRow) -> Result<WorkbenchProfile> {
@@ -229,7 +231,8 @@ impl Database {
                 .map_err(Into::into);
         }
         let rows = stmt.query_map([], read)?;
-        rows.collect::<rusqlite::Result<Vec<_>>>().map_err(Into::into)
+        rows.collect::<rusqlite::Result<Vec<_>>>()
+            .map_err(Into::into)
     }
 
     pub fn list_workbenches(&self) -> Result<WorkbenchState> {
