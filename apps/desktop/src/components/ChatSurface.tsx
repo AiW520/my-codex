@@ -8,9 +8,11 @@ import { TooltipButton } from "./ui";
 import { OnboardingChecklist } from "./OnboardingChecklist";
 import { ProductOnboardingDialog } from "./settings/ProductOnboardingDialog";
 import { WorkbenchLauncher } from "./WorkbenchLauncher";
+import { CustomWorkbenchHome } from "./workbenches/CustomWorkbenchHome";
 import { SessionPane } from "./SessionPane";
 import { ConversationWidthHandles } from "./ConversationWidthHandles";
 import { useAppStore } from "../stores/app-store";
+import { useWorkbenchStore } from "../stores/workbench-store";
 import { headPermission } from "../lib/pending-permissions";
 import { headAsk } from "../lib/pending-asks";
 
@@ -59,6 +61,11 @@ export const ChatSurface = memo(function ChatSurface() {
     state.activeSessionId
       ? state.sessions.find((session) => session.id === state.activeSessionId)
       : undefined,
+  );
+  const activeWorkbench = useWorkbenchStore((store) =>
+    store.state?.workbenches.find(
+      (workbench) => workbench.id === store.state?.activeWorkbenchId,
+    ),
   );
 
   // A pending permission or ask is itself transcript content, so the empty
@@ -166,6 +173,9 @@ export const ChatSurface = memo(function ChatSurface() {
                 </h1>
               </div>
               {!heroProject ? <WorkbenchLauncher /> : null}
+              {!heroProject && activeWorkbench?.templateId === "custom" ? (
+                <CustomWorkbenchHome key={activeWorkbench.id} workbench={activeWorkbench} />
+              ) : null}
               <OnboardingChecklist />
             </div>
           </div>

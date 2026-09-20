@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { summarizeWorkbench } from "../lib/workbench-dashboard";
 import { useWorkbenchStore } from "../stores/workbench-store";
 import { cx } from "./ui";
 import { WorkbenchIcon } from "./WorkbenchIcon";
@@ -20,6 +21,7 @@ export function WorkbenchLauncher() {
         {state.workbenches.map((workbench) => {
           const active = workbench.id === state.activeWorkbenchId;
           const switching = workbench.id === switchingId;
+          const summary = summarizeWorkbench(workbench);
           return (
             <button
               type="button"
@@ -40,6 +42,12 @@ export function WorkbenchLauncher() {
               <span className="workbench-launcher-copy">
                 <strong>{workbench.name}</strong>
                 <small>{t(`workbench.templates.${workbench.templateId}`)}</small>
+                <span className="workbench-launcher-summary">
+                  {t(`workbench.launcherSummary.${summary.kind}`, {
+                    primary: summary.primary,
+                    secondary: summary.secondary,
+                  })}
+                </span>
               </span>
             </button>
           );

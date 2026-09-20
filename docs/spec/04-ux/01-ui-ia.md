@@ -189,20 +189,27 @@ destination, chat as the home surface, tools and permissions inline.
 
 ### 3.1a Workbench surfaces
 
-- **Coding** and **Custom** retain the production Chat home/transcript,
-  Sidebar, Composer, and WorkPanel path. A template is an initializer, not a
-  second execution mode.
-- **Daily** replaces the chat body with a local task list and notes backed by
-  the active profile's bounded `dashboardState`. New profiles contain no sample
-  tasks or pre-completed work.
-- **Creative** provides a prompt, image/video model-role bindings, and an asset
-  empty state. Model bindings do not mutate a running chat. Generate is disabled
+- **Coding** retains the production Chat home/transcript, Sidebar, Composer,
+  and WorkPanel path. Its home launcher summarizes the profile's associated
+  projects and sessions without changing or duplicating runtime ownership.
+- **Custom** uses the same production Chat path and adds a configurable home
+  dashboard above the composer. Checklist, notes, and trusted-link modules are
+  optional and persist in the active profile's bounded `dashboardState`.
+- **Daily** replaces the chat body with prioritized Today/Later tasks, open/all/
+  done filters, completion progress, one daily focus, and notes. New profiles
+  contain no sample tasks or pre-completed work, and legacy tasks receive safe
+  default priority and schedule values when read.
+- **Creative** provides an image/video brief editor, saved draft queue,
+  image/video model-role bindings, and an explicit runtime state. Model bindings
+  do not mutate a running chat. Generate is disabled
   with an explicit not-configured state until a real media job adapter supports
   submission, cancellation, recovery, credentials, cost controls, and durable
   artifacts; the UI never simulates a successful result.
-- **Research** provides an explicit local source list and research notes. Source
-  URLs open only through the main-process external-URL allowlist. No sample
-  citation, PDF, or completed finding is fabricated.
+- **Research** provides a research question, explicit source list with reading
+  states and progress, working notes, and a separate conclusion. Renderer input
+  accepts only HTTP(S) source URLs, which still open through the main-process
+  external-URL allowlist. No sample citation, PDF, or completed finding is
+  fabricated.
 - Template-local fields save through host-core and surface write failures. A
   switch between two profiles using the same template resets transient input
   state to the destination profile rather than carrying draft controls across.

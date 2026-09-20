@@ -8,7 +8,7 @@ import { I18nextProvider } from "react-i18next";
 import { catalogs } from "@pi-desktop/i18n";
 import { createServer } from "vite";
 
-const profile = (id, name, templateId, position) => ({
+const profile = (id, name, templateId, position, extra = {}) => ({
   id,
   name,
   templateId,
@@ -25,6 +25,7 @@ const profile = (id, name, templateId, position) => ({
   dataVersion: 1,
   createdAt: 1,
   updatedAt: 1,
+  ...extra,
 });
 
 test("workbench launcher renders every default space and exposes switch state", async () => {
@@ -50,6 +51,7 @@ test("workbench launcher renders every default space and exposes switch state", 
       profile("daily", "Daily", "daily", 1),
       profile("creative", "Creative", "creative", 2),
       profile("research", "Research", "research", 3),
+      profile("custom", "Custom", "custom", 4),
     ];
     const render = (state, switchingId = null) => {
       Object.assign(useWorkbenchStore.getInitialState(), { state, switchingId });
@@ -69,8 +71,10 @@ test("workbench launcher renders every default space and exposes switch state", 
     }
     assert.match(html, /class="workbench-launcher-item is-coding is-active"/);
     assert.match(html, /class="workbench-launcher-item is-daily is-switching"/);
-    assert.equal((html.match(/disabled=""/g) ?? []).length, 4);
+    assert.equal((html.match(/disabled=""/g) ?? []).length, 5);
     assert.match(html, /aria-current="page"/);
+    assert.match(html, /0 projects · 0 chats/);
+    assert.match(html, /2 modules · 0 contexts/);
 
     assert.equal(
       render({ activeWorkbenchId: "coding", workbenches: workbenches.slice(0, 1) }),
