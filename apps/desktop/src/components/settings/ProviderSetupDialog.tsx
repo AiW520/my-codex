@@ -119,6 +119,8 @@ function endpointHost(url: string): string {
 export type ProviderSetupDialogProps = {
   provider?: ProviderPublic | null;
   initialDraft?: ProviderCopyDraft | null;
+  /** Preselect a named service when launched from first-run product onboarding. */
+  initialServiceId?: string;
   onClose: () => void;
   onSaved: (provider: ProviderPublic, models: ModelBinding[]) => void;
 };
@@ -126,6 +128,7 @@ export type ProviderSetupDialogProps = {
 export function ProviderSetupDialog({
   provider,
   initialDraft,
+  initialServiceId,
   onClose,
   onSaved,
 }: ProviderSetupDialogProps) {
@@ -136,7 +139,7 @@ export function ProviderSetupDialog({
     ? initialDraft.apiStyle === OPENCODE_GO_API_STYLE
       ? NAMED_ENDPOINT_PRESETS.find((preset) => preset.apiStyle === OPENCODE_GO_API_STYLE)?.id ?? CUSTOM_SERVICE
       : CUSTOM_SERVICE
-    : serviceIdFor(provider));
+    : initialServiceId ?? serviceIdFor(provider));
   const [name, setName] = useState(() => initialDraft?.name ?? initialName(provider));
   const [baseUrl, setBaseUrl] = useState(() => initialDraft?.baseUrl ?? initialBaseUrl(provider));
   const [apiKey, setApiKey] = useState("");
@@ -178,11 +181,14 @@ export function ProviderSetupDialog({
       baseUrl: requestBaseUrl,
       apiKey,
       apiStyle: resolvedApiStyle,
+      apiStyleCandidates: namedPreset?.apiStyleCandidates,
+      autoDetectApiStyle: namedPreset?.autoDetectApiStyle,
       headers,
     },
     provider,
   );
   const selection = useModelSelection(discovery, models, setModels);
+  const persistedApiStyle = normalizeApiStyle(discovery.apiStyle ?? resolvedApiStyle);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -280,7 +286,7 @@ export function ProviderSetupDialog({
           baseUrl: providerBaseUrl,
           defaultModelId: persisted[0]?.id,
           models: persisted,
-          apiStyle: resolvedApiStyle,
+          apiStyle: persistedApiStyle,
           headers,
           ...(apiKey ? { secretValue: apiKey } : {}),
         });
@@ -296,7 +302,7 @@ export function ProviderSetupDialog({
           defaultModelId: persisted[0]?.id,
           models: persisted,
           secretValue: apiKey || undefined,
-          apiStyle: resolvedApiStyle,
+          apiStyle: persistedApiStyle,
           headers,
         });
         onSaved(result.provider, persisted);

@@ -14,7 +14,14 @@ export type DiscoveredModel = {
   displayName: string;
 };
 
+export type ProviderModelDiscoveryResult = {
+  models: DiscoveredModel[];
+  /** The wire protocol selected for this endpoint, when detection was requested. */
+  apiStyle?: string;
+};
+
 const DISCOVERY_TIMEOUT_MS = 10_000;
+const PROTOCOL_PROBE_TIMEOUT_MS = 4_000;
 const MAX_MODELS = 500;
 const OPENCODE_GO_API_STYLE = "opencode_go";
 const RESERVED_DISCOVERY_HEADERS = new Set([
@@ -154,14 +161,93 @@ export function modelListRequest(opts: {
   };
 }
 
+function protocolRoute(baseUrl: string, apiStyle: string): string | undefined {
+  const base = baseUrl.trim().replace(/\/+$/, "");
+  if (
+    apiStyle === "responses" ||
+    apiStyle === "openai_codex_responses" ||
+    apiStyle === OPENCODE_GO_API_STYLE
+  ) {
+    return `${base}/responses`;
+  }
+  if (apiStyle === "chat_completions") return `${base}/chat/completions`;
+  return undefined;
+}
+
+/**
+ * Detect an OpenAI-compatible wire protocol without sending a generation
+ * request. Providers that expose the operation route normally answer OPTIONS
+ * with 2xx/4xx/405; a 404 means the candidate route is absent. If a gateway
+ * rejects OPTIONS for every route, the caller's declared default is retained.
+ */
+export async function detectProviderApiStyle(opts: {
+  baseUrl: string;
+  apiKey?: string;
+  apiStyle: string;
+  apiStyleCandidates?: readonly string[];
+  headers?: Record<string, string>;
+}): Promise<string> {
+  const candidates = [...new Set([opts.apiStyle, ...(opts.apiStyleCandidates ?? [])])]
+    .filter((style) => protocolRoute(opts.baseUrl, style));
+  if (candidates.length < 2) return opts.apiStyle;
+  for (const candidate of candidates) {
+    const url = protocolRoute(opts.baseUrl, candidate);
+    if (!url) continue;
+    const { headers } = modelListRequest({
+      baseUrl: opts.baseUrl,
+      apiKey: opts.apiKey,
+      apiStyle: candidate,
+      headers: opts.headers,
+    });
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), PROTOCOL_PROBE_TIMEOUT_MS);
+    try {
+      const response = await fetch(url, {
+        method: "OPTIONS",
+        headers,
+        signal: controller.signal,
+      });
+      if (response.status !== 404) return candidate;
+    } catch {
+      // A failed probe is inconclusive; continue to the next route.
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+  return opts.apiStyle;
+}
+
 /** Fetch and normalize the provider's model list. Throws on HTTP/network errors. */
 export async function discoverProviderModels(opts: {
   baseUrl: string;
   apiKey?: string;
   apiStyle?: string;
+  apiStyleCandidates?: readonly string[];
+  autoDetectApiStyle?: boolean;
   headers?: Record<string, string>;
 }): Promise<DiscoveredModel[]> {
-  const { url, headers } = modelListRequest(opts);
+  return (await discoverProviderModelsWithProtocol(opts)).models;
+}
+
+/** Fetch models and report the selected wire protocol for auto-detected services. */
+export async function discoverProviderModelsWithProtocol(opts: {
+  baseUrl: string;
+  apiKey?: string;
+  apiStyle?: string;
+  apiStyleCandidates?: readonly string[];
+  autoDetectApiStyle?: boolean;
+  headers?: Record<string, string>;
+}): Promise<ProviderModelDiscoveryResult> {
+  const apiStyle = opts.autoDetectApiStyle
+    ? await detectProviderApiStyle({
+        baseUrl: opts.baseUrl,
+        apiKey: opts.apiKey,
+        apiStyle: opts.apiStyle ?? "chat_completions",
+        apiStyleCandidates: opts.apiStyleCandidates,
+        headers: opts.headers,
+      })
+    : opts.apiStyle ?? "chat_completions";
+  const { url, headers } = modelListRequest({ ...opts, apiStyle });
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), DISCOVERY_TIMEOUT_MS);
   try {
@@ -171,7 +257,7 @@ export async function discoverProviderModels(opts: {
         status: res.status,
       });
     }
-    return normalizeModelList(opts.apiStyle, await res.json());
+    return { models: normalizeModelList(apiStyle, await res.json()), apiStyle };
   } finally {
     clearTimeout(timer);
   }

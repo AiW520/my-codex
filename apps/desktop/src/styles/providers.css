@@ -260,6 +260,195 @@
   z-index: 45;
 }
 
+/* First-run product chooser: a compact, non-tour entry point into the normal
+ * provider form. Cards are the repeated items, while the modal stays an
+ * unframed tool surface with one clear action row. */
+.tuzi-product-overlay {
+  z-index: 44;
+  background: color-mix(in oklab, var(--ds-bg-primary) 72%, transparent);
+}
+
+.tuzi-product-dialog {
+  width: min(760px, calc(100vw - 32px));
+  max-height: min(680px, calc(100vh - 48px));
+  overflow: auto;
+  padding: 26px;
+}
+
+.tuzi-product-hero {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.tuzi-product-mark,
+.tuzi-product-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  color: var(--ds-accent);
+  background: color-mix(in oklab, var(--ds-accent) 14%, transparent);
+}
+
+.tuzi-product-mark {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-md-plus);
+}
+
+.tuzi-product-eyebrow {
+  margin: 0 0 3px;
+  color: var(--ds-accent);
+  font-size: var(--text-xs-plus);
+  font-weight: var(--font-weight-strong);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.tuzi-product-hero h2 {
+  margin: 0;
+  color: var(--ds-text-primary);
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-strong);
+  line-height: var(--leading-heading);
+}
+
+.tuzi-product-subtitle {
+  max-width: 58ch;
+  margin: 6px 0 0;
+  color: var(--ds-text-secondary);
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+}
+
+.tuzi-product-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.tuzi-product-card {
+  display: flex;
+  min-width: 0;
+  min-height: 190px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 9px;
+  padding: 14px;
+  border: 1px solid color-mix(in oklab, var(--ds-text-primary) 10%, transparent);
+  border-radius: var(--radius-md-plus);
+  background: var(--ds-tile);
+  color: var(--ds-text-primary);
+  text-align: left;
+  transition: border-color var(--motion-duration-fast) var(--motion-ease-out),
+    background var(--motion-duration-fast) var(--motion-ease-out),
+    transform var(--motion-duration-fast) var(--motion-ease-out);
+}
+
+.tuzi-product-card:hover,
+.tuzi-product-card:focus-visible {
+  border-color: color-mix(in oklab, var(--ds-accent) 48%, transparent);
+  background: var(--ds-tile-hover);
+  transform: translateY(-1px);
+}
+
+.tuzi-product-card:focus-visible {
+  outline: 2px solid color-mix(in oklab, var(--ds-accent) 55%, transparent);
+  outline-offset: 2px;
+}
+
+.tuzi-product-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tuzi-product-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-sm);
+}
+
+.tuzi-product-card-arrow {
+  display: inline-flex;
+  color: var(--ds-text-muted);
+}
+
+.tuzi-product-card-name {
+  color: var(--ds-text-primary);
+  font-size: var(--text-md-plus);
+  font-weight: var(--font-weight-strong);
+  line-height: var(--leading-compact);
+}
+
+.tuzi-product-card-description {
+  min-height: 38px;
+  color: var(--ds-text-secondary);
+  font-size: var(--text-sm-plus);
+  line-height: var(--leading-body);
+}
+
+.tuzi-product-card-endpoint {
+  margin-top: auto;
+  overflow: hidden;
+  color: var(--ds-text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tuzi-product-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid color-mix(in oklab, var(--ds-text-primary) 8%, transparent);
+}
+
+.tuzi-product-security {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: 7px;
+  color: var(--ds-text-muted);
+  font-size: var(--text-xs-plus);
+}
+
+.tuzi-product-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+@media (max-width: 720px) {
+  .tuzi-product-dialog {
+    padding: 20px;
+  }
+
+  .tuzi-product-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tuzi-product-card {
+    min-height: 0;
+  }
+
+  .tuzi-product-footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .tuzi-product-actions {
+    justify-content: flex-end;
+  }
+}
+
 .provider-dialog {
   width: min(100%, 820px);
   max-height: min(90vh, 820px);

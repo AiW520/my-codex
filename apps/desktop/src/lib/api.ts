@@ -494,12 +494,15 @@ export const api = {
     baseUrl?: string;
     apiKey?: string;
     apiStyle?: string;
+    apiStyleCandidates?: readonly string[];
+    autoDetectApiStyle?: boolean;
     headers?: Record<string, string>;
     source?: "cache" | "refresh";
   }) =>
     invoke<{
       models: ModelInfo[];
       source: "cache" | "remote" | "catalog" | "fallback";
+      apiStyle?: string;
       error?: string;
     }>(IPC.invoke.providersListModels, input),
   /** Force-refresh models.dev for the running process; release snapshots are bundled. */

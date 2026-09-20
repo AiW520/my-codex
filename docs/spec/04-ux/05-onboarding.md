@@ -58,3 +58,25 @@ Example:
 1. Fresh profile shows checklist
 2. Completing provider+key+prompt removes critical empty-state blocker
 3. User can dismiss optional parts without breaking app use
+
+## 8. Tuzi product entry point
+
+When the onboarding state is visible and the provider list is empty, the chat
+surface may show a compact product chooser for the Tuzi family. It is a single
+selection surface, not a second onboarding wizard:
+
+- **Tuzi API**, **Tuzi Store Codex subscription**, and **GAC Codex subscription**
+  are named endpoint presets. Selecting one opens the existing
+  `ProviderSetupDialog` with the endpoint prefilled.
+- The API key field remains in the shared provider form. Keys are written only
+  through the Host secret store; renderer state and persisted onboarding state
+  never contain the key.
+- **Later** dismisses the onboarding state through `app.dismissOnboarding`.
+  Saving a provider also dismisses it, so a successful setup cannot reopen the
+  chooser on the next render.
+- **Other provider** opens the same form in Custom endpoint mode. The chooser
+  is hidden as soon as a provider exists, even when the checklist is still
+  visible.
+
+The chooser is deliberately gated by the empty provider list to avoid covering
+returning users or changing the existing checklist contract.

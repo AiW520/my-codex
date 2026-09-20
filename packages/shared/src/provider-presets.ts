@@ -16,11 +16,51 @@ export type NamedEndpointPreset = {
   /** i18n key under `settings`. */
   labelKey: string;
   aliases?: readonly string[];
+  /** First-party product grouping used by the optional onboarding picker. */
+  product?: "tuzi";
+  /** Probe compatible operation routes before persisting the wire protocol. */
+  autoDetectApiStyle?: boolean;
+  /** Ordered fallback candidates for route probing. */
+  apiStyleCandidates?: readonly CatalogApiStyle[];
+  website?: string;
   /** Completions thinking/tool-stream flags for Zhipu / Z.AI hosts. */
   zhipuCompat?: boolean;
 };
 
 export const NAMED_ENDPOINT_PRESETS: readonly NamedEndpointPreset[] = [
+  {
+    id: "tuzi-api",
+    vendorKey: "tuzi-api",
+    name: "兔子 API",
+    baseUrl: "https://api.tu-zi.com/v1",
+    apiStyle: "responses",
+    labelKey: "settings.presetTuziApi",
+    aliases: ["tuzi", "兔子", "api.tu-zi.com"],
+    product: "tuzi",
+    website: "https://api.tu-zi.com/",
+  },
+  {
+    id: "tuzi-codex",
+    vendorKey: "tuzi-codex",
+    name: "兔小店 Codex 订阅",
+    baseUrl: "https://api.tu-zi.com/coding",
+    apiStyle: "responses",
+    labelKey: "settings.presetTuziCodex",
+    aliases: ["兔小店", "codex", "coding"],
+    product: "tuzi",
+    website: "https://store.tu-zi.com/cat/11",
+  },
+  {
+    id: "gac-codex",
+    vendorKey: "gac-codex",
+    name: "GAC Codex 订阅",
+    baseUrl: "https://gaccode.com/codex/v1",
+    apiStyle: "responses",
+    labelKey: "settings.presetGacCodex",
+    aliases: ["gac", "gaccode", "gac code"],
+    product: "tuzi",
+    website: "https://gaccode.com/",
+  },
   {
     id: "openai",
     vendorKey: "openai",

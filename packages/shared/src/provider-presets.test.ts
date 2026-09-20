@@ -181,6 +181,39 @@ describe("named endpoint presets", () => {
     });
   });
 
+  it("includes the Tuzi product endpoints with stable protocol defaults", () => {
+    expect(NAMED_ENDPOINT_PRESETS.filter((item) => item.product === "tuzi")).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "tuzi-api",
+          baseUrl: "https://api.tu-zi.com/v1",
+          apiStyle: "responses",
+        }),
+        expect.objectContaining({
+          id: "tuzi-codex",
+          baseUrl: "https://api.tu-zi.com/coding",
+          apiStyle: "responses",
+        }),
+        expect.objectContaining({
+          id: "gac-codex",
+          baseUrl: "https://gaccode.com/codex/v1",
+          apiStyle: "responses",
+        }),
+      ]),
+    );
+    expect(matchNamedPreset({ vendorKey: "兔小店" })?.id).toBe("tuzi-codex");
+    expect(matchNamedPreset({ baseUrl: "https://gaccode.com/codex/v1" })?.id).toBe(
+      "gac-codex",
+    );
+    for (const vendorKey of ["tuzi-api", "tuzi-codex", "gac-codex"]) {
+      expect(matchNamedPreset({ vendorKey })).toMatchObject({
+        apiStyle: "responses",
+      });
+      expect(matchNamedPreset({ vendorKey })).not.toHaveProperty("autoDetectApiStyle");
+      expect(matchNamedPreset({ vendorKey })).not.toHaveProperty("apiStyleCandidates");
+    }
+  });
+
   it("maps DashScope and Doubao aliases to China catalog keys", () => {
     expect(matchNamedPreset({ vendorKey: "dashscope" })?.id).toBe("alibaba-cn");
     expect(matchNamedPreset({ vendorKey: "doubao" })?.id).toBe("volcengine");
