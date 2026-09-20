@@ -7590,24 +7590,33 @@ identify the platform validation still needed.
 
 #### E2E-260: Workbench surfaces are truthful, isolated, and theme-safe
 
-- **Preconditions**: Two Daily profiles plus Coding, Creative, and Research;
-  global light/dark and reduced-motion settings available; a missing plugin
-  theme id fixture available.
+- **Preconditions**: Two Daily profiles plus Coding, Creative, Research, and
+  Custom; global light/dark and reduced-motion settings available; a missing
+  plugin theme id fixture available.
 - **Steps**:
-  1. Add, complete, and delete a Daily task; enter notes. Switch to the second
-     Daily profile and back, then restart.
-  2. Save a Creative prompt and image/video model-role bindings. Inspect the
-     generation action and asset area.
-  3. Add a Research source and notes, open the source, and try a disallowed URL
-     fixture.
-  4. Cycle `polar-night`, `sakura-day`, `fortune-gold`, and `deep-study`, then a
+  1. Add Today/Later tasks at each priority, exercise open/all/done filters,
+     complete and delete a task, and enter the daily focus and notes. Switch to
+     the second Daily profile and back, then restart.
+  2. Save and reload image/video Creative briefs and model-role bindings.
+     Inspect the generation action and media runtime state.
+  3. Enter a Research question, add sources, move them through unread/reading/
+     reviewed, record notes and a conclusion, open a source, and try non-HTTP(S)
+     URL fixtures.
+  4. Enable and disable Custom checklist, notes, and links; populate every
+     enabled module, start a chat from the same home, then restart.
+  5. Inspect the Coding launcher summary and confirm its associated project and
+     session counts update without changing the running session.
+  6. Cycle `polar-night`, `sakura-day`, `fortune-gold`, and `deep-study`, then a
      missing plugin theme. Compare the stored global theme before and after.
-  5. Disable workbench motion and enable OS reduced motion; collapse/expand the
+  7. Disable workbench motion and enable OS reduced motion; collapse/expand the
      sidebar at desktop and narrow supported widths.
 - **Expected**: Each profile shows only its own persisted dashboard data and
-  transient text never leaks between same-template profiles. Creative remains
-  explicitly unconfigured and produces no fake job or asset. Research URLs
-  pass through the main-process http(s)/mailto allowlist. Effective workbench
+  transient text never leaks between same-template profiles. Daily priorities,
+  schedules, filters, focus, and notes persist. Creative remains explicitly
+  unconfigured and produces no fake job or asset. Research progress reflects
+  source states, non-HTTP(S) input is rejected before persistence, and accepted
+  URLs pass through the main-process allowlist. Custom modules persist without
+  replacing Chat, Composer, Sidebar, or WorkPanel. Effective workbench
   themes never rewrite the global preference; a missing plugin theme falls back
   to it. Reduced motion wins, wallpaper intensity remains separate, and no
   themed layer overlaps the collapsed sidebar or controls.
@@ -7615,7 +7624,9 @@ identify the platform validation still needed.
   ADR 0283, ADR 0168
 - **Acceptance**: F (persistence), Security, Quality
 - **Milestone**: M6+
-- **Status**: Unit/source-contract covered (`workbench-contract.test.mjs`,
+- **Status**: Unit/source-contract and SSR surface covered
+  (`workbench-dashboard.test.mjs`, `workbench-surfaces-rendering.test.mjs`,
+  `workbench-launcher-rendering.test.mjs`, `workbench-contract.test.mjs`,
   host-core workbench tests); rendered desktop journey Draft
 
 ## 8. Traceability Matrix
