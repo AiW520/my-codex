@@ -20,6 +20,7 @@ test("renderer exposes all templates and an honest unconfigured media state", ()
   const shell = read("../src/features/app/AppShell.tsx");
   const surface = read("../src/components/WorkbenchSurface.tsx");
   const switcher = read("../src/components/WorkbenchSwitcher.tsx");
+  const launcher = read("../src/components/WorkbenchLauncher.tsx");
   assert.match(shell, /activeWorkbench\.templateId !== "coding"/);
   for (const template of ["coding", "daily", "creative", "research", "custom"]) {
     assert.match(switcher, new RegExp(`"${template}"`));
@@ -29,6 +30,11 @@ test("renderer exposes all templates and an honest unconfigured media state", ()
   assert.match(surface, /key=\{workbench\.id\}/);
   assert.match(surface, /api\.browserOpenExternal\(source\.url\)/);
   assert.doesNotMatch(surface, /fake|mock asset|sample citation/i);
+  assert.match(launcher, /state\.workbenches\.map/);
+  assert.match(launcher, /selectWorkbench\(workbench\.id\)/);
+  assert.match(switcher, /motionIntensity/);
+  assert.match(switcher, /wallpaperOpacity/);
+  assert.match(switcher, /themeId/);
 });
 
 test("effective workbench theme never writes the persisted global setting", () => {

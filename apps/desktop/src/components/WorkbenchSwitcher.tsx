@@ -1,36 +1,29 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import type { WorkbenchProfile, WorkbenchTemplateId } from "@pi-desktop/shared";
+import type {
+  WorkbenchProfile,
+  WorkbenchTemplateId,
+  WorkbenchUpdate,
+} from "@pi-desktop/shared";
 import { useWorkbenchStore } from "../stores/workbench-store";
 import { useArmedDelete } from "../hooks/use-armed-delete";
 import { Button, Input, Select, TooltipButton, cx } from "./ui";
 import {
-  IconBookOpen,
-  IconCalendar,
   IconChevronDown,
-  IconCode,
   IconGripVertical,
-  IconPalette,
   IconPencil,
   IconPlus,
   IconTrash,
   IconX,
 } from "./icons";
+import { WorkbenchIcon } from "./WorkbenchIcon";
 
-function WorkbenchIcon({ profile, size = 15 }: { profile: WorkbenchProfile; size?: number }) {
-  switch (profile.templateId) {
-    case "daily":
-      return <IconCalendar size={size} />;
-    case "creative":
-      return <IconPalette size={size} />;
-    case "research":
-      return <IconBookOpen size={size} />;
-    case "coding":
-    case "custom":
-    default:
-      return <IconCode size={size} />;
-  }
-}
+const WORKBENCH_THEMES = [
+  "polar-night",
+  "sakura-day",
+  "fortune-gold",
+  "deep-study",
+] as const;
 
 export function WorkbenchSwitcher() {
   const { t } = useTranslation();
@@ -118,6 +111,14 @@ export function WorkbenchSwitcher() {
     setArmedDelete(null);
     try {
       await deleteWorkbench(profile.id);
+    } catch (error) {
+      useWorkbenchStore.setState({ error: error instanceof Error ? error.message : String(error) });
+    }
+  };
+
+  const saveAppearance = async (patch: WorkbenchUpdate) => {
+    try {
+      await updateWorkbench(active.id, patch);
     } catch (error) {
       useWorkbenchStore.setState({ error: error instanceof Error ? error.message : String(error) });
     }
@@ -235,6 +236,64 @@ export function WorkbenchSwitcher() {
                     </div>
                   </div>
                 ))}
+              </div>
+
+              <div className="workbench-appearance">
+                <div className="workbench-appearance-heading">{t("workbench.appearance")}</div>
+                <label className="workbench-appearance-field">
+                  <span>{t("workbench.theme")}</span>
+                  <Select
+                    value={active.themeId ?? ""}
+                    aria-label={t("workbench.theme")}
+                    onChange={(event) =>
+                      void saveAppearance({ themeId: event.target.value || null })
+                    }
+                  >
+                    <option value="">{t("workbench.followGlobalTheme")}</option>
+                    {WORKBENCH_THEMES.map((theme) => (
+                      <option value={theme} key={theme}>{t(`workbench.themes.${theme}`)}</option>
+                    ))}
+                  </Select>
+                </label>
+                <label className="workbench-appearance-toggle">
+                  <input
+                    type="checkbox"
+                    checked={active.motionEnabled}
+                    onChange={(event) =>
+                      void saveAppearance({ motionEnabled: event.target.checked })
+                    }
+                  />
+                  <span>{t("workbench.motion")}</span>
+                </label>
+                <label className="workbench-appearance-slider">
+                  <span>{t("workbench.motionIntensity")}</span>
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    step="10"
+                    value={active.motionIntensity}
+                    disabled={!active.motionEnabled}
+                    onChange={(event) =>
+                      void saveAppearance({ motionIntensity: Number(event.target.value) })
+                    }
+                  />
+                  <output>{active.motionIntensity}%</output>
+                </label>
+                <label className="workbench-appearance-slider">
+                  <span>{t("workbench.wallpaperOpacity")}</span>
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    step="10"
+                    value={active.wallpaperOpacity}
+                    onChange={(event) =>
+                      void saveAppearance({ wallpaperOpacity: Number(event.target.value) })
+                    }
+                  />
+                  <output>{active.wallpaperOpacity}%</output>
+                </label>
               </div>
 
               {creating ? (
