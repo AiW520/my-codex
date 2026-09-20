@@ -13,6 +13,7 @@ import {
   BookOpen,
   Bot,
   Camera,
+  Calendar,
   Check,
   CheckCheck,
   ChevronDown,
@@ -165,6 +166,7 @@ export const IconPencil = icon(PencilLine);
 export const IconWrench = icon(Wrench);
 export const IconPullRequest = icon(GitPullRequestArrow);
 export const IconClock = icon(Clock);
+export const IconCalendar = icon(Calendar);
 export const IconAt = icon(AtSign);
 export const IconSettings = icon(Settings);
 export const IconHelp = icon(CircleHelp);

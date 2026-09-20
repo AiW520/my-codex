@@ -2,21 +2,21 @@ const REPOSITORY = "AiW520/my-codex";
 const RELEASES_API = `https://api.github.com/repos/${REPOSITORY}/releases?per_page=10`;
 
 const FALLBACK_RELEASE = {
-  tagName: "v0.15.1-beta.3",
+  tagName: "v0.15.1-beta.4",
   prerelease: true,
   publishedAt: null,
-  url: `https://github.com/${REPOSITORY}/releases/tag/v0.15.1-beta.3`,
+  url: `https://github.com/${REPOSITORY}/releases/tag/v0.15.1-beta.4`,
   assetNames: [
-    "PI-Desktop-Setup-0.15.1-beta.3.exe",
-    "PI-Desktop-Portable-0.15.1-beta.3.exe",
-    "PI-Desktop-0.15.1-beta.3-arm64.dmg",
-    "PI-Desktop-0.15.1-beta.3-arm64-mac.zip",
-    "PI-Desktop-0.15.1-beta.3-x64.dmg",
-    "PI-Desktop-0.15.1-beta.3-x64-mac.zip",
-    "PI-Desktop-0.15.1-beta.3.AppImage",
-    "pi-desktop_0.15.1-beta.3_amd64.deb",
-    "pi-desktop-0.15.1-beta.3-x86_64.rpm",
-    "PI-Desktop-0.15.1-beta.3-linux-x64.asar",
+    "PI-Desktop-Setup-0.15.1-beta.4.exe",
+    "PI-Desktop-Portable-0.15.1-beta.4.exe",
+    "PI-Desktop-0.15.1-beta.4-arm64.dmg",
+    "PI-Desktop-0.15.1-beta.4-arm64-mac.zip",
+    "PI-Desktop-0.15.1-beta.4-x64.dmg",
+    "PI-Desktop-0.15.1-beta.4-x64-mac.zip",
+    "PI-Desktop-0.15.1-beta.4.AppImage",
+    "pi-desktop_0.15.1-beta.4_amd64.deb",
+    "pi-desktop-0.15.1-beta.4-x86_64.rpm",
+    "PI-Desktop-0.15.1-beta.4-linux-x64.asar",
   ],
 };
 

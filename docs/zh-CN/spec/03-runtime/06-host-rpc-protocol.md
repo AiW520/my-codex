@@ -201,6 +201,28 @@ type ToolBudgetHealth = {
   多文件夹项目组根目录的路径会被拒绝，以便该组保留有效的 Primary 根目录；而只要其中仍有会话
   在运行，调用就会被拒绝（1008 / `CONFLICT`），因此运行中的轮次绝不会丢失它正在写入的转录本。
 
+### 工作台（ADR 0283）
+
+- `workbenches.list` — 确保四个默认配置存在，并按持久 position 返回
+  `{ activeWorkbenchId, workbenches }`。
+- `workbenches.create({ name, templateId? })` — 在末尾创建配置并返回
+  `{ workbench }`；模板默认为 `custom`。
+- `workbenches.update({ id, patch })` — 只接受 `name`、`icon`、`themeId`、
+  `motionEnabled`、`motionIntensity`、`wallpaperOpacity`、`layoutPreset`、
+  `modelRoles` 与 `dashboardState`，拒绝未知字段和错误类型。
+- `workbenches.activate({ id, projectPath?, sessionId? })` — 激活配置并可选记住
+  导航上下文；会话必须存在且未删除。它不会改变会话目录、模型、权限、运行中回合
+  或 runtime 所有权。
+- `workbenches.reorder({ ids })` — 要求每个现有 id 精确出现一次，在事务中持久化
+  顺序并返回 `{ workbenches }`。
+- `workbenches.delete({ id })` — 只删除配置与关联行，保留项目和会话并返回
+  `{ ok: true }`；删除当前配置会选择替代项，删除最后一个配置会失败。
+
+这些方法在 protocol v11 内增量加入。新项目与会话由 host-core 关联到当前工作台，
+但仍由既有项目/会话域拥有。工作台模型角色只是展示和未来路由提示，绝不修改
+运行中的会话绑定。错误输入返回 `INVALID_PARAMS`，缺失实体返回 `NOT_FOUND`，
+删除最后一个配置返回 `CONFLICT`，SQLite 与持久数据错误返回 `INTERNAL`。
+
 ### 秘密
 - `secrets.set`
 - `secrets.delete`
