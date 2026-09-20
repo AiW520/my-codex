@@ -51,6 +51,8 @@ Electron Main exclusively owns the update client and fixed GitHub Releases
 target. The renderer can request allowlisted operations and render typed state,
 but cannot supply a feed URL or access the updater directly. App updates do
 not pass through Rust host-core or the agent sidecar (D120 / ADR 0022).
+This distribution pins that target to `AiW520/my-codex`; packaged builds must
+not discover or install releases from the upstream `vastsa/PI-Desktop` feed.
 
 ### 3.2 UI (React)
 - session UX

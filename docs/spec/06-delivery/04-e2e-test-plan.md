@@ -3912,7 +3912,8 @@ identify the platform validation still needed.
 
 - **Preconditions**: Packaged build whose embedded version is a prerelease such
   as `0.2.0-rc.6`; GitHub Releases latest stable tag is newer (for example
-  `0.2.2`) with published `latest*.yml` feeds.
+  `0.2.2`) with published `latest*.yml` feeds in the configured distribution
+  repository.
 - **Steps**: 1) Launch the packaged prerelease install. 2) Wait for the
   automatic check or invoke Check for Updates from the application menu /
   Settings → Info.
@@ -3922,14 +3923,16 @@ identify the platform validation still needed.
   (`PORTABLE_EXECUTABLE_FILE`) stays on the manual notify-and-link path and
   must not download or run the NSIS installer. The client must not report
   up-to-date merely because no newer release shares the same `rc` prerelease
-  channel.
+  channel. Feed discovery and the manual releases action remain pinned to the
+  configured distribution repository and never cross to an upstream fork.
 - **Specs linked**: `04-ux/09-interaction-patterns.md`,
   `05-security/01-security.md`, `08-meta/decisions-log.md` (D120),
   ADR 0022
 - **Acceptance**: A (app startup), Quality
 - **Milestone**: M5
 - **Status**: Unit-covered (`auto-update.test.mjs` asserts
-  `allowPrerelease = false`); packaged discovery scenario Draft
+  `allowPrerelease = false` and the fixed distribution repository); packaged
+  discovery scenario Draft
 
 #### E2E-067B: Shipped-locale update notes and full changelog dialog (D164/D345/D349)
 
