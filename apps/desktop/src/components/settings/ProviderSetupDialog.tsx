@@ -245,10 +245,14 @@ export function ProviderSetupDialog({
         ok?: boolean;
         message?: string;
         status?: number;
+        network?: string;
+        credential?: "verified" | "invalid" | "unverified";
       };
       setTestResult(
         result?.ok
-          ? t("settings.testOk")
+          ? result.credential === "unverified" && result.network === "ok"
+            ? t("settings.testEndpointOnly")
+            : t("settings.testOk")
           : result?.message ||
               (result?.status
                 ? t("settings.testFailedStatus", { status: result.status })

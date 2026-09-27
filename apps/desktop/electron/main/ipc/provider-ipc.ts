@@ -8,6 +8,7 @@ import {
 } from "@pi-desktop/shared";
 import { OAUTH_AUTH_KIND, type VendorOAuth } from "../oauth";
 import { discoverProviderModelsWithProtocol } from "../model-discovery";
+import { providerConnectionRequest } from "../provider-connection";
 import { genericModelConfig, modelConfigWithBinding, mergeProviderHeaders } from "@pi-desktop/agent-runtime";
 import { modelConfigFromModelsDev, modelInfoFromModelsDev, type ModelsDevCatalog } from "../models-dev-catalog";
 import type { HostProcess } from "../host-process";
@@ -122,9 +123,17 @@ export function registerProviderIpc({
       "providers.testConnection",
       { id },
     );
-    if (!local.ok) return { ...local, network: "skipped" };
+    if (!local.ok) return { ...local, network: "skipped", credential: "unverified" };
     const detail = await host.call<{
-      provider?: { baseUrl?: string; authKind?: string; headers?: Record<string, string> };
+      provider?: {
+        baseUrl?: string;
+        authKind?: string;
+        apiStyle?: string;
+        modelId?: string;
+        defaultModelId?: string;
+        models?: ModelBinding[];
+        headers?: Record<string, string>;
+      };
     }>("providers.get", { id });
     // A vendor account proves itself by resolving auth — refreshing the token
     // if it has expired — not by probing /models with a key it does not have.
@@ -141,23 +150,41 @@ export function registerProviderIpc({
         };
       }
     }
-    const baseUrl = detail.provider?.baseUrl;
-    if (!baseUrl) return { ...local, network: "skipped" };
+    const provider = detail.provider;
+    const baseUrl = provider?.baseUrl;
+    if (!baseUrl) return { ...local, network: "skipped", credential: "unverified" };
     const secret = await host.call<{ value?: string }>("providers.getSecret", { id });
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 8000);
     try {
-      const res = await fetch(`${baseUrl.replace(/\/+$/, "")}/models`, {
-        headers: mergeProviderHeaders(
-          secret.value ? { Authorization: `Bearer ${secret.value}` } : {},
-          detail.provider?.headers,
-        ),
+      const isResponses = (provider?.apiStyle ?? "chat_completions") === "responses";
+      const model = provider?.defaultModelId ?? provider?.models?.[0]?.id ?? provider?.modelId;
+      if (isResponses && !model) {
+        return {
+          ...local,
+          ok: false,
+          network: "skipped",
+          credential: "unverified",
+          errorCode: ErrorCodes.MODEL_NOT_CONFIGURED,
+          message: "No model is configured for Responses verification",
+        };
+      }
+      const request = providerConnectionRequest({
+        baseUrl,
+        apiStyle: isResponses ? "responses" : provider?.apiStyle,
+        modelId: model,
+        apiKey: secret.value,
+        headers: mergeProviderHeaders({}, detail.provider?.headers),
+      });
+      const res = await fetch(request.url, {
+        ...request.init,
         signal: controller.signal,
       });
       if (res.status === 401 || res.status === 403) {
         return {
           ok: false,
           network: "failed",
+          credential: request.verifiesCredential ? "invalid" : "unverified",
           status: res.status,
           errorCode: ErrorCodes.PROVIDER_UNAUTHORIZED,
         };
@@ -166,15 +193,22 @@ export function registerProviderIpc({
         return {
           ok: false,
           network: "failed",
+          credential: request.verifiesCredential ? "unverified" : "unverified",
           status: res.status,
           errorCode: ErrorCodes.PROVIDER_RATE_LIMITED,
         };
       }
-      return { ok: res.ok, network: res.ok ? "ok" : "failed", status: res.status };
+      return {
+        ok: res.ok,
+        network: res.ok ? "ok" : "failed",
+        credential: request.verifiesCredential && res.ok ? "verified" : "unverified",
+        status: res.status,
+      };
     } catch (e) {
       return {
         ok: false,
         network: "failed",
+        credential: "unverified",
         errorCode: ErrorCodes.TIMEOUT,
         message: e instanceof Error ? e.message : String(e),
       };

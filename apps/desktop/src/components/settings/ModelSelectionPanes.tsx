@@ -451,10 +451,16 @@ export function ModelSelectionPanes({
         </div>
 
         {discovery.source === "catalog" ? (
-          <div className="provider-models-note">{t("settings.modelsFromCatalogNote")}</div>
+          <>
+            <div className="provider-models-note">{t("settings.modelsFromCatalogNote")}</div>
+            <div className="provider-models-note">{t("settings.modelsUnverifiedNote")}</div>
+          </>
         ) : null}
         {discovery.source === "fallback" ? (
-          <div className="provider-models-note">{t("settings.modelsFallbackNote")}</div>
+          <>
+            <div className="provider-models-note">{t("settings.modelsFallbackNote")}</div>
+            <div className="provider-models-note">{t("settings.modelsUnverifiedNote")}</div>
+          </>
         ) : null}
         {fetchFailed && !emptyFetchError ? (
           <ModelsFetchErrorMessage error={discovery.error} variant="banner" />

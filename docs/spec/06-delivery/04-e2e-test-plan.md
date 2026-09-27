@@ -119,6 +119,23 @@ Each scenario is documented in this format:
 
 ## E2E Main Integration Validation
 
+### E2E-PROVIDER-responses-credential-validation: Responses credential state
+
+- **Preconditions**: A provider row is configured with the standard
+  `responses` API and a model; a non-Responses provider is also available.
+- **Steps**: Test the Responses provider with a valid and invalid credential,
+  then test the non-Responses provider whose `/models` endpoint is reachable.
+- **Expected**: The minimal Responses generation probe reports `verified` on
+  2xx and `invalid` on 401/403. The model-list probe reports endpoint
+  reachability but keeps the credential `unverified`. A Responses row without
+  a model is skipped with `MODEL_NOT_CONFIGURED` and never makes a network
+  request.
+- **Specs linked**: `docs/spec/03-runtime/11-provider-model-system.md`.
+- **Acceptance criterion**: A, C.
+- **Milestone**: M2.
+- **Status**: Partially automated (IPC contract coverage; valid production
+  generation requires a provider test credential).
+
 Every code-bearing change must pass the E2E suites relevant to its regression
 surface on the integrated local `main` that carries the change, before the
 request branch is pushed and the pull request is opened. Code-bearing changes
