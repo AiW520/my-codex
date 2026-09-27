@@ -364,7 +364,15 @@ refused with `PERMISSION_DENIED`, while omitting the key, or naming the default 
 - API keys stored via secure storage (`SECRET_*` APIs)
 - Provider config stores only `secretRef` / hasSecret boolean
 - Renderer never receives raw key in list APIs
-- Optional key validation call: `providers.testConnection`
+- Optional key validation call: `providers.testConnection`. For a provider using
+  the standard `responses` API, this call sends one bounded, non-streaming
+  `POST /responses` request for the configured model with `input: "ping"`,
+  `max_output_tokens: 16`, and `store: false`; a successful 2xx response is
+  the only `verified` credential result. A 401/403 is `invalid`. Providers
+  using another wire API retain the non-generating `/models` reachability
+  probe and are reported as `unverified`, because a successful model listing
+  does not prove that the credential can generate. A Responses provider with
+  no configured model is skipped and reported as `MODEL_NOT_CONFIGURED`.
 - A vendor-account row stores an OAuth grant instead of a key; `hasSecret`
   covers either credential and `hasOauth` distinguishes them (§8a)
 

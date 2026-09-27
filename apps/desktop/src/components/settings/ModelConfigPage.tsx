@@ -247,9 +247,16 @@ export function ModelConfigPage() {
         ok?: boolean;
         message?: string;
         status?: number;
+        network?: string;
+        credential?: "verified" | "invalid" | "unverified";
       };
       if (result?.ok) {
-        showToast(t("settings.testOk"), { variant: "success" });
+        showToast(
+          result.credential === "unverified" && result.network === "ok"
+            ? t("settings.testEndpointOnly")
+            : t("settings.testOk"),
+          { variant: result.credential === "unverified" ? "warning" : "success" },
+        );
       } else {
         showToast(
           result?.message ||
