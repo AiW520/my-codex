@@ -871,7 +871,7 @@ nav a::after,
   justify-content: center;
 }
 
-.hero-content > * { max-width: min(570px, 100%); }
+.hero-content > * { max-width: min(570px, 48%); }
 .hero-kicker-row { margin-bottom: 24px; }
 .hero-build-tag { border-color: rgba(185, 239, 202, 0.32); color: #b9efca; }
 h1 { font-size: clamp(58px, 7vw, 92px); letter-spacing: -0.06em; }
@@ -915,6 +915,7 @@ footer { background: #0b1914; }
 @media (max-width: 900px) {
   .hero::after { right: 24px; bottom: 9%; width: 40vw; opacity: .34; }
   .hero-content { position: relative; z-index: 2; }
+  .hero-content > * { max-width: min(570px, 100%); }
 }
 
 @media (max-width: 560px) {
