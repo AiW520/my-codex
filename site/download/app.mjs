@@ -2,21 +2,21 @@ const REPOSITORY = "AiW520/my-codex";
 const RELEASES_API = `https://api.github.com/repos/${REPOSITORY}/releases?per_page=10`;
 
 const FALLBACK_RELEASE = {
-  tagName: "v0.15.1-beta.6",
+  tagName: "v0.15.1-beta.7",
   prerelease: true,
   publishedAt: null,
-  url: `https://github.com/${REPOSITORY}/releases/tag/v0.15.1-beta.6`,
+  url: `https://github.com/${REPOSITORY}/releases/tag/v0.15.1-beta.7`,
   assetNames: [
-    "PI-Desktop-Setup-0.15.1-beta.6.exe",
-    "PI-Desktop-Portable-0.15.1-beta.6.exe",
-    "PI-Desktop-0.15.1-beta.6-arm64.dmg",
-    "PI-Desktop-0.15.1-beta.6-arm64-mac.zip",
-    "PI-Desktop-0.15.1-beta.6-x64.dmg",
-    "PI-Desktop-0.15.1-beta.6-x64-mac.zip",
-    "PI-Desktop-0.15.1-beta.6.AppImage",
-    "pi-desktop_0.15.1-beta.6_amd64.deb",
-    "pi-desktop-0.15.1-beta.6-x86_64.rpm",
-    "PI-Desktop-0.15.1-beta.6-linux-x64.asar",
+    "PI-Desktop-Setup-0.15.1-beta.7.exe",
+    "PI-Desktop-Portable-0.15.1-beta.7.exe",
+    "PI-Desktop-0.15.1-beta.7-arm64.dmg",
+    "PI-Desktop-0.15.1-beta.7-arm64-mac.zip",
+    "PI-Desktop-0.15.1-beta.7-x64.dmg",
+    "PI-Desktop-0.15.1-beta.7-x64-mac.zip",
+    "PI-Desktop-0.15.1-beta.7.AppImage",
+    "pi-desktop_0.15.1-beta.7_amd64.deb",
+    "pi-desktop-0.15.1-beta.7-x86_64.rpm",
+    "PI-Desktop-0.15.1-beta.7-linux-x64.asar",
   ],
 };
 
