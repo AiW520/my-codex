@@ -179,8 +179,6 @@ ignoreBrokenStdio();
 installMainProcessErrorHandlers();
 
 app.setName(APP_NAME);
-// Brand changes must not create a second Chromium profile or singleton lock.
-// Host-owned data continues to use ~/.pi-desktop independently of this path.
 app.setPath("userData", join(app.getPath("appData"), "PI-Desktop"));
 if (process.platform === "win32") {
   app.setAppUserModelId(APP_ID);
