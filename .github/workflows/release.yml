@@ -83,8 +83,11 @@ jobs:
 
       - name: Desktop startup and task configuration journeys
         run: |
-          xvfb-run -a node scripts/e2e-electron-boot.mjs
-          xvfb-run -a node scripts/e2e-provider-api-style.mjs --task-tuzi
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends openbox x11-utils
+          sudo chown root:root apps/desktop/node_modules/electron/dist/chrome-sandbox
+          sudo chmod 4755 apps/desktop/node_modules/electron/dist/chrome-sandbox
+          xvfb-run -a bash scripts/e2e-desktop-linux.sh
 
   build:
     name: Build ${{ matrix.name }}

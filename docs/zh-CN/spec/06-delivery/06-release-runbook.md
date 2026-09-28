@@ -38,6 +38,9 @@ Electron 43+ 上的首次 `pnpm dev` 会按需下载 Electron 二进制文件
 CI 和发布验证会在运行启动与任务配置探针前执行
 `pnpm --filter @pi-desktop/desktop exec install-electron`，因为这些探针会直接
 启动 Electron 二进制文件。
+一次性 Linux runner 将 Electron 的 `chrome-sandbox` 辅助程序设为 root 所有、
+权限 `4755`。探针保留 Chromium 沙箱，在 Xvfb 和 Openbox 中运行，并限时等待
+窗口管理器就绪，以验证原生最大化窗口 IPC。
 打包通道在 macOS 上通过 electron-builder 使用 `build/icon.icns`，并在
 Windows 可执行文件和原生窗口图标中使用 `build/icon.ico`。渲染器通过
 `BrandLogo` 导入相同的 PNG。PNG 是规范来源；`scripts/make-icon.py` 派生
