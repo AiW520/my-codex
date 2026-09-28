@@ -7,6 +7,13 @@
 
 ## 1. Build lanes
 
+The product display name is **鞭陀-Desktop**. Public release attachment names use
+the ASCII prefix `BianTuo-Desktop`: GitHub strips Chinese filename characters,
+and electron-builder otherwise substitutes updater URLs that differ from the
+uploaded files. This does not change application names, app identity, or profiles.
+Before publishing, `scripts/check-release-assets.rb` verifies every updater
+reference, file size, and SHA-512 digest against the actual staged artifacts.
+
 | Lane | Command | Signing | Use |
 |---|---|---|---|
 | Dev | `pnpm dev` | none | daily development |

@@ -130,7 +130,7 @@
       }
     ],
     "mac": {
-      "artifactName": "鞭陀-Desktop-${version}-${arch}-mac.${ext}",
+      "artifactName": "BianTuo-Desktop-${version}-${arch}-mac.${ext}",
       "target": [
         {
           "target": "dmg"
@@ -161,7 +161,7 @@
       ]
     },
     "dmg": {
-      "artifactName": "鞭陀-Desktop-${version}-${arch}.${ext}",
+      "artifactName": "BianTuo-Desktop-${version}-${arch}.${ext}",
       "background": "build/dmg-background.png",
       "window": {
         "width": 720,
@@ -221,25 +221,26 @@
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "shortcutName": "鞭陀-Desktop",
-      "artifactName": "鞭陀-Desktop-Setup-${version}.${ext}"
+      "artifactName": "BianTuo-Desktop-Setup-${version}.${ext}"
     },
     "portable": {
-      "artifactName": "鞭陀-Desktop-Portable-${version}.${ext}",
+      "artifactName": "BianTuo-Desktop-Portable-${version}.${ext}",
       "requestExecutionLevel": "user"
     },
     "deb": {
       "packageName": "pi-desktop",
-      "artifactName": "鞭陀-Desktop_${version}_${arch}.${ext}"
+      "artifactName": "BianTuo-Desktop_${version}_${arch}.${ext}"
     },
     "rpm": {
       "packageName": "pi-desktop",
-      "artifactName": "鞭陀-Desktop-${version}-${arch}.${ext}",
+      "artifactName": "BianTuo-Desktop-${version}-${arch}.${ext}",
       "fpm": [
         "--rpm-rpmbuild-define",
         "_build_id_links none"
       ]
     },
     "linux": {
+      "artifactName": "BianTuo-Desktop-${version}.${ext}",
       "executableName": "pi-desktop",
       "syncDesktopName": true,
       "target": [

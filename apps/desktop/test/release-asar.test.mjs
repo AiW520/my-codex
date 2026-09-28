@@ -28,7 +28,7 @@ test("exports the exact Linux app.asar with the release asset name", async () =>
     const result = await exportLinuxAsar({ rootDir: fixture.rootDir });
     const destination = join(
       fixture.releaseDir,
-      "鞭陀-Desktop-9.8.7-linux-x64.asar",
+      "BianTuo-Desktop-9.8.7-linux-x64.asar",
     );
 
     assert.equal(result.destination, destination);
