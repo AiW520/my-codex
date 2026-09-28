@@ -166,7 +166,7 @@ test("release workflow publishes the Linux ASAR beside installers", () => {
   );
   assert.match(
     releaseAsarScriptSource,
-    /PI-Desktop-\$\{releaseVersion\}-linux-x64\.asar/,
+    /鞭陀-Desktop-\$\{releaseVersion\}-linux-x64\.asar/,
   );
 });
 
@@ -185,12 +185,12 @@ test("release matrix packages both native macOS architectures", () => {
   );
   assert.equal(
     JSON.parse(desktopPackageSource).build.mac.artifactName,
-    "PI-Desktop-${version}-${arch}-mac.${ext}",
+    "鞭陀-Desktop-${version}-${arch}-mac.${ext}",
     "macOS ZIP names include the target architecture",
   );
   assert.equal(
     JSON.parse(desktopPackageSource).build.dmg.artifactName,
-    "PI-Desktop-${version}-${arch}.${ext}",
+    "鞭陀-Desktop-${version}-${arch}.${ext}",
     "macOS DMG names include the target architecture",
   );
   assert.match(

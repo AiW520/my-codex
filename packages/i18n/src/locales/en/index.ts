@@ -2,9 +2,9 @@ import { workbenchEn } from "../../workbench-copy.js";
 
 export const en = {
   app: {
-    shellName: "PI-Desktop",
+    shellName: "鞭陀-Desktop",
     tagline: "Local AI coding partner",
-    starting: "Starting PI-Desktop…",
+    starting: "Starting 鞭陀-Desktop…",
     loadingView: "Loading view…",
     uiCrashed: "Something went wrong with the interface",
   },
@@ -23,13 +23,13 @@ export const en = {
     close: "Close",
   },
   tray: {
-    open: "Open PI-Desktop",
-    quit: "Quit PI-Desktop",
-    askTitle: "Keep PI-Desktop running in the background?",
+    open: "Open 鞭陀-Desktop",
+    quit: "Quit 鞭陀-Desktop",
+    askTitle: "Keep 鞭陀-Desktop running in the background?",
     askBody:
-      "When you close the window, PI-Desktop can keep running in the system tray so nothing is lost. You can change this any time in Settings.",
+      "When you close the window, 鞭陀-Desktop can keep running in the system tray so nothing is lost. You can change this any time in Settings.",
     closeToTray: "Close to tray",
-    confirmQuitTitle: "Quit PI-Desktop?",
+    confirmQuitTitle: "Quit 鞭陀-Desktop?",
     confirmQuitBody:
       "Are you sure you want to quit? All running sessions will be stopped and unsaved changes may be lost.",
     confirmQuit: "Quit",
@@ -87,7 +87,7 @@ export const en = {
     zoomOut: "Zoom Out",
     toggleFullScreen: "Toggle Full Screen",
     toggleDevTools: "Developer Tools",
-    appHelp: "PI-Desktop Help",
+    appHelp: "鞭陀-Desktop Help",
     openLogs: "Open Logs",
     checkForUpdates: "Check for Updates…",
   },
@@ -220,7 +220,7 @@ export const en = {
     emptyTitle: "What can I help you build?",
     emptyTitleInProject: "What can we build in {{project}}?",
     emptyTitleTemporary: "What would you like to explore temporarily?",
-    placeholder: "Ask PI-Desktop to help with anything",
+    placeholder: "Ask 鞭陀-Desktop to help with anything",
     placeholderHome: "Ask anything",
     placeholderHint: "Type / for commands · @ for files",
     placeholderHomeHint: "Type / for commands · @ for files",
@@ -629,7 +629,7 @@ sklm: {
       "This provider comes from the plugin \"{{plugin}}\", which supplies its endpoint and models. Enable or disable it on the Plugins page.",
     pluginProviderKey: "API key",
     pluginProviderKeyHint:
-      "Stored in PI-Desktop and used by the runtime. The plugin never receives it.",
+      "Stored in 鞭陀-Desktop and used by the runtime. The plugin never receives it.",
     pluginProviderKeyRemove: "Remove key",
     pluginProviderKeySaved: "API key saved",
     pluginProviderKeyRemoved: "API key removed",
@@ -1718,9 +1718,9 @@ importConfirm: "Imported extensions run inside the agent process with the same a
         "Can spend your model quota on a one-shot completion. The plugin never receives your API keys.",
       "agent.extension": "Runs ExtensionAPI modules inside the agent process with the same access as the agent's own tools. Enable only code you trust.",
       "provider.register":
-        "Adds the providers this plugin defines to Settings' provider list. The plugin supplies the endpoint and models; your API key stays in PI-Desktop.",
+        "Adds the providers this plugin defines to Settings' provider list. The plugin supplies the endpoint and models; your API key stays in 鞭陀-Desktop.",
       "desktop.control":
-        "Lets the plugin invoke the reviewed PI-Desktop control catalog. Destructive operations still require confirm=true; the MCP bearer token is never exposed.",
+        "Lets the plugin invoke the reviewed 鞭陀-Desktop control catalog. Destructive operations still require confirm=true; the MCP bearer token is never exposed.",
       "models.list": "Can see which models you have signed in for. It does not receive keys.",
       "session.read":
         "Can read the conversation the current tool call is operating on, including tool results.",
@@ -1735,7 +1735,7 @@ importConfirm: "Imported extensions run inside the agent process with the same a
       "audio.capture.background": "Captures the microphone while the plugin runs in the background, with no panel open.",
       "audio.playback.background": "Plays audio the plugin streams, even when no panel is open.",
       "speech.adapter.register": "Can add a transcription or speech protocol that uses your existing provider keys. The plugin never sees the key.",
-      "keyboard.globalShortcut": "Registers system-wide keyboard shortcuts that trigger this plugin's own commands while PI-Desktop is not focused.",
+      "keyboard.globalShortcut": "Registers system-wide keyboard shortcuts that trigger this plugin's own commands while 鞭陀-Desktop is not focused.",
       "net.websocket": "Opens real-time two-way connections to the hostnames the plugin declared.",
       "bus.publish": "Can send messages on the topics it declared.",
       "bus.subscribe": "Can receive messages on the topics it declared.",
@@ -1953,7 +1953,7 @@ importConfirm: "Imported extensions run inside the agent process with the same a
     unsupportedGlibc:
       "This Linux build needs glibc 2.35 or newer (Ubuntu 22.04, Debian 12, Fedora 36+).",
     dbSchemaTooNew:
-      "This PI-Desktop is older than your local data (data schema {{found}}, this build supports {{supported}}). Install the newer PI-Desktop that last opened this data, or a later version.",
+      "This 鞭陀-Desktop is older than your local data (data schema {{found}}, this build supports {{supported}}). Install the newer 鞭陀-Desktop that last opened this data, or a later version.",
     archMismatch:
       "This is the {{buildArch}} build running on a {{machineArch}} machine, so it runs through translation and is slower. Install the {{machineArch}} build instead.",
     dismissArchMismatch: "Dismiss",

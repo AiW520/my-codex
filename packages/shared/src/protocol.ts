@@ -1,8 +1,11 @@
 export const PROTOCOL_VERSION = 11 as const;
 export const SCHEMA_VERSION = 16 as const;
 export const APP_ID = "net.aiuo.pi-desktop";
-export const APP_NAME = "PI-Desktop";
-export const APP_VERSION = "0.15.1-beta.7";
+// Visible product name. Keep APP_ID and IPC prefixes stable so existing
+// profiles, native notifications, updater channels, and preload contracts
+// continue to resolve after the rebrand.
+export const APP_NAME = "鞭陀-Desktop";
+export const APP_VERSION = "0.15.1-beta.8";
 
 export const APP_MENU_COMMANDS = [
   "newTask",

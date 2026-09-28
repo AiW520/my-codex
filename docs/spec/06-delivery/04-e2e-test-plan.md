@@ -8,6 +8,24 @@
 
 ## 1. Goals
 
+### E2E-BRANDING-download-page-and-profile-compatibility
+
+- **Preconditions:** The page is served with the current Release API unavailable,
+  and an existing desktop profile is present at the legacy `PI-Desktop` app-data
+  path.
+- **Steps:** Load the download page, switch Windows/macOS/Linux tabs with mouse
+  and arrow keys, then launch the packaged desktop build.
+- **Expected:** The page identifies the product as **鞭陀-Desktop**, renders
+  verified fallback assets immediately, preserves keyboard tab behavior, and
+  the desktop uses the same existing profile/IPC/App ID while exposing the new
+  native display name. No download control points outside the repository's
+  GitHub Release assets.
+- **Specs linked:** `docs/spec/04-ux/07-ui-design-system.md`,
+  `docs/spec/06-delivery/06-release-runbook.md`.
+- **Acceptance criterion:** A, F.
+- **Milestone:** M6.
+- **Status:** Automated source/page checks; packaged launch remains platform-gated.
+
 ### E2E-PLUGIN-appearance-extension-lifecycle
 
 - **Preconditions:** A fixture plugin declares `ui.theme`, `ui.settings`, one

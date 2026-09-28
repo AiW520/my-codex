@@ -473,7 +473,7 @@ export class McpServerClient {
         {
           protocolVersion: MCP_PROTOCOL_VERSION,
           capabilities: {},
-          clientInfo: { name: "PI-Desktop", version: "1" },
+          clientInfo: { name: "鞭陀-Desktop", version: "1" },
         },
         timeoutMs,
       );

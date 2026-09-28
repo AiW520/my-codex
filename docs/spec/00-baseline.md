@@ -108,7 +108,9 @@
 
 ## Frozen Decisions
 
-1. Product name: **PI-Desktop**
+1. Product name: **鞭陀-Desktop** (the visible/native display name; the stable
+   `pi-desktop` package, IPC, App ID, host binary, and data directory identifiers
+   remain unchanged for upgrade and profile compatibility)
 2. Desktop shell: **Electron**
 3. UI: **React + TypeScript + Vite + Tailwind**
 4. UI language default: **English**

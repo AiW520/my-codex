@@ -45,6 +45,18 @@ test("selectDownloadAssets rejects untrusted URLs and ignores update metadata", 
   assert.equal(isTrustedDownloadUrl("https://github.com/other/repo/releases/download/v1/file.exe"), false);
 });
 
+test("selectDownloadAssets accepts the rebranded asset names while keeping legacy releases downloadable", () => {
+  const release = fallbackRelease();
+  const renamed = release.assets.map((asset) => ({
+    ...asset,
+    name: asset.name.replace(/^PI-Desktop|^pi-desktop/, "鞭陀-Desktop"),
+  }));
+  const assets = selectDownloadAssets(renamed);
+  assert.equal(assets.windowsInstaller.name, "鞭陀-Desktop-Setup-0.15.1-beta.7.exe");
+  assert.equal(assets.linuxDeb.name, "鞭陀-Desktop_0.15.1-beta.7_amd64.deb");
+  assert.equal(assets.macArmDmg.name, "鞭陀-Desktop-0.15.1-beta.7-arm64.dmg");
+});
+
 test("selectPublishedRelease skips drafts and invalid release pages", () => {
   const release = selectPublishedRelease([
     { draft: true, tag_name: "v2", html_url: "https://github.com/AiW520/my-codex/releases/tag/v2" },

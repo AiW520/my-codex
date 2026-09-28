@@ -64,7 +64,7 @@ const english = {
     briefQueue: "Draft queue", briefQueueHint: "Reload a saved brief into the editor.", draft: "Draft",
     emptyBriefs: "No saved briefs", emptyBriefsHint: "Save a prompt to build a local production queue.", deleteBrief: "Delete brief",
     assets: "Assets", assetsHint: "Completed media jobs will appear here when the media runtime exists.",
-    emptyAssets: "No generated assets", emptyAssetsHint: "PI-Desktop will not display placeholder output as a successful generation.",
+    emptyAssets: "No generated assets", emptyAssetsHint: "鞭陀-Desktop will not display placeholder output as a successful generation.",
   },
   research: {
     subtitle: "Local sources and research notes", localOnly: "Local workspace", progress: "{{reviewed}} of {{total}} reviewed",
@@ -132,7 +132,7 @@ export const workbenchZhCN = {
     runtime: "媒体运行时", runtimeHint: "生成操作需要接入真实媒体适配器。",
     briefQueue: "草稿队列", briefQueueHint: "将已保存简报重新载入编辑器。", draft: "草稿",
     emptyBriefs: "暂无简报", emptyBriefsHint: "保存提示词后即可建立本地创作队列。", deleteBrief: "删除简报",
-    emptyAssets: "暂无生成资产", emptyAssetsHint: "PI-Desktop 不会把占位内容伪装成成功的生成结果。",
+    emptyAssets: "暂无生成资产", emptyAssetsHint: "鞭陀-Desktop 不会把占位内容伪装成成功的生成结果。",
   },
   research: {
     subtitle: "本地来源与研究笔记", localOnly: "本地工作空间", progress: "已审阅 {{reviewed}} / {{total}}",

@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="docs/image/readme/logo.png" alt="PI-Desktop" width="108" />
+<img src="docs/image/readme/logo.png" alt="鞭陀-Desktop" width="108" />
 
-# PI-Desktop
+# 鞭陀-Desktop
 
 ### The desktop workspace for AI coding agents.
 
@@ -28,11 +28,11 @@ Local-first · Model-agnostic · Extensible · macOS / Windows / Linux
 
 <br />
 
-<img src="docs/image/readme/home.webp" alt="PI-Desktop desktop workspace" width="94%" />
+<img src="docs/image/readme/home.webp" alt="鞭陀-Desktop desktop workspace" width="94%" />
 
 <br />
 
-**No PI-Desktop account. No mandatory relay. No editor lock-in.**
+**No 鞭陀-Desktop account. No mandatory relay. No editor lock-in.**
 
 <sub>Projects and sessions stay on your machine. Model requests go directly to the provider or endpoint you configure.</sub>
 
@@ -40,20 +40,20 @@ Local-first · Model-agnostic · Extensible · macOS / Windows / Linux
 
 <a href="https://trendshift.io/repositories/178787?utm_source=repository-badge&amp;utm_medium=badge&amp;utm_campaign=badge-repository-178787" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/repositories/178787" alt="vastsa/PI-Desktop | Trendshift" width="230" height="51"/></a>
 &nbsp;
-<a href="https://www.producthunt.com/products/pi-desktop?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-pi-desktop" target="_blank" rel="noopener noreferrer"><img alt="PI-Desktop on Product Hunt" width="230" height="50" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1245457&amp;theme=dark&amp;t=1788955688339"/></a>
+<a href="https://www.producthunt.com/products/pi-desktop?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-pi-desktop" target="_blank" rel="noopener noreferrer"><img alt="鞭陀-Desktop on Product Hunt" width="230" height="50" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1245457&amp;theme=dark&amp;t=1788955688339"/></a>
 
 </div>
 
 ---
 
 > [!IMPORTANT]
-> **PI-Desktop is in Early Preview.** It is already usable for real coding workflows, while APIs, extension interfaces, and some desktop behaviors are still evolving.
+> **鞭陀-Desktop is in Early Preview.** It is already usable for real coding workflows, while APIs, extension interfaces, and some desktop behaviors are still evolving.
 
 ## Not another chat window
 
 Most coding agents live inside a terminal, an editor extension, or a hosted service.
 
-**PI-Desktop gives the agent workflow a workspace of its own.**
+**鞭陀-Desktop gives the agent workflow a workspace of its own.**
 
 Projects, sessions, files, reviews, previews, models, permissions, extensions, and long-running work live together — without tying your workflow to a single editor, model vendor, or hosted runtime.
 
@@ -83,7 +83,7 @@ Import existing local sessions from Claude Code, Codex, OpenCode, and Pi.
 
 ### Your control
 
-Agents can read files, edit code, and run commands, while privileged actions pass through PI-Desktop's permission layer.
+Agents can read files, edit code, and run commands, while privileged actions pass through 鞭陀-Desktop's permission layer.
 
 Inspect diffs. Review command output. Decide how much autonomy each session gets.
 
@@ -128,14 +128,14 @@ Privileged tools still go through the permission layer in every mode.
 <tr>
 <td width="50%">
 
-<img src="docs/image/readme/chat_en.png" alt="PI-Desktop conversation" />
+<img src="docs/image/readme/chat_en.png" alt="鞭陀-Desktop conversation" />
 
 <p align="center"><sub>Long-running conversations with transcript navigation</sub></p>
 
 </td>
 <td width="50%">
 
-<img src="docs/image/readme/model_en.png" alt="PI-Desktop model selection" />
+<img src="docs/image/readme/model_en.png" alt="鞭陀-Desktop model selection" />
 
 <p align="center"><sub>Switch providers, models, and reasoning levels per session</sub></p>
 
@@ -144,14 +144,14 @@ Privileged tools still go through the permission layer in every mode.
 <tr>
 <td width="50%">
 
-<img src="docs/image/readme/plugins_en.png" alt="PI-Desktop plugin marketplace" />
+<img src="docs/image/readme/plugins_en.png" alt="鞭陀-Desktop plugin marketplace" />
 
 <p align="center"><sub>Extend the workspace through the plugin marketplace</sub></p>
 
 </td>
 <td width="50%">
 
-<img src="docs/image/readme/addmodel_en.png" alt="PI-Desktop model configuration" />
+<img src="docs/image/readme/addmodel_en.png" alt="鞭陀-Desktop model configuration" />
 
 <p align="center"><sub>Add a provider and connect a model</sub></p>
 
@@ -167,7 +167,7 @@ Privileged tools still go through the permission layer in every mode.
 
 ## Built for work that lasts longer than one prompt
 
-PI-Desktop is designed around persistent projects and long-running sessions rather than disposable chat threads.
+鞭陀-Desktop is designed around persistent projects and long-running sessions rather than disposable chat threads.
 
 - Manage multiple projects and sessions
 - Pin, archive, branch, and search conversations
@@ -195,11 +195,11 @@ Each Subagent runs in its own context and reports its result back to the parent 
 
 ## Extend the workspace instead of rebuilding it
 
-PI-Desktop has multiple extension layers, from lightweight reusable instructions to full desktop integrations.
+鞭陀-Desktop has multiple extension layers, from lightweight reusable instructions to full desktop integrations.
 
 ### Plugins
 
-Plugins can extend PI-Desktop with:
+Plugins can extend 鞭陀-Desktop with:
 
 | Agent | Workspace | Platform |
 | --- | --- | --- |
@@ -214,20 +214,20 @@ Install plugins locally or through the marketplace using the `.piplug` package w
 
 The official `pi.session-orchestrator` plugin lets an Agent coordinate durable worker sessions in parallel. Install `pi.session-orchestrator` from the Plugins marketplace, then use its `SessionTask` tool to spawn, send, supervise, inspect status, wait for bounded results, accept reports, cancel work, and list workers.
 
-Workers inherit the parent project's provider, model, thinking level, and permission mode. They remain ordinary PI-Desktop sessions, so you can open and inspect their transcripts at any time. Work is parent-scoped and bounded to four active workers per parent and sixteen across the plugin.
+Workers inherit the parent project's provider, model, thinking level, and permission mode. They remain ordinary 鞭陀-Desktop sessions, so you can open and inspect their transcripts at any time. Work is parent-scoped and bounded to four active workers per parent and sixteen across the plugin.
 
 <table>
 <tr>
 <td width="50%">
 
-<img src="docs/image/readme/session-orchestrator-overview.png" alt="PI-Desktop Session Orchestrator coordinating worker sessions" />
+<img src="docs/image/readme/session-orchestrator-overview.png" alt="鞭陀-Desktop Session Orchestrator coordinating worker sessions" />
 
 <p align="center"><sub>Coordinate multiple durable worker sessions from one conversation</sub></p>
 
 </td>
 <td width="50%">
 
-<img src="docs/image/readme/session-orchestrator-worker.png" alt="PI-Desktop Session Orchestrator worker session" />
+<img src="docs/image/readme/session-orchestrator-worker.png" alt="鞭陀-Desktop Session Orchestrator worker session" />
 
 <p align="center"><sub>Open a worker session and inspect its progress independently</sub></p>
 
@@ -248,13 +248,13 @@ Give agents reusable instructions and workflows. Skills can be installed globall
 
 Connect external tools and services through Model Context Protocol servers without baking them into the desktop application.
 
-PI-Desktop can also be controlled by an external MCP Agent. Start the app with `PI_DESKTOP_MCP_CONTROL=1`, then read the loopback endpoint and bearer token from `mcp-control.json` in the Electron user-data directory.
+鞭陀-Desktop can also be controlled by an external MCP Agent. Start the app with `PI_DESKTOP_MCP_CONTROL=1`, then read the loopback endpoint and bearer token from `mcp-control.json` in the Electron user-data directory.
 
 The control endpoint supports project, session, and Agent workflows plus a reviewed desktop operation catalog. It is disabled by default, binds to loopback only, and grants the calling local Agent the same authority as the desktop for those operations. `confirm: true` is not a user prompt.
 
 ### pi extensions
 
-Extensions written for the [pi](https://github.com/badlogic/pi-mono) CLI can run inside PI-Desktop's agent unchanged.
+Extensions written for the [pi](https://github.com/badlogic/pi-mono) CLI can run inside 鞭陀-Desktop's agent unchanged.
 
 A plugin can list them under `contributes.agentExtensions`, or **Plugins → Import pi extension** can wrap an existing extension file or directory in a plugin. If the directory declares production or optional npm dependencies, a system `npm` on `PATH` performs a bounded registry-only install before first load (`--ignore-scripts`, so no third-party install script ever runs); release builds do not include standalone Node/npm.
 
@@ -264,7 +264,7 @@ They can register tools, slash commands, and hooks on every turn, tool call, and
 
 ## Bring the model you want
 
-PI-Desktop does not hardcode your agent workflow to one model vendor.
+鞭陀-Desktop does not hardcode your agent workflow to one model vendor.
 
 Use:
 
@@ -283,7 +283,7 @@ Per-model configuration can include context windows, output limits, reasoning co
 
 ## Local-first, precisely
 
-PI-Desktop is **local-first**, not “nothing ever touches the network.”
+鞭陀-Desktop is **local-first**, not “nothing ever touches the network.”
 
 | Data | Behavior |
 | --- | --- |
@@ -291,10 +291,10 @@ PI-Desktop is **local-first**, not “nothing ever touches the network.”
 | Settings | Stored on your machine |
 | API credentials | Stored in the operating system keychain |
 | Logs | Local |
-| PI-Desktop telemetry | None |
+| 鞭陀-Desktop telemetry | None |
 | Model requests | Sent directly to the provider or endpoint you configure |
 
-There is no required PI-Desktop account and no mandatory PI-hosted relay between your machine and your model provider.
+There is no required 鞭陀-Desktop account and no mandatory PI-hosted relay between your machine and your model provider.
 
 If you use a remote model provider, the context required for that model request is sent to that provider according to its own privacy policy.
 
@@ -302,7 +302,7 @@ If you use a remote model provider, the context required for that model request 
 
 ## From install to first patch
 
-1. **Download PI-Desktop**
+1. **Download 鞭陀-Desktop**
    Get the latest build from [GitHub Releases](https://github.com/vastsa/PI-Desktop/releases/latest).
 
 2. **Connect a model**
@@ -315,7 +315,7 @@ If you use a remote model provider, the context required for that model request 
    Start immediately, approve an implementation plan first, or define the outcome and let the agent choose the path.
 
 5. **Review the result**
-   Inspect edits in the Review panel, check command output, preview the application, and continue without leaving PI-Desktop.
+   Inspect edits in the Review panel, check command output, preview the application, and continue without leaving 鞭陀-Desktop.
 
 ---
 
@@ -356,7 +356,7 @@ ldd --version
 The Linux `.asar` asset is also available for repackaging with a system Electron:
 
 ```bash
-electron PI-Desktop-<version>-linux-x64.asar
+electron 鞭陀-Desktop-<version>-linux-x64.asar
 ```
 
 The target distribution still needs the required native host and packaged resources.
@@ -370,19 +370,19 @@ The target distribution still needs the required native host and packaged resour
 
 The tagged-release workflow publishes unsigned macOS artifacts by default.
 
-For a trusted unsigned install, move `PI-Desktop.app` to `/Applications` and open it. If macOS reports the app as damaged or refuses to open it:
+For a trusted unsigned install, move `鞭陀-Desktop.app` to `/Applications` and open it. If macOS reports the app as damaged or refuses to open it:
 
-1. Confirm the app came from a trusted PI-Desktop release.
-2. Move `PI-Desktop.app` to `/Applications`.
+1. Confirm the app came from a trusted 鞭陀-Desktop release.
+2. Move `鞭陀-Desktop.app` to `/Applications`.
 3. Run:
 
 ```bash
-xattr -r -d com.apple.quarantine /Applications/PI-Desktop.app
+xattr -r -d com.apple.quarantine /Applications/鞭陀-Desktop.app
 ```
 
-4. Open PI-Desktop again.
+4. Open 鞭陀-Desktop again.
 
-The DMG includes `If app won't open, read this.txt`. The ZIP also includes `PI-Desktop-macOS-open.command`, which performs the same trusted-source fallback after the app is moved to Applications.
+The DMG includes `If app won't open, read this.txt`. The ZIP also includes `鞭陀-Desktop-macOS-open.command`, which performs the same trusted-source fallback after the app is moved to Applications.
 
 The command only removes Apple's quarantine attribute. Do not use it for an untrusted app.
 
@@ -392,7 +392,7 @@ A manually dispatched run with `sign_macos: true` signs, notarizes, and staples 
 
 ### Code signing
 
-Windows releases of PI-Desktop are digitally signed with free code signing provided by [SignPath.io](https://signpath.io/), using a certificate from the [SignPath Foundation](https://signpath.org/).
+Windows releases of 鞭陀-Desktop are digitally signed with free code signing provided by [SignPath.io](https://signpath.io/), using a certificate from the [SignPath Foundation](https://signpath.org/).
 
 ---
 
@@ -400,7 +400,7 @@ Windows releases of PI-Desktop are digitally signed with free code signing provi
 
 Already using another coding agent?
 
-PI-Desktop can import local sessions from:
+鞭陀-Desktop can import local sessions from:
 
 - Claude Code
 - Codex
@@ -413,7 +413,7 @@ Open **Settings → Import** to bring existing work into the desktop workspace.
 
 ## Architecture
 
-PI-Desktop separates the user interface, privileged host capabilities, and the agent loop.
+鞭陀-Desktop separates the user interface, privileged host capabilities, and the agent loop.
 
 ```mermaid
 flowchart TB
@@ -440,11 +440,11 @@ The **Rust Host Core** owns privileged workspace operations, permissions, persis
 
 ## Built on pi
 
-PI-Desktop builds on the excellent work of the [pi-mono](https://github.com/badlogic/pi-mono) ecosystem.
+鞭陀-Desktop builds on the excellent work of the [pi-mono](https://github.com/badlogic/pi-mono) ecosystem.
 
 The agent runtime uses `pi-ai` and `pi-agent-core`.
 
-**Pi provides the agent engine. PI-Desktop turns it into a persistent desktop workspace.**
+**Pi provides the agent engine. 鞭陀-Desktop turns it into a persistent desktop workspace.**
 
 The desktop application also uses technologies including Electron, React, TypeScript, Rust, SQLite, Vite, Tailwind CSS, Shiki, Mermaid, KaTeX, TypeBox, and i18next.
 
@@ -452,7 +452,7 @@ The desktop application also uses technologies including Electron, React, TypeSc
 
 ## Project status
 
-PI-Desktop is an early preview under active development.
+鞭陀-Desktop is an early preview under active development.
 
 The current **0.15.x** line includes the desktop shell, streaming agent runtime, Agent / Plan / Goal workflows, permission-aware workspace tools, projects and sessions, session imports, local MCP control, MCP / Skills / Subagents, background delegation, multi-provider model configuration, plugins and marketplace support, context checkpoints, notifications, release notes, and cross-platform packaging.
 
@@ -471,7 +471,7 @@ Follow development through the [project board](docs/project/BOARD.md) and [miles
 ## Development
 
 <details open>
-<summary><strong>Run PI-Desktop locally</strong></summary>
+<summary><strong>Run 鞭陀-Desktop locally</strong></summary>
 
 <br />
 
@@ -487,7 +487,7 @@ The repository currently pins pnpm 11, while CI and release builds use Node 24.
 
 ```bash
 git clone https://github.com/vastsa/PI-Desktop.git
-cd PI-Desktop
+cd 鞭陀-Desktop
 
 pnpm install
 
@@ -606,7 +606,7 @@ This project was created with the models below.
 
 ## License
 
-PI-Desktop is licensed under the **GNU Lesser General Public License v3.0**.
+鞭陀-Desktop is licensed under the **GNU Lesser General Public License v3.0**.
 
 See [LICENSE](LICENSE) for details.
 
@@ -616,7 +616,7 @@ See [LICENSE](LICENSE) for details.
 
 ### Build with the model you want. Keep the workflow yours.
 
-**[Download PI-Desktop](https://github.com/vastsa/PI-Desktop/releases/latest)**
+**[Download 鞭陀-Desktop](https://github.com/vastsa/PI-Desktop/releases/latest)**
 
 <sub>macOS · Windows · Linux</sub>
 

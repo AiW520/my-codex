@@ -1,9 +1,10 @@
-import { readMainSource } from "./helpers/source-contracts.mjs";
+import { readMainModule, readMainSource } from "./helpers/source-contracts.mjs";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 const mainSource = await readMainSource();
+const mainIndexSource = await readMainModule("index.ts");
 const activationSource = await readFile(
   new URL("../electron/main/bootstrap/app-activation.ts", import.meta.url),
   "utf8",
@@ -20,6 +21,14 @@ test("the single-instance lock is taken before anything touches the data directo
   assert.ok(mainSource.indexOf("app.setName(APP_NAME)") < lock);
   assert.ok(lock < mainSource.indexOf("new Logger("));
   assert.ok(lock < mainSource.indexOf("new PersistenceOutbox("));
+});
+
+test("the display-name rebrand keeps the legacy Electron profile path", () => {
+  assert.match(
+    mainIndexSource,
+    /app\.setPath\("userData", join\(app\.getPath\("appData"\), "PI-Desktop"\)\)/,
+  );
+  assert.match(mainSource, /process\.env\.PI_DESKTOP_DATA_DIR \|\| join\(homedir\(\), "\.pi-desktop"\)/);
 });
 
 test("a launch that loses the lock quits and boots nothing", () => {

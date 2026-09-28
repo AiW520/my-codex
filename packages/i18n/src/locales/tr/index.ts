@@ -3,9 +3,9 @@ import { workbenchTr } from "../../workbench-copy.js";
 
 export const tr = {
   app: {
-    shellName: "PI-Desktop",
+    shellName: "鞭陀-Desktop",
     tagline: "Yerel AI kodlama ortağı",
-    starting: "PI-Desktop başlatılıyor…",
+    starting: "鞭陀-Desktop başlatılıyor…",
     loadingView: "Görünüm yükleniyor…",
     uiCrashed: "Arayüzde bir sorun oluştu",
   },
@@ -24,13 +24,13 @@ export const tr = {
     close: "Kapat",
   },
   tray: {
-    open: "PI-Desktop’u aç",
-    quit: "PI-Desktop’tan çık",
-    askTitle: "PI-Desktop arka planda çalışmaya devam etsin mi?",
+    open: "鞭陀-Desktop’u aç",
+    quit: "鞭陀-Desktop’tan çık",
+    askTitle: "鞭陀-Desktop arka planda çalışmaya devam etsin mi?",
     askBody:
-      "Pencereyi kapattığınızda PI-Desktop sistem tepsisinde çalışmaya devam edebilir; hiçbir şey kaybolmaz. Bunu Ayarlar’dan dilediğiniz zaman değiştirebilirsiniz.",
+      "Pencereyi kapattığınızda 鞭陀-Desktop sistem tepsisinde çalışmaya devam edebilir; hiçbir şey kaybolmaz. Bunu Ayarlar’dan dilediğiniz zaman değiştirebilirsiniz.",
     closeToTray: "Tepsiye kapat",
-    confirmQuitTitle: "PI-Desktop'tan çıkılsın mı?",
+    confirmQuitTitle: "鞭陀-Desktop'tan çıkılsın mı?",
     confirmQuitBody:
       "Çıkmak istediğinizden emin misiniz? Tüm çalışan oturumlar durdurulur ve kaydedilmemiş değişiklikler kaybolabilir.",
     confirmQuit: "Çık",
@@ -88,7 +88,7 @@ export const tr = {
     zoomOut: "Uzaklaştır",
     toggleFullScreen: "Tam ekranı aç/kapat",
     toggleDevTools: "Geliştirici araçları",
-    appHelp: "PI-Desktop yardımı",
+    appHelp: "鞭陀-Desktop yardımı",
     openLogs: "Günlükleri aç",
     checkForUpdates: "Güncellemeleri denetle…",
   },
@@ -221,7 +221,7 @@ export const tr = {
     emptyTitle: "Neyi birlikte oluşturalım?",
     emptyTitleInProject: "{{project}} içinde ne oluşturalım?",
     emptyTitleTemporary: "Geçici olarak neyi keşfetmek istersiniz?",
-    placeholder: "PI-Desktop’tan herhangi bir konuda yardım isteyin",
+    placeholder: "鞭陀-Desktop’tan herhangi bir konuda yardım isteyin",
     placeholderHome: "Bir şey sorun",
     placeholderHint: "Komutlar için / · dosyalar için @ yazın",
     placeholderHomeHint: "Komutlar için / · dosyalar için @ yazın",
@@ -629,7 +629,7 @@ sklm: {
     pluginProviderManaged:
       "Bu servis, uç noktasını ve modellerini sağlayan “{{plugin}}” eklentisinden gelir. “Uzantılar” sayfasından açıp kapatabilirsiniz.",
     pluginProviderKey: "API anahtarı",
-    pluginProviderKeyHint: "PI-Desktop’ta saklanır ve çalışma zamanı tarafından kullanılır. Eklenti bu anahtarı asla almaz.",
+    pluginProviderKeyHint: "鞭陀-Desktop’ta saklanır ve çalışma zamanı tarafından kullanılır. Eklenti bu anahtarı asla almaz.",
     pluginProviderKeyRemove: "Anahtarı kaldır",
     pluginProviderKeySaved: "API anahtarı kaydedildi",
     pluginProviderKeyRemoved: "API anahtarı kaldırıldı",
@@ -1717,9 +1717,9 @@ importConfirm: "İçe aktarılan uzantılar ajan sürecinde, ajanın kendi araç
         "Model kotanızı tek seferlik bir tamamlatma için harcayabilir. Eklenti API anahtarlarınızı almaz.",
       "agent.extension": "ExtensionAPI modüllerini ajan sürecinde, ajanın kendi araçlarıyla aynı erişimle çalıştırır. Yalnızca güvendiğiniz kodu etkinleştirin.",
       "provider.register":
-        "Bu eklentinin tanımladığı servisleri Ayarlar’daki servis listesine ekler. Uç noktayı ve modelleri eklenti sağlar; API anahtarınız PI-Desktop’ta kalır.",
+        "Bu eklentinin tanımladığı servisleri Ayarlar’daki servis listesine ekler. Uç noktayı ve modelleri eklenti sağlar; API anahtarınız 鞭陀-Desktop’ta kalır.",
       "desktop.control":
-        "Eklentinin incelenmiş PI-Desktop denetim kataloğunu çağırmasını sağlar. Yıkıcı işlemler yine confirm=true gerektirir; MCP bearer token eklentiye verilmez.",
+        "Eklentinin incelenmiş 鞭陀-Desktop denetim kataloğunu çağırmasını sağlar. Yıkıcı işlemler yine confirm=true gerektirir; MCP bearer token eklentiye verilmez.",
       "models.list": "Oturum açtığınız modelleri görebilir. Anahtar almaz.",
       "session.read":
         "Geçerli araç çağrısının üzerinde çalıştığı konuşmayı, araç sonuçları dahil, okuyabilir.",
@@ -1734,7 +1734,7 @@ importConfirm: "İçe aktarılan uzantılar ajan sürecinde, ajanın kendi araç
       "audio.capture.background": "Eklenti arka planda çalışırken, hiçbir panel açık olmadan mikrofonu yakalar.",
       "audio.playback.background": "Hiçbir panel açık olmasa bile eklentinin akışa verdiği sesi çalar.",
       "speech.adapter.register": "Mevcut sağlayıcı anahtarlarınızı kullanan bir yazıya dökme veya konuşma protokolü ekleyebilir. Eklenti anahtarı asla görmez.",
-      "keyboard.globalShortcut": "PI-Desktop odakta değilken bu eklentinin kendi komutlarını tetikleyen sistem geneli klavye kısayollarını kaydeder.",
+      "keyboard.globalShortcut": "鞭陀-Desktop odakta değilken bu eklentinin kendi komutlarını tetikleyen sistem geneli klavye kısayollarını kaydeder.",
       "net.websocket": "Eklentinin bildirdiği ana makinelere gerçek zamanlı iki yönlü bağlantılar açar.",
       "bus.publish": "Bildirdiği konularda ileti gönderebilir.",
       "bus.subscribe": "Bildirdiği konularda ileti alabilir.",
@@ -1951,7 +1951,7 @@ importConfirm: "İçe aktarılan uzantılar ajan sürecinde, ajanın kendi araç
     unsupportedGlibc:
       "Bu Linux sürümü glibc 2.35 veya daha yenisini gerektirir (Ubuntu 22.04, Debian 12, Fedora 36+).",
     dbSchemaTooNew:
-      "Bu PI-Desktop sürümü yerel verilerinizden daha eski (veri şeması {{found}}, bu sürüm {{supported}} destekliyor). Bu verileri en son açan daha yeni PI-Desktop sürümünü veya sonrasını yükleyin.",
+      "Bu 鞭陀-Desktop sürümü yerel verilerinizden daha eski (veri şeması {{found}}, bu sürüm {{supported}} destekliyor). Bu verileri en son açan daha yeni 鞭陀-Desktop sürümünü veya sonrasını yükleyin.",
     archMismatch:
       "Bu, {{machineArch}} makinede çalışan {{buildArch}} sürümü; çeviri üzerinden çalıştığı için daha yavaş. Bunun yerine {{machineArch}} sürümünü yükleyin.",
     dismissArchMismatch: "Kapat",

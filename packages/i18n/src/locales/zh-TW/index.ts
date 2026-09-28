@@ -3,9 +3,9 @@ import { workbenchZhTW } from "../../workbench-copy.js";
 
 export const zhTW = {
   app: {
-    shellName: "PI-Desktop",
+    shellName: "鞭陀-Desktop",
     tagline: "本地 AI 程式設計助手",
-    starting: "正在啟動 PI-Desktop…",
+    starting: "正在啟動 鞭陀-Desktop…",
     loadingView: "正在載入頁面…",
     uiCrashed: "介面出現了問題",
   },
@@ -23,13 +23,13 @@ export const zhTW = {
     close: "關閉",
   },
   tray: {
-    open: "開啟 PI-Desktop",
-    quit: "退出 PI-Desktop",
-    askTitle: "關閉後繼續在後臺執行 PI-Desktop？",
+    open: "開啟 鞭陀-Desktop",
+    quit: "退出 鞭陀-Desktop",
+    askTitle: "關閉後繼續在後臺執行 鞭陀-Desktop？",
     askBody:
-      "關閉視窗後，PI-Desktop 可以繼續在系統托盤中執行，避免丟失任何內容。你隨時可以在設定中更改此選項。",
+      "關閉視窗後，鞭陀-Desktop 可以繼續在系統托盤中執行，避免丟失任何內容。你隨時可以在設定中更改此選項。",
     closeToTray: "關閉到托盤",
-    confirmQuitTitle: "確定退出 PI-Desktop？",
+    confirmQuitTitle: "確定退出 鞭陀-Desktop？",
     confirmQuitBody:
       "退出將停止所有正在進行的會話，未儲存的內容可能會丟失。你確定要退出嗎？",
     confirmQuit: "退出",
@@ -81,7 +81,7 @@ export const zhTW = {
     zoomOut: "縮小",
     toggleFullScreen: "切換全屏",
     toggleDevTools: "開發者工具",
-    appHelp: "PI-Desktop 幫助",
+    appHelp: "鞭陀-Desktop 幫助",
     openLogs: "開啟日誌",
     checkForUpdates: "檢查更新…",
   },
@@ -214,7 +214,7 @@ export const zhTW = {
     emptyTitle: "今天想做點什麼？",
     emptyTitleInProject: "今天想在 {{project}} 裡做點什麼？",
     emptyTitleTemporary: "臨時聊點什麼？",
-    placeholder: "讓 PI-Desktop 幫你做任何事",
+    placeholder: "讓 鞭陀-Desktop 幫你做任何事",
     placeholderHome: "隨便問問",
     placeholderHint: "輸入 / 使用命令 · @ 引用檔案",
     placeholderHomeHint: "輸入 / 使用命令 · @ 引用檔案",
@@ -620,7 +620,7 @@ sklm: {
     pluginProviderManaged:
       "此服務來自外掛“{{plugin}}”，介面地址和模型均由該外掛提供。可在“擴充套件”頁面啟用或停用。",
     pluginProviderKey: "API 金鑰",
-    pluginProviderKeyHint: "儲存在 PI-Desktop 中，由執行環境使用。外掛拿不到此金鑰。",
+    pluginProviderKeyHint: "儲存在 鞭陀-Desktop 中，由執行環境使用。外掛拿不到此金鑰。",
     pluginProviderKeyRemove: "移除金鑰",
     pluginProviderKeySaved: "API 金鑰已儲存",
     pluginProviderKeyRemoved: "API 金鑰已移除",
@@ -1692,8 +1692,8 @@ sklm: {
       "agent.prompt.inject": "可能修改傳送給智慧體的指令。",
       "agent.complete": "會消耗你的模型額度發起一次補全。外掛拿不到 API 金鑰。",
       "agent.extension": "在 agent 程序內執行 ExtensionAPI 模組，擁有與 agent 自身工具相同的權限。只啟用你信任的程式碼。",
-      "provider.register": "把此外掛定義的服務新增到設定的服務列表。介面地址和模型由外掛提供，API 金鑰則留在 PI-Desktop 中。",
-      "desktop.control": "允許外掛呼叫經過審查的 PI-Desktop 操作目錄；破壞性操作仍需 confirm=true，外掛永遠拿不到 MCP bearer token。",
+      "provider.register": "把此外掛定義的服務新增到設定的服務列表。介面地址和模型由外掛提供，API 金鑰則留在 鞭陀-Desktop 中。",
+      "desktop.control": "允許外掛呼叫經過審查的 鞭陀-Desktop 操作目錄；破壞性操作仍需 confirm=true，外掛永遠拿不到 MCP bearer token。",
       "models.list": "可以看到你已登入的模型，但拿不到金鑰。",
       "session.read": "可以讀取當前這次工具呼叫所在會話發給模型的對話，包括工具結果。",
       "net.fetch": "可發起出站網路請求。",
@@ -1706,7 +1706,7 @@ sklm: {
       "audio.capture.background": "外掛在後臺執行時（沒有開啟面板）也能擷取麥克風。",
       "audio.playback.background": "即使沒有開啟面板，也能播放外掛推送的音訊。",
       "speech.adapter.register": "可以新增轉寫或朗讀協定，沿用你既有的服務金鑰。外掛拿不到金鑰。",
-      "keyboard.globalShortcut": "註冊系統級快捷鍵，在 PI-Desktop 未聚焦時觸發此外掛自己的命令。",
+      "keyboard.globalShortcut": "註冊系統級快捷鍵，在 鞭陀-Desktop 未聚焦時觸發此外掛自己的命令。",
       "net.websocket": "與外掛宣告的網域建立即時雙向連線。",
       "bus.publish": "可在其宣告的主題上傳送訊息。",
       "bus.subscribe": "可在其宣告的主題上接收訊息。",
@@ -1917,7 +1917,7 @@ sklm: {
     unsupportedGlibc:
       "目前 Linux 建置需要 glibc 2.35 或更新版本（Ubuntu 22.04、Debian 12、Fedora 36+）。",
     dbSchemaTooNew:
-      "目前的 PI-Desktop 比本機資料更舊（資料庫 schema {{found}}，此版本僅支援 {{supported}}）。請安裝上次開啟這些資料的較新版本，或更高版本。",
+      "目前的 鞭陀-Desktop 比本機資料更舊（資料庫 schema {{found}}，此版本僅支援 {{supported}}）。請安裝上次開啟這些資料的較新版本，或更高版本。",
     archMismatch:
       "目前安裝的是 {{buildArch}} 版本，而這台機器是 {{machineArch}}，需要透過轉譯執行，速度較慢。請改裝 {{machineArch}} 版本。",
     dismissArchMismatch: "知道了",
