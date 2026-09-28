@@ -80,3 +80,13 @@ selection surface, not a second onboarding wizard:
 
 The chooser is deliberately gated by the empty provider list to avoid covering
 returning users or changing the existing checklist contract.
+
+## 9. Tuzi configuration center
+
+The model configuration page also exposes a compact Tuzi/GAC configuration
+center for the three named endpoint presets. It reports which presets have a
+stored API key, the Responses protocol, discovered model counts, connection
+test state, and links to the provider portals. It reuses the existing Host
+secret store and provider/model discovery IPC; it does not add password login,
+duplicate token storage, or a second account database. Usage and limits remain
+associated with the issued API key.

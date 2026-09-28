@@ -39,6 +39,7 @@ import {
 import { copyProviderConfiguration, type ProviderCopyDraft } from "./provider-copy";
 import { ProviderSetupDialog } from "./ProviderSetupDialog";
 import { VendorAccountsSection } from "./VendorAccountsSection";
+import { TuziConfigurationCard } from "./TuziConfigurationCard";
 
 const DELETE_CONFIRM_MS = 3000;
 
@@ -680,6 +681,8 @@ export function ModelConfigPage() {
           )}
         </div>
       </section>
+
+      <TuziConfigurationCard />
 
       <VendorAccountsSection />
 

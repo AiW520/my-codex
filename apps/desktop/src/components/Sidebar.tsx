@@ -95,6 +95,8 @@ type ProjectEntry = {
   branch?: string;
 };
 
+type SidebarStatusFilter = "all" | "running" | "permission" | "completed" | "failed";
+
 const VIEWPORT_PADDING = 8;
 const SIDEBAR_RESIZE_STEP = 16;
 /** Private MIME so a sidebar session drag is never mistaken for an OS file drop. */
@@ -264,6 +266,7 @@ export function Sidebar({
   const update = useUpdateState();
 
   const [sortOpen, setSortOpen] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<SidebarStatusFilter>("all");
   const [sessionMenu, setSessionMenu] = useState<string | null>(null);
   const [renameFor, setRenameFor] = useState<SessionSummary | null>(null);
   const [editProjectFor, setEditProjectFor] = useState<ProjectEntry | null>(null);
@@ -1601,6 +1604,17 @@ export function Sidebar({
     );
   });
 
+  const matchesStatusFilter = (session: SessionSummary) => {
+    if (statusFilter === "all") return true;
+    const status = sidebarSessionStatus({
+      running: Boolean(runningSessions[session.id]),
+      selected: false,
+      outcome: sessionOutcomes[session.id],
+      hasPendingPermission: (pendingPermissions[session.id]?.length ?? 0) > 0,
+    });
+    return status === statusFilter;
+  };
+
   const renderProjectGroup = (entry: ProjectEntry) => {
     const collapsedProject = entry.meta.collapsed ?? projectCollapsed[entry.key] ?? false;
     const projectId = projectDomId(entry.key);
@@ -1610,7 +1624,9 @@ export function Sidebar({
     // sessions stay folded behind the same load-more affordance used for the
     // time-grouped overflow and expand on click.
     const sessionsExpanded = expandedProjectSessions[entry.key] ?? false;
-    const history = entry.sessions.filter((session) => !pinnedSessionIds.has(session.id));
+    const history = entry.sessions.filter(
+      (session) => !pinnedSessionIds.has(session.id) && matchesStatusFilter(session),
+    );
     const visibleSessions = sessionsExpanded ? history : history.slice(0, MAX_VISIBLE_SESSIONS);
     const hiddenCount = history.length - visibleSessions.length;
 
@@ -1630,7 +1646,7 @@ export function Sidebar({
             </div>
           );
         }
-        result.push(...renderSessionRows(groupSessions, { projectPath: entry.path }));
+        result.push(...renderSessionRows(groupSessions.filter(matchesStatusFilter), { projectPath: entry.path }));
       }
       // Add "load more" button if there are hidden sessions
       if (hiddenCount > 0) {
@@ -2112,7 +2128,7 @@ export function Sidebar({
               </span>
             </div>
             <div className="sidebar-session-group-body pinned" onScroll={() => closeMenus(false)}>
-              {renderSessionRows(pinnedSessions, { global: true })}
+              {renderSessionRows(pinnedSessions.filter(matchesStatusFilter), { global: true })}
             </div>
           </section>
         ) : null}
@@ -2139,6 +2155,18 @@ export function Sidebar({
               {t("nav.sessions", { defaultValue: "Sessions" })}
             </span>
             <div className="sidebar-toolbar-actions">
+              <select
+                className="sidebar-status-filter"
+                aria-label={t("nav.filterSessions", { defaultValue: "Filter sessions" })}
+                value={statusFilter}
+                onChange={(event) => setStatusFilter(event.target.value as SidebarStatusFilter)}
+              >
+                <option value="all">{t("nav.filterAll", { defaultValue: "All" })}</option>
+                <option value="running">{t("nav.filterRunning", { defaultValue: "Running" })}</option>
+                <option value="permission">{t("nav.filterPermission", { defaultValue: "Needs approval" })}</option>
+                <option value="completed">{t("nav.filterCompleted", { defaultValue: "Completed" })}</option>
+                <option value="failed">{t("nav.filterFailed", { defaultValue: "Failed" })}</option>
+              </select>
               <div className="sidebar-menu-wrap">
                 <TooltipButton
                   type="button"
@@ -2188,10 +2216,14 @@ export function Sidebar({
               openSectionMenu("sessions", event.clientX, event.clientY);
             }}
           >
-            {temporarySessionHistory.length > 0 ? (
-              renderSessionRows(temporarySessionHistory, { temporary: true })
+            {temporarySessionHistory.some(matchesStatusFilter) ? (
+              renderSessionRows(temporarySessionHistory.filter(matchesStatusFilter), { temporary: true })
             ) : temporarySessions.length === 0 ? (
               <div className="sidebar-session-empty">{t("nav.noTemporarySessions")}</div>
+            ) : statusFilter !== "all" ? (
+              <div className="sidebar-session-empty">
+                {t("nav.noMatchingSessions", { defaultValue: "No sessions match this filter" })}
+              </div>
             ) : null}
           </div>
         </section>

@@ -490,6 +490,27 @@ identify the platform validation still needed.
 - **Milestone**: M2
 - **Status**: Source-contract and protocol unit-covered; rendered Electron journey pending
 
+#### E2E-005-TUZI-CENTER: Inspect Tuzi configuration and task context
+
+- **Preconditions**: App running with zero or more of the three Tuzi/GAC
+  presets configured; at least one saved session has a provider and model.
+- **Steps**: 1) Open Settings → Model configuration and inspect the Tuzi/GAC
+  configuration center. 2) Confirm each preset reports API-key state, the
+  Responses protocol, model count, and a portal link. 3) On a configured row,
+  refresh models and run connection test. 4) Return to a session and inspect
+  the task context bar and the sidebar status filter while a turn runs, waits
+  for permission, completes, and fails.
+- **Expected**: The center uses the existing provider secret and model APIs and
+  never echoes the key. Refresh/test failures are surfaced as bounded toasts;
+  the task bar shows project/branch/provider/model/reasoning/permission and a
+  status chip. The sidebar filter changes only presentation and does not alter
+  session persistence or the running turn.
+- **Specs linked**: `04-ux/05-onboarding.md`,
+  `03-runtime/14-secrets-storage.md`, `03-runtime/13-model-catalog-and-selection.md`
+- **Acceptance**: B (provider/model configuration), Quality, Security
+- **Milestone**: M6+
+- **Status**: Pure status logic automated; rendered Electron journey pending
+
 #### E2E-PROVIDER-configured-models-search: The chosen pane's search narrows the configured list
 
 - **Preconditions**: App running; one provider saved with at least three model bindings, one of them carrying an alias and another whose catalog display name differs from its id.
