@@ -2,21 +2,21 @@ const REPOSITORY = "AiW520/my-codex";
 const RELEASES_API = `https://api.github.com/repos/${REPOSITORY}/releases?per_page=10`;
 
 const FALLBACK_RELEASE = {
-  tagName: "v0.15.1-beta.7",
+  tagName: "v0.15.1-beta.8",
   prerelease: true,
-  publishedAt: null,
-  url: `https://github.com/${REPOSITORY}/releases/tag/v0.15.1-beta.7`,
+  publishedAt: "2026-09-28T07:53:15Z",
+  url: `https://github.com/${REPOSITORY}/releases/tag/v0.15.1-beta.8`,
   assetNames: [
-    "PI-Desktop-Setup-0.15.1-beta.7.exe",
-    "PI-Desktop-Portable-0.15.1-beta.7.exe",
-    "PI-Desktop-0.15.1-beta.7-arm64.dmg",
-    "PI-Desktop-0.15.1-beta.7-arm64-mac.zip",
-    "PI-Desktop-0.15.1-beta.7-x64.dmg",
-    "PI-Desktop-0.15.1-beta.7-x64-mac.zip",
-    "PI-Desktop-0.15.1-beta.7.AppImage",
-    "pi-desktop_0.15.1-beta.7_amd64.deb",
-    "pi-desktop-0.15.1-beta.7-x86_64.rpm",
-    "PI-Desktop-0.15.1-beta.7-linux-x64.asar",
+    "BianTuo-Desktop-Setup-0.15.1-beta.8.exe",
+    "BianTuo-Desktop-Portable-0.15.1-beta.8.exe",
+    "BianTuo-Desktop-0.15.1-beta.8-arm64.dmg",
+    "BianTuo-Desktop-0.15.1-beta.8-arm64-mac.zip",
+    "BianTuo-Desktop-0.15.1-beta.8-x64.dmg",
+    "BianTuo-Desktop-0.15.1-beta.8-x64-mac.zip",
+    "BianTuo-Desktop-0.15.1-beta.8.AppImage",
+    "BianTuo-Desktop_0.15.1-beta.8_amd64.deb",
+    "BianTuo-Desktop-0.15.1-beta.8-x86_64.rpm",
+    "BianTuo-Desktop-0.15.1-beta.8-linux-x64.asar",
   ],
 };
 
@@ -51,16 +51,16 @@ export function selectDownloadAssets(assets) {
   );
 
   return {
-    windowsInstaller: findAsset(eligible, /^(?:鞭陀-Desktop|PI-Desktop)-Setup-.*\.exe$/i),
-    windowsPortable: findAsset(eligible, /^(?:鞭陀-Desktop|PI-Desktop)-Portable-.*\.exe$/i),
-    macArmDmg: findAsset(eligible, /^(?:鞭陀-Desktop|PI-Desktop)-.*-arm64\.dmg$/i),
-    macArmZip: findAsset(eligible, /^(?:鞭陀-Desktop|PI-Desktop)-.*-arm64-mac\.zip$/i),
-    macIntelDmg: findAsset(eligible, /^(?:鞭陀-Desktop|PI-Desktop)-.*-x64\.dmg$/i),
-    macIntelZip: findAsset(eligible, /^(?:鞭陀-Desktop|PI-Desktop)-.*-x64-mac\.zip$/i),
-    linuxAppImage: findAsset(eligible, /^(?:鞭陀-Desktop|PI-Desktop)-.*\.AppImage$/i),
-    linuxDeb: findAsset(eligible, /^(?:鞭陀-Desktop|pi-desktop)_.*_amd64\.deb$/i),
-    linuxRpm: findAsset(eligible, /^(?:鞭陀-Desktop|pi-desktop)-.*-x86_64\.rpm$/i),
-    linuxAsar: findAsset(eligible, /^(?:鞭陀-Desktop|PI-Desktop)-.*-linux-x64\.asar$/i),
+    windowsInstaller: findAsset(eligible, /^(?:BianTuo-Desktop|鞭陀-Desktop|PI-Desktop)-Setup-.*\.exe$/i),
+    windowsPortable: findAsset(eligible, /^(?:BianTuo-Desktop|鞭陀-Desktop|PI-Desktop)-Portable-.*\.exe$/i),
+    macArmDmg: findAsset(eligible, /^(?:BianTuo-Desktop|鞭陀-Desktop|PI-Desktop)-.*-arm64\.dmg$/i),
+    macArmZip: findAsset(eligible, /^(?:BianTuo-Desktop|鞭陀-Desktop|PI-Desktop)-.*-arm64-mac\.zip$/i),
+    macIntelDmg: findAsset(eligible, /^(?:BianTuo-Desktop|鞭陀-Desktop|PI-Desktop)-.*-x64\.dmg$/i),
+    macIntelZip: findAsset(eligible, /^(?:BianTuo-Desktop|鞭陀-Desktop|PI-Desktop)-.*-x64-mac\.zip$/i),
+    linuxAppImage: findAsset(eligible, /^(?:BianTuo-Desktop|鞭陀-Desktop|PI-Desktop)-.*\.AppImage$/i),
+    linuxDeb: findAsset(eligible, /^(?:BianTuo-Desktop|鞭陀-Desktop|pi-desktop)_.*_amd64\.deb$/i),
+    linuxRpm: findAsset(eligible, /^(?:BianTuo-Desktop|鞭陀-Desktop|pi-desktop)-.*-x86_64\.rpm$/i),
+    linuxAsar: findAsset(eligible, /^(?:BianTuo-Desktop|鞭陀-Desktop|PI-Desktop)-.*-linux-x64\.asar$/i),
   };
 }
 
@@ -112,6 +112,7 @@ function renderRelease(release, source, documentLike = document) {
   const assets = selectDownloadAssets(release.assets);
   documentLike.querySelector("#release-version").textContent = release.tagName;
   documentLike.querySelector("#release-channel").textContent = release.prerelease ? "预发布" : "正式版本";
+  documentLike.querySelector(".hero-build-tag").textContent = `${release.prerelease ? "PREVIEW" : "RELEASE"} · ${release.tagName}`;
 
   for (const link of documentLike.querySelectorAll("#release-link, #all-assets-link")) {
     link.href = release.url;

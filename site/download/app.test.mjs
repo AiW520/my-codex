@@ -19,7 +19,7 @@ test("detectPlatform maps common browser platform strings", () => {
 test("fallbackRelease exposes trusted links for every supported artifact", () => {
   const release = fallbackRelease();
   const assets = selectDownloadAssets(release.assets);
-  assert.equal(release.tagName, "v0.15.1-beta.7");
+  assert.equal(release.tagName, "v0.15.1-beta.8");
   assert.equal(release.prerelease, true);
   assert.deepEqual(
     Object.entries(assets).filter(([, asset]) => asset === null),
@@ -40,7 +40,7 @@ test("selectDownloadAssets rejects untrusted URLs and ignores update metadata", 
       browser_download_url: "https://github.com/AiW520/my-codex/releases/download/v0.15.1-beta.6/latest.yml",
     },
   ]);
-  assert.match(assets.windowsInstaller.name, /0\.15\.1-beta\.7/);
+  assert.match(assets.windowsInstaller.name, /0\.15\.1-beta\.8/);
   assert.equal(isTrustedDownloadUrl("javascript:alert(1)"), false);
   assert.equal(isTrustedDownloadUrl("https://github.com/other/repo/releases/download/v1/file.exe"), false);
 });
@@ -49,12 +49,17 @@ test("selectDownloadAssets accepts the rebranded asset names while keeping legac
   const release = fallbackRelease();
   const renamed = release.assets.map((asset) => ({
     ...asset,
-    name: asset.name.replace(/^PI-Desktop|^pi-desktop/, "鞭陀-Desktop"),
+    name: asset.name.replace(/^BianTuo-Desktop/, "鞭陀-Desktop"),
   }));
   const assets = selectDownloadAssets(renamed);
-  assert.equal(assets.windowsInstaller.name, "鞭陀-Desktop-Setup-0.15.1-beta.7.exe");
-  assert.equal(assets.linuxDeb.name, "鞭陀-Desktop_0.15.1-beta.7_amd64.deb");
-  assert.equal(assets.macArmDmg.name, "鞭陀-Desktop-0.15.1-beta.7-arm64.dmg");
+  assert.equal(assets.windowsInstaller.name, "鞭陀-Desktop-Setup-0.15.1-beta.8.exe");
+  assert.equal(assets.linuxDeb.name, "鞭陀-Desktop_0.15.1-beta.8_amd64.deb");
+  assert.equal(assets.macArmDmg.name, "鞭陀-Desktop-0.15.1-beta.8-arm64.dmg");
+  const legacy = selectDownloadAssets(release.assets.map((asset) => ({
+    ...asset,
+    name: asset.name.replace(/^BianTuo-Desktop/, "PI-Desktop"),
+  })));
+  assert.ok(Object.values(legacy).every(Boolean));
 });
 
 test("selectPublishedRelease skips drafts and invalid release pages", () => {

@@ -900,6 +900,7 @@ h1 { font-size: clamp(58px, 7vw, 92px); letter-spacing: -0.06em; }
 .product-frame { border-radius: 18px; box-shadow: 0 28px 70px rgba(24, 33, 28, 0.1); }
 
 .download-section { background: var(--night); border-color: #203d30; }
+.download-section .all-assets a { color: #b9efca; }
 .platform-tabs { border-radius: 12px; }
 .platform-tabs button { border-radius: 9px; }
 .download-panel { border-radius: 16px; box-shadow: 0 14px 40px rgba(4, 18, 12, 0.16); }
@@ -920,7 +921,7 @@ footer { background: #0b1914; }
   .site-header { height: 64px; }
   .hero { min-height: 660px; height: auto; }
   .hero::after { right: 18px; bottom: 24px; width: calc(100% - 36px); opacity: .25; }
-  .hero-content { min-height: 660px; padding: 54px 0 250px; }
+  .hero-content { min-height: 660px; padding: 54px 0 300px; }
   h1 { font-size: 52px; }
   .section-heading h2 { letter-spacing: -0.03em; }
 }

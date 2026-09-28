@@ -19,7 +19,10 @@
   verified fallback assets immediately, preserves keyboard tab behavior, and
   the desktop uses the same existing profile/IPC/App ID while exposing the new
   native display name. No download control points outside the repository's
-  GitHub Release assets.
+  GitHub Release assets. Public attachments use the GitHub-safe
+  `BianTuo-Desktop` prefix while application display names remain Chinese.
+  Update feeds resolve to those exact files with matching sizes and SHA-512
+  digests; the publish gate rejects missing, unsafe, or corrupted assets.
 - **Specs linked:** `docs/spec/04-ux/07-ui-design-system.md`,
   `docs/spec/06-delivery/06-release-runbook.md`.
 - **Acceptance criterion:** A, F.
