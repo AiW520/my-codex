@@ -21,6 +21,106 @@
   background: var(--ds-tile);
 }
 
+/* ------------------------------------------------------ Tuzi configuration */
+.tuzi-config-card {
+  gap: 10px;
+}
+
+.tuzi-config-subtitle {
+  margin: 4px 0 0;
+  color: var(--ds-text-muted);
+  font-size: var(--text-xs);
+  line-height: var(--leading-relaxed);
+}
+
+.tuzi-protocol-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 7px;
+  border-radius: var(--radius-full);
+  background: color-mix(in oklab, var(--ds-success) 12%, transparent);
+  color: var(--ds-success);
+  font-size: var(--text-2xs);
+  white-space: nowrap;
+}
+
+.tuzi-config-grid {
+  display: grid;
+  gap: 6px;
+}
+
+.tuzi-config-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--ds-border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--ds-tile);
+}
+
+.tuzi-config-row-copy {
+  min-width: 0;
+}
+
+.tuzi-config-row-title,
+.tuzi-config-row-meta,
+.tuzi-config-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.tuzi-config-row-title {
+  color: var(--ds-text-primary);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.tuzi-config-row-meta {
+  margin-top: 3px;
+  color: var(--ds-text-muted);
+  font-size: var(--text-2xs);
+}
+
+.tuzi-config-row-meta .font-mono {
+  overflow: hidden;
+  max-width: 360px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tuzi-config-row-actions {
+  flex: 0 0 auto;
+}
+
+.tuzi-config-row-actions .btn {
+  gap: 4px;
+}
+
+.tuzi-config-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--ds-text-secondary);
+  font-size: var(--text-xs);
+  text-decoration: none;
+}
+
+.tuzi-config-link:hover {
+  color: var(--ds-text-primary);
+  text-decoration: underline;
+}
+
+.tuzi-config-footer {
+  color: var(--ds-text-muted);
+  font-size: var(--text-2xs);
+  line-height: var(--leading-relaxed);
+}
+
 .model-catalog-status-text {
   color: var(--ds-text-muted);
   font-size: var(--text-2xs);

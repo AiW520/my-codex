@@ -266,6 +266,21 @@ refresh or app restart. Outcomes already marked read never produce a terminal
 mark. Reduced-motion mode disables the breathing animation while retaining its
 orange fill and localized accessible name.
 
+The conversation content surface also has a compact task context bar below the
+title toolbar. It shows project, the owning workspace's known branch, provider,
+model, canonical reasoning level, effective permission mode, and task status.
+Temporary tasks never inherit another workspace's branch. Details scroll
+horizontally at narrow widths without pushing the status or title out of view.
+
+The sidebar exposes All, Unread, Running, Needs approval, Completed, and Failed
+filters. Filtering is presentation-only across pinned, temporary, and project
+tasks. Approval includes both tool permission requests and Plan approvals and
+takes precedence over Running. Context and terminal filters use the latest known
+live turn result or retained task notification, including read notifications;
+Unread and row badges retain their existing acknowledgment semantics. This does
+not introduce a durable run-history store: tasks whose result is no longer in
+memory or retained notifications show Ready until another result is known.
+
 ### 4.6 Tailwind CSS variable stub
 
 The following CSS custom properties stub is the canonical bridge between spec tokens and Tailwind classes. It is **not an app source file** — it documents the intended mapping for implementation.

@@ -80,3 +80,27 @@ selection surface, not a second onboarding wizard:
 
 The chooser is deliberately gated by the empty provider list to avoid covering
 returning users or changing the existing checklist contract.
+
+## 9. Tuzi configuration center
+
+The model configuration page also exposes a compact Tuzi/GAC configuration
+center for the three named endpoint presets. It reports which presets have a
+stored API key, the Responses protocol, discovered model counts, connection
+test state, and links to the provider portals. It reuses the existing Host
+secret store and provider/model discovery IPC; it does not add password login,
+duplicate token storage, or a second account database. Usage and limits remain
+associated with the issued API key.
+
+Providers are matched by normalized endpoint rather than vendor label. Empty
+presets open the existing add form with that preset selected; configured rows
+open the edit form without carrying a previous preset into later edits. The
+default action selects the provider's first configured model using existing
+settings APIs. Disabled and plugin-managed providers retain their restrictions.
+
+Connection results are shown inline: only a verified generation reports success;
+endpoint reachability is a warning, and authentication, rate-limit, missing-model,
+timeout, network, and HTTP errors have bounded localized messages. Model refresh
+updates discovery cache only and never rewrites selected bindings or credentials.
+A failed refresh preserves the prior cache; duplicate clicks and responses after
+unmount cannot change it. The model count reflects discovered models when known,
+otherwise configured bindings. Editing credentials invalidates transient results.

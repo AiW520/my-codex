@@ -32,6 +32,8 @@ const enEntries: ChangelogEntry[] = [
     version: "0.15.1",
     date: "2026-09-18",
     highlights: [
+      "Show task context and filter sessions by running, approval, completed, failed, or unread status.",
+      "Configure Tuzi/GAC endpoints, keys, models, and connection checks in one center using the Responses protocol.",
       "Add persisted workbench profiles for Coding, Daily, Creative, Research, and Custom workflows.",
       "Switch workbenches without restarting or changing the runtime configuration of a running session.",
       "Manage workbench names, order, deletion, remembered project and session context, and local dashboard state.",
@@ -807,6 +809,8 @@ const zhCNEntries: ChangelogEntry[] = [
     version: "0.15.1",
     date: "2026-09-18",
     highlights: [
+      "显示任务上下文，并按运行中、待审批、已完成、失败或未读状态筛选会话。",
+      "在统一配置中心管理 Tuzi/GAC 地址、密钥、模型与连接测试，固定使用 Responses 协议。",
       "新增可持久化的工作台配置，覆盖编程、日常、创作、研究和自定义工作流。",
       "切换工作台时不会重启运行中的会话，也不会改写会话的运行配置。",
       "支持管理工作台名称、顺序、删除操作，以及记住的项目、会话上下文和本地看板状态。",
@@ -1582,6 +1586,8 @@ const zhTWEntries: ChangelogEntry[] = [
     version: "0.15.1",
     date: "2026-09-18",
     highlights: [
+      "顯示任務上下文，並依執行中、待核准、已完成、失敗或未讀狀態篩選工作階段。",
+      "在統一設定中心管理 Tuzi/GAC 位址、金鑰、模型與連線測試，固定使用 Responses 協定。",
       "新增可持久化的工作台設定，涵蓋程式設計、日常、創作、研究與自訂工作流程。",
       "切換工作台時不會重啟執行中的工作階段，也不會改寫工作階段的執行設定。",
       "支援管理工作台名稱、順序、刪除操作，以及記住的專案、工作階段上下文和本機儀表板狀態。",

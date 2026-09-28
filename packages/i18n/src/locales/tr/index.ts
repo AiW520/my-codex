@@ -116,6 +116,13 @@ export const tr = {
     devDisabled: "Geliştirme derlemelerinde güncellemeler kapalıdır.",
   },
   nav: {
+    filterSessions: "Görevleri filtrele",
+    filterAll: "Tümü",
+    filterRunning: "Çalışıyor",
+    filterPermission: "Onay gerekli",
+    filterCompleted: "Tamamlandı",
+    filterFailed: "Başarısız",
+    noMatchingSessions: "Bu filtreyle eşleşen görev yok",
     "pinnedSessions": "Sabitlenmiş",
     home: "Ana sayfa",
     newTask: "Yeni görev",
@@ -464,6 +471,21 @@ export const tr = {
     thinkingHide: "Düşünmeyi gizle",
     untitledTask: "Yeni görev",
   },
+  taskContext: {
+    ariaLabel: "Görev bağlamı",
+    project: "Proje",
+    provider: "Sağlayıcı",
+    model: "Model",
+    reasoning: "Akıl yürütme",
+    permission: "İzin",
+    status: {
+      idle: "Hazır",
+      running: "Çalışıyor",
+      permission: "Onay gerekli",
+      completed: "Tamamlandı",
+      failed: "Başarısız",
+    },
+  },
   session: {
     renameTitle: "Görevi yeniden adlandır",
     renameAction: "{{title}} görevini yeniden adlandır",
@@ -518,6 +540,16 @@ export const tr = {
     dismiss: "Kapat",
   },
   settings: {
+    tuziEndpointOnly: "Uç noktaya erişiliyor; kimlik bilgileri doğrulanmadı.",
+    tuziCredentialInvalid: "Hizmet bu API anahtarını reddetti.",
+    tuziModelsUpdated: "Model listesi yenilendi.",
+    tuziTitle: "Tuzi / GAC yapılandırması",
+    tuziDescription: "API anahtarınızı ve modelleri yapılandırın, Responses erişimini test edin ve hizmet portalını açın.",
+    tuziConfigured: "Anahtar kaydedildi",
+    tuziNeedsKey: "API anahtarı gerekli",
+    tuziRefreshModels: "Modelleri yenile",
+    tuziOpenPortal: "Hizmet portalı",
+    tuziUsageHint: "Kullanım ve sınırlar bu API anahtarıyla ilişkili hesaba aittir. Kota ve faturalandırma bilgilerini hizmet portalında görüntüleyin.",
 
 sklm: {
       browse: "Market",

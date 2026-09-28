@@ -50,6 +50,7 @@ they cover are specified in
 | `e2e-plan.mjs` | `pnpm test:e2e:plan` | Plan state, checkpoint artifact, and approval transitions |
 | `e2e-plan-ui.mjs` | `pnpm test:e2e:plan-ui` | Plan approval through the rendered UI |
 | `e2e-electron-boot.mjs` | `pnpm test:e2e:boot` | Electron boot probe |
+| `e2e-desktop-linux.sh` | `xvfb-run -a bash scripts/e2e-desktop-linux.sh` | CI boot and task/configuration probes with an Openbox window manager; requires the installed Electron runtime and its standard SUID sandbox helper permissions |
 | `e2e-supervision.mjs` | `pnpm test:e2e:supervision` | Process supervision and restart behavior |
 | `e2e-subagents.mjs` | `pnpm test:e2e:subagents` | Subagent registry over RPC, then through the real loader (D202) |
 | `e2e-agent-live.mjs` | `node scripts/e2e-agent-live.mjs` | Live streaming chat through agent-runtime + host-core. Requires `PI_DESKTOP_TEST_API_KEY`, `PI_DESKTOP_TEST_BASE_URL`, and `PI_DESKTOP_TEST_MODEL` (no defaults), so it has no `pnpm` alias |
@@ -62,7 +63,10 @@ and on manual dispatch, skipping both when a change touches only `docs/**` or
 
 - **JS build / typecheck / lint / test** — `pnpm install --frozen-lockfile`,
   `pnpm build:js`, `pnpm --filter @pi-desktop/desktop typecheck`, `pnpm lint`,
-  `pnpm -r --if-present test`
+  architecture checks, `pnpm -r --if-present test`, then a Host build and
+  Electron startup / task-configuration probes under Xvfb. Before the probes,
+  `pnpm --filter @pi-desktop/desktop exec install-electron` downloads the locked
+  Electron binary: Electron 43+ no longer does so during dependency installation.
 - **Rust host-core test** — `cargo test -p host-core --locked`
 
 `.github/workflows/docs-check.yml` covers the paths `ci.yml` ignores: it runs

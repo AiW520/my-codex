@@ -41,6 +41,8 @@ import {
   sidebarSessionStatus,
   type SidebarSessionStatus,
 } from "../lib/sidebar-session-status";
+import { matchesTaskFilter, taskContextStatus, taskOutcomes, type TaskStatusFilter } from "../lib/task-context";
+import { TaskStatusFilterControl } from "./TaskStatusFilterControl";
 import { ErrorCodes } from "@pi-desktop/shared";
 import type { SessionSummary } from "@pi-desktop/shared";
 import type {
@@ -226,6 +228,9 @@ export function Sidebar({
   const projectSort = useAppStore((s) => s.projectSort);
   const runningSessions = useAppStore((s) => s.runningSessions);
   const sessionOutcomes = useAppStore((s) => s.sessionOutcomes);
+  const latestTurnResults = useAppStore((s) => s.latestTurnResults);
+  const notifications = useAppStore((s) => s.notifications);
+  const planningStates = useAppStore((s) => s.planningStates);
   const pendingPermissions = useAppStore((s) => s.pendingPermissions);
   const setPage = useAppStore((s) => s.setPage);
   const navBack = useAppStore((s) => s.navBack);
@@ -264,6 +269,7 @@ export function Sidebar({
   const update = useUpdateState();
 
   const [sortOpen, setSortOpen] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<TaskStatusFilter>("all");
   const [sessionMenu, setSessionMenu] = useState<string | null>(null);
   const [renameFor, setRenameFor] = useState<SessionSummary | null>(null);
   const [editProjectFor, setEditProjectFor] = useState<ProjectEntry | null>(null);
@@ -291,6 +297,11 @@ export function Sidebar({
   const [draggingProjectKey, setDraggingProjectKey] = useState<string | null>(null);
   const [dropIndicator, setDropIndicator] = useState<{ key: string; insertAfter: boolean } | null>(null);
   const [windowFocused, setWindowFocused] = useState(true);
+
+  const taskOutcomesBySession = useMemo(
+    () => taskOutcomes(notifications, latestTurnResults),
+    [latestTurnResults, notifications],
+  );
 
   const menuTriggerRef = useRef<HTMLButtonElement | null>(null);
   const menuFirstItemRef = useRef<HTMLButtonElement | null>(null);
@@ -1601,6 +1612,15 @@ export function Sidebar({
     );
   });
 
+  const matchesStatusFilter = (session: SessionSummary) => {
+    const status = taskContextStatus({
+      running: Boolean(runningSessions[session.id]),
+      outcome: taskOutcomesBySession[session.id],
+      hasPendingPermission: (pendingPermissions[session.id]?.length ?? 0) > 0 || planningStates[session.id] === "awaiting_approval",
+    });
+    return matchesTaskFilter(statusFilter, status, Boolean(sessionOutcomes[session.id]));
+  };
+
   const renderProjectGroup = (entry: ProjectEntry) => {
     const collapsedProject = entry.meta.collapsed ?? projectCollapsed[entry.key] ?? false;
     const projectId = projectDomId(entry.key);
@@ -1610,7 +1630,9 @@ export function Sidebar({
     // sessions stay folded behind the same load-more affordance used for the
     // time-grouped overflow and expand on click.
     const sessionsExpanded = expandedProjectSessions[entry.key] ?? false;
-    const history = entry.sessions.filter((session) => !pinnedSessionIds.has(session.id));
+    const history = entry.sessions.filter(
+      (session) => !pinnedSessionIds.has(session.id) && matchesStatusFilter(session),
+    );
     const visibleSessions = sessionsExpanded ? history : history.slice(0, MAX_VISIBLE_SESSIONS);
     const hiddenCount = history.length - visibleSessions.length;
 
@@ -2099,8 +2121,9 @@ export function Sidebar({
       </div>
 
       <div className="sidebar-body no-drag">
+        <TaskStatusFilterControl value={statusFilter} onChange={setStatusFilter} />
 
-        {pinnedSessions.length > 0 ? (
+        {pinnedSessions.some(matchesStatusFilter) ? (
           <section
             className="sidebar-pinned-sessions"
             aria-labelledby="sidebar-pinned-label"
@@ -2112,7 +2135,7 @@ export function Sidebar({
               </span>
             </div>
             <div className="sidebar-session-group-body pinned" onScroll={() => closeMenus(false)}>
-              {renderSessionRows(pinnedSessions, { global: true })}
+              {renderSessionRows(pinnedSessions.filter(matchesStatusFilter), { global: true })}
             </div>
           </section>
         ) : null}
@@ -2188,10 +2211,14 @@ export function Sidebar({
               openSectionMenu("sessions", event.clientX, event.clientY);
             }}
           >
-            {temporarySessionHistory.length > 0 ? (
-              renderSessionRows(temporarySessionHistory, { temporary: true })
+            {temporarySessionHistory.some(matchesStatusFilter) ? (
+              renderSessionRows(temporarySessionHistory.filter(matchesStatusFilter), { temporary: true })
             ) : temporarySessions.length === 0 ? (
               <div className="sidebar-session-empty">{t("nav.noTemporarySessions")}</div>
+            ) : statusFilter !== "all" ? (
+              <div className="sidebar-session-empty">
+                {t("nav.noMatchingSessions")}
+              </div>
             ) : null}
           </div>
         </section>

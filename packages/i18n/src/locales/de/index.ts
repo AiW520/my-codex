@@ -107,6 +107,13 @@ export const de = {
     "devDisabled": "Updates sind in Entwicklungs-Builds deaktiviert."
   },
   "nav": {
+    filterSessions: "Aufgaben filtern",
+    filterAll: "Alle",
+    filterRunning: "Läuft",
+    filterPermission: "Freigabe nötig",
+    filterCompleted: "Abgeschlossen",
+    filterFailed: "Fehlgeschlagen",
+    noMatchingSessions: "Keine Aufgaben entsprechen diesem Filter",
     "pinnedSessions": "Angeheftet",
     "home": "Startseite",
     "newTask": "Neue Aufgabe",
@@ -455,6 +462,21 @@ export const de = {
     "thinkingHide": "Denken ausblenden",
     "untitledTask": "Neue Aufgabe"
   },
+  taskContext: {
+    ariaLabel: "Aufgabenkontext",
+    project: "Projekt",
+    provider: "Anbieter",
+    model: "Modell",
+    reasoning: "Denken",
+    permission: "Berechtigung",
+    status: {
+      idle: "Bereit",
+      running: "Läuft",
+      permission: "Freigabe nötig",
+      completed: "Abgeschlossen",
+      failed: "Fehlgeschlagen",
+    },
+  },
   "session": {
     "renameTitle": "Aufgabe umbenennen",
     "renameAction": "Aufgabe umbenennen {{title}}",
@@ -509,6 +531,16 @@ export const de = {
     "dismiss": "Verwerfen"
   },
   "settings": {
+    tuziEndpointOnly: "Endpunkt erreichbar; Zugangsdaten nicht geprüft.",
+    tuziCredentialInvalid: "Der Dienst hat diesen API-Schlüssel abgelehnt.",
+    tuziModelsUpdated: "Modellliste aktualisiert.",
+    tuziTitle: "Tuzi / GAC konfigurieren",
+    tuziDescription: "API-Schlüssel und Modelle konfigurieren, Responses-Zugriff testen und das Serviceportal öffnen.",
+    tuziConfigured: "Schlüssel gespeichert",
+    tuziNeedsKey: "API-Schlüssel fehlt",
+    tuziRefreshModels: "Modelle aktualisieren",
+    tuziOpenPortal: "Serviceportal",
+    tuziUsageHint: "Nutzung und Limits gehören zum Konto dieses API-Schlüssels. Kontingent und Abrechnung finden Sie im Serviceportal.",
 
 sklm: {
       browse: "Markt",

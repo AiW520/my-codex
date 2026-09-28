@@ -61,6 +61,13 @@ test("CI does not typecheck workspace dependencies twice", () => {
   assert.doesNotMatch(ciWorkflowSource, /run: pnpm typecheck/);
 });
 
+test("Electron probes explicitly install the locked runtime", () => {
+  const installCommand =
+    /run: pnpm --filter @pi-desktop\/desktop exec install-electron/;
+  assert.match(ciWorkflowSource, installCommand);
+  assert.match(releaseWorkflowSource, installCommand);
+});
+
 test("release runners validate tags without a separate job barrier", () => {
   assert.doesNotMatch(releaseWorkflowSource, /^  validate:/m);
   assert.doesNotMatch(releaseWorkflowSource, /^    needs: validate$/m);

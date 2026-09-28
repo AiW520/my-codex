@@ -4,6 +4,10 @@
 */
 
 @media (max-width: 720px) {
+  .task-context-chip-label {
+    display: none;
+  }
+
   .plugins-toolbar-end {
     flex: 1 1 100%;
     justify-content: flex-start;
