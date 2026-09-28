@@ -35,6 +35,9 @@ notifications or taskbar groups. The Windows package additionally pins the
 and preserve developer workspace defaults despite the branded executable name.
 The first `pnpm dev` on Electron 43+ downloads the Electron binary on demand
 (the package no longer installs it during `pnpm install`).
+CI and release verification invoke
+`pnpm --filter @pi-desktop/desktop exec install-electron` before running the
+startup and task-configuration probes, which launch the binary directly.
 Packaged lanes use `build/icon.icns` through electron-builder on macOS and
 `build/icon.ico` for the Windows executable and native window icon. The
 renderer imports the same PNG through `BrandLogo`. The PNG is canonical;

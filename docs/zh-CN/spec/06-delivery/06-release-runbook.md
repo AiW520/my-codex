@@ -35,6 +35,9 @@ Electron 准备就绪，防止库存主机身份拥有本机
 并保留开发人员工作区默认值，尽管有品牌可执行文件名称。
 Electron 43+ 上的首次 `pnpm dev` 会按需下载 Electron 二进制文件
 （该包不再在 `pnpm install` 期间安装它）。
+CI 和发布验证会在运行启动与任务配置探针前执行
+`pnpm --filter @pi-desktop/desktop exec install-electron`，因为这些探针会直接
+启动 Electron 二进制文件。
 打包通道在 macOS 上通过 electron-builder 使用 `build/icon.icns`，并在
 Windows 可执行文件和原生窗口图标中使用 `build/icon.ico`。渲染器通过
 `BrandLogo` 导入相同的 PNG。PNG 是规范来源；`scripts/make-icon.py` 派生

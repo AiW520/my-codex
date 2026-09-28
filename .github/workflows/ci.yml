@@ -65,6 +65,10 @@ jobs:
       - name: Build Host for desktop startup probe
         run: cargo build -p host-core --locked
 
+      - name: Install Electron for desktop probes
+        # Electron 43+ downloads its binary on demand, not during pnpm install.
+        run: pnpm --filter @pi-desktop/desktop exec install-electron
+
       - name: Desktop startup and task configuration journeys
         run: |
           xvfb-run -a node scripts/e2e-electron-boot.mjs

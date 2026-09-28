@@ -62,7 +62,10 @@ and on manual dispatch, skipping both when a change touches only `docs/**` or
 
 - **JS build / typecheck / lint / test** — `pnpm install --frozen-lockfile`,
   `pnpm build:js`, `pnpm --filter @pi-desktop/desktop typecheck`, `pnpm lint`,
-  `pnpm -r --if-present test`
+  architecture checks, `pnpm -r --if-present test`, then a Host build and
+  Electron startup / task-configuration probes under Xvfb. Before the probes,
+  `pnpm --filter @pi-desktop/desktop exec install-electron` downloads the locked
+  Electron binary: Electron 43+ no longer does so during dependency installation.
 - **Rust host-core test** — `cargo test -p host-core --locked`
 
 `.github/workflows/docs-check.yml` covers the paths `ci.yml` ignores: it runs
