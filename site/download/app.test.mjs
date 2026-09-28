@@ -19,7 +19,7 @@ test("detectPlatform maps common browser platform strings", () => {
 test("fallbackRelease exposes trusted links for every supported artifact", () => {
   const release = fallbackRelease();
   const assets = selectDownloadAssets(release.assets);
-  assert.equal(release.tagName, "v0.15.1-beta.6");
+  assert.equal(release.tagName, "v0.15.1-beta.7");
   assert.equal(release.prerelease, true);
   assert.deepEqual(
     Object.entries(assets).filter(([, asset]) => asset === null),
@@ -40,7 +40,7 @@ test("selectDownloadAssets rejects untrusted URLs and ignores update metadata", 
       browser_download_url: "https://github.com/AiW520/my-codex/releases/download/v0.15.1-beta.6/latest.yml",
     },
   ]);
-  assert.match(assets.windowsInstaller.name, /0\.15\.1-beta\.6/);
+  assert.match(assets.windowsInstaller.name, /0\.15\.1-beta\.7/);
   assert.equal(isTrustedDownloadUrl("javascript:alert(1)"), false);
   assert.equal(isTrustedDownloadUrl("https://github.com/other/repo/releases/download/v1/file.exe"), false);
 });
