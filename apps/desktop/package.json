@@ -3,8 +3,8 @@
   "version": "0.15.1-beta.7",
   "desktopName": "pi-desktop.desktop",
   "private": true,
-  "description": "PI-Desktop Electron application",
-  "homepage": "https://github.com/vastsa/PI-Desktop",
+  "description": "鞭陀-Desktop Electron application",
+  "homepage": "https://github.com/AiW520/my-codex",
   "author": {
     "name": "vastsa",
     "email": "hhxk666@gmail.com"
@@ -74,7 +74,7 @@
   },
   "build": {
     "appId": "net.aiuo.pi-desktop",
-    "productName": "PI-Desktop",
+    "productName": "鞭陀-Desktop",
     "directories": {
       "output": "release"
     },
@@ -130,7 +130,7 @@
       }
     ],
     "mac": {
-      "artifactName": "PI-Desktop-${version}-${arch}-mac.${ext}",
+      "artifactName": "鞭陀-Desktop-${version}-${arch}-mac.${ext}",
       "target": [
         {
           "target": "dmg"
@@ -156,12 +156,12 @@
         }
       ],
       "extraDistFiles": [
-        "PI-Desktop-macOS-open.command",
-        "PI-Desktop-macOS-opening-help.txt"
+        "鞭陀-Desktop-macOS-open.command",
+        "鞭陀-Desktop-macOS-opening-help.txt"
       ]
     },
     "dmg": {
-      "artifactName": "PI-Desktop-${version}-${arch}.${ext}",
+      "artifactName": "鞭陀-Desktop-${version}-${arch}.${ext}",
       "background": "build/dmg-background.png",
       "window": {
         "width": 720,
@@ -185,12 +185,12 @@
           "y": 370,
           "type": "file",
           "name": "If app won't open, read this.txt",
-          "path": "PI-Desktop-macOS-opening-help.txt"
+          "path": "鞭陀-Desktop-macOS-opening-help.txt"
         }
       ]
     },
     "win": {
-      "executableName": "PI-Desktop",
+      "executableName": "鞭陀-Desktop",
       "target": [
         {
           "target": "nsis",
@@ -220,20 +220,20 @@
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
-      "shortcutName": "PI-Desktop",
-      "artifactName": "PI-Desktop-Setup-${version}.${ext}"
+      "shortcutName": "鞭陀-Desktop",
+      "artifactName": "鞭陀-Desktop-Setup-${version}.${ext}"
     },
     "portable": {
-      "artifactName": "PI-Desktop-Portable-${version}.${ext}",
+      "artifactName": "鞭陀-Desktop-Portable-${version}.${ext}",
       "requestExecutionLevel": "user"
     },
     "deb": {
       "packageName": "pi-desktop",
-      "artifactName": "pi-desktop_${version}_${arch}.${ext}"
+      "artifactName": "鞭陀-Desktop_${version}_${arch}.${ext}"
     },
     "rpm": {
       "packageName": "pi-desktop",
-      "artifactName": "pi-desktop-${version}-${arch}.${ext}",
+      "artifactName": "鞭陀-Desktop-${version}-${arch}.${ext}",
       "fpm": [
         "--rpm-rpmbuild-define",
         "_build_id_links none"

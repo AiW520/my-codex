@@ -22,7 +22,7 @@ test("macOS release finalization staples the generated DMG", async (t) => {
   const release = join(root, "release");
   const bin = join(root, "bin");
   const log = join(root, "xcrun.log");
-  const dmg = join(release, "PI-Desktop-0.14.2-arm64.dmg");
+  const dmg = join(release, "鞭陀-Desktop-0.14.2-arm64.dmg");
   await mkdir(release, { recursive: true });
   await mkdir(bin, { recursive: true });
   await writeFile(dmg, "fixture");
@@ -49,16 +49,16 @@ test("macOS release verification requires a notarized Developer ID app and DMG",
   t.after(() => rm(root, { recursive: true, force: true }));
 
   const release = join(root, "release");
-  const app = join(release, "mac-arm64", "PI-Desktop.app");
+  const app = join(release, "mac-arm64", "鞭陀-Desktop.app");
   const bin = join(root, "bin");
   const staplerLog = join(root, "stapler.log");
-  const dmg = join(release, "PI-Desktop-0.14.2-arm64.dmg");
+  const dmg = join(release, "鞭陀-Desktop-0.14.2-arm64.dmg");
   await mkdir(app, { recursive: true });
   await mkdir(bin, { recursive: true });
   await writeFile(dmg, "fixture");
   await writeFile(
     join(bin, "codesign"),
-    "#!/usr/bin/env bash\nif [[ \"$*\" == *\"-dv\"* ]]; then echo 'Authority=Developer ID Application: PI-Desktop (TEAM123)' >&2; fi\nexit 0\n",
+    "#!/usr/bin/env bash\nif [[ \"$*\" == *\"-dv\"* ]]; then echo 'Authority=Developer ID Application: 鞭陀-Desktop (TEAM123)' >&2; fi\nexit 0\n",
   );
   await writeFile(
     join(bin, "spctl"),
@@ -83,7 +83,7 @@ test("macOS release verification requires a notarized Developer ID app and DMG",
 
   assert.equal(result.status, 0, `${result.stdout}\n${result.stderr}`);
   assert.match(result.stdout, /Notarized Developer ID/);
-  assert.match(result.stdout, /PI-Desktop-0\.14\.2-arm64\.dmg/);
+  assert.match(result.stdout, /鞭陀-Desktop-0\.14\.2-arm64\.dmg/);
   assert.equal(
     await readFile(staplerLog, "utf8"),
     `stapler validate ${app}\nstapler validate ${dmg}\n`,
@@ -95,14 +95,14 @@ test("macOS release verification rejects a Developer ID app without notarization
   t.after(() => rm(root, { recursive: true, force: true }));
 
   const release = join(root, "release");
-  const app = join(release, "mac-arm64", "PI-Desktop.app");
+  const app = join(release, "mac-arm64", "鞭陀-Desktop.app");
   const bin = join(root, "bin");
   await mkdir(app, { recursive: true });
   await mkdir(bin, { recursive: true });
-  await writeFile(join(release, "PI-Desktop-0.14.2-arm64.dmg"), "fixture");
+  await writeFile(join(release, "鞭陀-Desktop-0.14.2-arm64.dmg"), "fixture");
   await writeFile(
     join(bin, "codesign"),
-    "#!/usr/bin/env bash\nif [[ \"$*\" == *\"-dv\"* ]]; then echo 'Authority=Developer ID Application: PI-Desktop (TEAM123)' >&2; fi\n",
+    "#!/usr/bin/env bash\nif [[ \"$*\" == *\"-dv\"* ]]; then echo 'Authority=Developer ID Application: 鞭陀-Desktop (TEAM123)' >&2; fi\n",
   );
   await writeFile(
     join(bin, "spctl"),

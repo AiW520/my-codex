@@ -103,18 +103,18 @@ empty rail outside the panel surface.
 
 ### 3.4 Product identity and marks
 
-The visible product identity is **PI-Desktop**, even where the shell borrows
+The visible product identity is **鞭陀-Desktop**, even where the shell borrows
 Codex as a visual reference. The identity contract is deliberately small:
 
 - The sidebar shell name, settings copy, and composer placeholder use
-  `PI-Desktop`; `Codex` is reserved for the external session-import source or
+  `鞭陀-Desktop`; `Codex` is reserved for the external session-import source or
   historical design-reference text.
 - `build/icon_1024.png` is the canonical shell logo master; the renderer
   imports the 192x192 marks derived from it under `src/assets/brand/`
   (ADR 0125). `BrandLogo` imports those
   through Vite so the renderer bundle, development Dock, and packaged
   application all use the same visual asset.
-- On macOS, both development and packaged launches expose `PI-Desktop` as the
+- On macOS, both development and packaged launches expose `鞭陀-Desktop` as the
   native application-menu name. The native About panel uses the PI-Desktop
   name, version, and canonical icon; no stock Electron name or icon is visible.
   Development launches use a generated branded host bundle because AppKit
@@ -123,7 +123,8 @@ Codex as a visual reference. The identity contract is deliberately small:
   AppUserModelID before readiness. The runtime ID, packaged executable name,
   and NSIS shortcut identity stay aligned so native notifications,
   notification settings, and taskbar groups identify the app as `PI-Desktop`
-  rather than Electron.
+  rather than Electron. The App ID and `~/.pi-desktop` profile path remain
+  stable across the display-name change.
 - The empty-home hero uses a 100px `HomeMascotLogo` GIF: an eight-frame waving
   mascot compiled from the supplied light and dark action sets, with a short
   idle hold on the first frame. CSS selects the pair from

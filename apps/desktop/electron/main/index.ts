@@ -179,6 +179,9 @@ ignoreBrokenStdio();
 installMainProcessErrorHandlers();
 
 app.setName(APP_NAME);
+// Brand changes must not create a second Chromium profile or singleton lock.
+// Host-owned data continues to use ~/.pi-desktop independently of this path.
+app.setPath("userData", join(app.getPath("appData"), "PI-Desktop"));
 if (process.platform === "win32") {
   app.setAppUserModelId(APP_ID);
 }
@@ -189,8 +192,8 @@ if (process.platform === "win32") {
 // updater are singletons of the running app — a second process fights the first
 // for every one of them and leaves the user with two shells over one database.
 //
-// Electron keeps the lock in `userData`, which is derived from the app name set
-// just above, so it is taken after `setName` and before anything else in this
+// Electron keeps the lock in the legacy `userData` path pinned above,
+// so it is taken after identity setup and before anything else in this
 // module touches the data directory. That scope is the installation, not
 // `PI_DESKTOP_DATA_DIR`: a run pointed at its own data directory (E2E
 // harnesses, the capture rig, a side-by-side profile) shares no state with the

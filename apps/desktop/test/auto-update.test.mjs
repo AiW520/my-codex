@@ -251,7 +251,7 @@ test("packaging publishes an electron-updater feed for GitHub Releases", () => {
   assert.ok(!pkg.build.deb.artifactName.includes("${name}"), "deb artifactName");
   assert.equal(
     pkg.build.rpm.artifactName,
-    "pi-desktop-${version}-${arch}.${ext}",
+    "鞭陀-Desktop-${version}-${arch}.${ext}",
     "rpm artifactName",
   );
   assert.deepEqual(
@@ -260,12 +260,12 @@ test("packaging publishes an electron-updater feed for GitHub Releases", () => {
     "rpm build-id configuration",
   );
   // GitHub asset URLs mangle spaces; keep Windows artifact names space-free.
-  assert.equal(pkg.build.nsis.artifactName, "PI-Desktop-Setup-${version}.${ext}");
+  assert.equal(pkg.build.nsis.artifactName, "鞭陀-Desktop-Setup-${version}.${ext}");
   const winTargets = pkg.build.win.target.map((entry) => entry.target);
   assert.deepEqual(winTargets, ["nsis", "portable"], "Windows release targets");
   assert.equal(
     pkg.build.portable.artifactName,
-    "PI-Desktop-Portable-${version}.${ext}",
+    "鞭陀-Desktop-Portable-${version}.${ext}",
   );
   assert.equal(pkg.build.portable.requestExecutionLevel, "user");
   // The upload step must carry every updater feed, and the release publishes

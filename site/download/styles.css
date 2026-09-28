@@ -801,3 +801,126 @@ footer p {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Brand refresh: a quiet launchpad with one clear action colour. The older
+   selectors above remain as a compatibility layer for embedded previews. */
+:root {
+  --page: #f7f8fa;
+  --surface: #ffffff;
+  --surface-soft: #eef2f1;
+  --ink: #13201b;
+  --muted: #65736c;
+  --line: #dce5df;
+  --accent: #1a8a68;
+  --accent-hover: #11634c;
+  --night: #10251e;
+  --highlight: #b9efca;
+  --content: 1160px;
+}
+
+body {
+  background: var(--page);
+  background-image: radial-gradient(circle at 80% 0%, #e6f3ed 0, transparent 30rem);
+}
+
+.site-header {
+  height: 74px;
+  background: rgba(247, 248, 250, 0.82);
+  border-bottom-color: rgba(210, 222, 215, 0.8);
+}
+
+.brand {
+  letter-spacing: -0.02em;
+  font-size: 16px;
+}
+
+.brand img { border-radius: 11px; }
+
+nav a::after,
+.footer-links a::after { background: var(--accent); }
+
+.hero {
+  min-height: 680px;
+  height: min(760px, calc(100svh - 74px));
+  background: #10251e;
+  border-bottom: 0;
+}
+
+.hero::after {
+  position: absolute;
+  right: max(24px, calc((100% - var(--content)) / 2));
+  bottom: 12%;
+  width: min(43vw, 500px);
+  aspect-ratio: 1.25;
+  background: url("./assets/pi-desktop.webp") center / cover;
+  border: 1px solid rgba(210, 255, 227, 0.28);
+  border-radius: 18px;
+  box-shadow: 0 35px 80px rgba(0, 0, 0, 0.3), 0 0 0 10px rgba(255,255,255,.03);
+  filter: saturate(.62) contrast(.96);
+  content: "";
+  transform: rotate(2.5deg);
+}
+
+.hero-backdrop {
+  background: radial-gradient(circle at 78% 20%, rgba(44, 142, 105, 0.35), transparent 30%), linear-gradient(120deg, #0d211a 0%, #15382a 58%, #10251e 100%);
+}
+
+.hero-content {
+  width: min(var(--content), calc(100% - 48px));
+  padding: 80px 0;
+  justify-content: center;
+}
+
+.hero-content > * { max-width: min(570px, 100%); }
+.hero-kicker-row { margin-bottom: 24px; }
+.hero-build-tag { border-color: rgba(185, 239, 202, 0.32); color: #b9efca; }
+h1 { font-size: clamp(58px, 7vw, 92px); letter-spacing: -0.06em; }
+.hero-lead { font-size: 19px; line-height: 1.65; }
+.hero-proof { gap: 22px; margin-top: 28px; }
+.hero-proof span::before { background: #b9efca; }
+
+.workbench-section,
+.download-section,
+.install-section { padding-top: 116px; padding-bottom: 116px; }
+
+.section-heading { margin-bottom: 42px; }
+.section-heading h2 { letter-spacing: -0.04em; }
+.eyebrow { letter-spacing: 0.12em; }
+.workbench-list { gap: 16px; }
+.workbench-item {
+  min-height: 210px;
+  padding: 26px;
+  border-radius: 16px;
+  box-shadow: 0 8px 28px rgba(22, 50, 38, 0.04);
+}
+.workbench-item::before { height: 3px; }
+.workbench-item h3 { margin-top: 38px; }
+
+.product-view { padding-bottom: 116px; }
+.product-frame { border-radius: 18px; box-shadow: 0 28px 70px rgba(24, 33, 28, 0.1); }
+
+.download-section { background: var(--night); border-color: #203d30; }
+.platform-tabs { border-radius: 12px; }
+.platform-tabs button { border-radius: 9px; }
+.download-panel { border-radius: 16px; box-shadow: 0 14px 40px rgba(4, 18, 12, 0.16); }
+.button { border-radius: 10px; min-height: 48px; }
+
+.install-section { background: #f0f5f2; }
+.install-steps li { padding: 28px 0; }
+.install-steps li > span { background: #d6f5e2; color: #137150; }
+.preview-note { border-radius: 12px; }
+footer { background: #0b1914; }
+
+@media (max-width: 900px) {
+  .hero::after { right: 24px; bottom: 9%; width: 40vw; opacity: .34; }
+  .hero-content { position: relative; z-index: 2; }
+}
+
+@media (max-width: 560px) {
+  .site-header { height: 64px; }
+  .hero { min-height: 660px; height: auto; }
+  .hero::after { right: 18px; bottom: 24px; width: calc(100% - 36px); opacity: .25; }
+  .hero-content { min-height: 660px; padding: 54px 0 250px; }
+  h1 { font-size: 52px; }
+  .section-heading h2 { letter-spacing: -0.03em; }
+}

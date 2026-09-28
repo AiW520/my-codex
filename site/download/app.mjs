@@ -51,16 +51,16 @@ export function selectDownloadAssets(assets) {
   );
 
   return {
-    windowsInstaller: findAsset(eligible, /^PI-Desktop-Setup-.*\.exe$/i),
-    windowsPortable: findAsset(eligible, /^PI-Desktop-Portable-.*\.exe$/i),
-    macArmDmg: findAsset(eligible, /^PI-Desktop-.*-arm64\.dmg$/i),
-    macArmZip: findAsset(eligible, /^PI-Desktop-.*-arm64-mac\.zip$/i),
-    macIntelDmg: findAsset(eligible, /^PI-Desktop-.*-x64\.dmg$/i),
-    macIntelZip: findAsset(eligible, /^PI-Desktop-.*-x64-mac\.zip$/i),
-    linuxAppImage: findAsset(eligible, /^PI-Desktop-.*\.AppImage$/i),
-    linuxDeb: findAsset(eligible, /^pi-desktop_.*_amd64\.deb$/i),
-    linuxRpm: findAsset(eligible, /^pi-desktop-.*-x86_64\.rpm$/i),
-    linuxAsar: findAsset(eligible, /^PI-Desktop-.*-linux-x64\.asar$/i),
+    windowsInstaller: findAsset(eligible, /^(?:鞭陀-Desktop|PI-Desktop)-Setup-.*\.exe$/i),
+    windowsPortable: findAsset(eligible, /^(?:鞭陀-Desktop|PI-Desktop)-Portable-.*\.exe$/i),
+    macArmDmg: findAsset(eligible, /^(?:鞭陀-Desktop|PI-Desktop)-.*-arm64\.dmg$/i),
+    macArmZip: findAsset(eligible, /^(?:鞭陀-Desktop|PI-Desktop)-.*-arm64-mac\.zip$/i),
+    macIntelDmg: findAsset(eligible, /^(?:鞭陀-Desktop|PI-Desktop)-.*-x64\.dmg$/i),
+    macIntelZip: findAsset(eligible, /^(?:鞭陀-Desktop|PI-Desktop)-.*-x64-mac\.zip$/i),
+    linuxAppImage: findAsset(eligible, /^(?:鞭陀-Desktop|PI-Desktop)-.*\.AppImage$/i),
+    linuxDeb: findAsset(eligible, /^(?:鞭陀-Desktop|pi-desktop)_.*_amd64\.deb$/i),
+    linuxRpm: findAsset(eligible, /^(?:鞭陀-Desktop|pi-desktop)-.*-x86_64\.rpm$/i),
+    linuxAsar: findAsset(eligible, /^(?:鞭陀-Desktop|PI-Desktop)-.*-linux-x64\.asar$/i),
   };
 }
 
@@ -164,6 +164,7 @@ async function loadRelease(fetchLike = fetch) {
   try {
     const response = await fetchLike(RELEASES_API, {
       headers: { Accept: "application/vnd.github+json" },
+      signal: AbortSignal.timeout(8000),
     });
     if (!response.ok) throw new Error(`GitHub API returned ${response.status}`);
     const release = selectPublishedRelease(await response.json());
@@ -176,24 +177,31 @@ async function loadRelease(fetchLike = fetch) {
 }
 
 export async function initializePage({ documentLike = document, navigatorLike = navigator, fetchLike = fetch } = {}) {
-  const platform = detectPlatform(navigatorLike);
-  setPlatform(platform, documentLike);
+  let platform = detectPlatform(navigatorLike);
+  let assets = renderRelease(fallbackRelease(), "fallback", documentLike);
+  const choosePlatform = (next) => {
+    platform = next;
+    setPlatform(platform, documentLike);
+    configurePrimaryAction(platform, assets, documentLike);
+  };
+  choosePlatform(platform);
 
   for (const tab of documentLike.querySelectorAll("[data-platform]")) {
-    tab.addEventListener("click", () => setPlatform(tab.dataset.platform, documentLike));
+    tab.addEventListener("click", () => choosePlatform(tab.dataset.platform));
     tab.addEventListener("keydown", (event) => {
       if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+      event.preventDefault();
       const tabs = [...documentLike.querySelectorAll("[data-platform]")];
       const index = tabs.indexOf(tab);
       const offset = event.key === "ArrowRight" ? 1 : -1;
       const next = tabs[(index + offset + tabs.length) % tabs.length];
-      setPlatform(next.dataset.platform, documentLike);
+      choosePlatform(next.dataset.platform);
       next.focus();
     });
   }
 
   const { release, source } = await loadRelease(fetchLike);
-  const assets = renderRelease(release, source, documentLike);
+  assets = renderRelease(release, source, documentLike);
   configurePrimaryAction(platform, assets, documentLike);
 }
 
