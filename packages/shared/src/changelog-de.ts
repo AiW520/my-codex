@@ -5,6 +5,8 @@ export const deEntries: ChangelogEntry[] = [
     "version": "0.15.1",
     "date": "2026-09-18",
     "highlights": [
+      "Aufgabenkontext anzeigen und Sitzungen nach laufend, Freigabe ausstehend, abgeschlossen, fehlgeschlagen oder ungelesen filtern.",
+      "Tuzi/GAC-Endpunkte, Schlüssel, Modelle und Verbindungstests zentral mit dem Responses-Protokoll konfigurieren.",
       "Persistente Arbeitsbereiche für Programmieren, Alltag, Kreativ, Recherche und benutzerdefinierte Workflows.",
       "Arbeitsbereiche wechseln, ohne laufende Sitzungen neu zu starten oder ihre Laufzeitkonfiguration zu ändern.",
       "Namen, Reihenfolge, Löschung sowie gemerkten Projekt-, Sitzungs- und lokalen Dashboard-Kontext verwalten.",

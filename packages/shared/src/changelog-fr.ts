@@ -5,6 +5,8 @@ export const frEntries: ChangelogEntry[] = [
     "version": "0.15.1",
     "date": "2026-09-18",
     "highlights": [
+      "Affiche le contexte des tâches et filtre les sessions en cours, à approuver, terminées, échouées ou non lues.",
+      "Configurez les endpoints, clés, modèles et tests de connexion Tuzi/GAC dans un centre utilisant le protocole Responses.",
       "Ajoute des espaces de travail persistants pour les flux Code, Quotidien, Créatif, Recherche et Personnalisé.",
       "Changez d'espace de travail sans redémarrer ni modifier la configuration d'exécution d'une session active.",
       "Gérez les noms, l'ordre, la suppression et le contexte mémorisé du projet, de la session et du tableau local.",

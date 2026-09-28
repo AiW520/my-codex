@@ -5,6 +5,8 @@ export const trEntries: ChangelogEntry[] = [
     "version": "0.15.1",
     "date": "2026-09-18",
     "highlights": [
+      "Görev bağlamını gösterir ve oturumları çalışan, onay bekleyen, tamamlanan, başarısız veya okunmamış durumuna göre filtreler.",
+      "Tuzi/GAC uç noktalarını, anahtarlarını, modellerini ve bağlantı testlerini Responses protokolüyle tek merkezden yapılandırın.",
       "Kodlama, Günlük, Yaratıcı, Araştırma ve Özel iş akışları için kalıcı çalışma alanları ekler.",
       "Çalışan bir oturumu yeniden başlatmadan veya çalışma zamanı ayarlarını değiştirmeden çalışma alanları arasında geçiş yapın.",
       "Çalışma alanı adlarını, sırasını, silinmesini ve hatırlanan proje, oturum ve yerel pano bağlamını yönetin.",
