@@ -5,7 +5,7 @@ export const APP_ID = "net.aiuo.pi-desktop";
 // profiles, native notifications, updater channels, and preload contracts
 // continue to resolve after the rebrand.
 export const APP_NAME = "鞭陀-Desktop";
-export const APP_VERSION = "0.15.1-beta.7";
+export const APP_VERSION = "0.15.1-beta.8";
 
 export const APP_MENU_COMMANDS = [
   "newTask",
