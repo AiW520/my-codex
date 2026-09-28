@@ -4,10 +4,6 @@
 */
 
 @media (max-width: 720px) {
-  .task-context-bar {
-    max-width: 30vw;
-  }
-
   .task-context-chip-label {
     display: none;
   }

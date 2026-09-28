@@ -471,22 +471,43 @@
 }
 
 .task-context-bar {
+  position: absolute;
+  inset: var(--ds-toolbar-height) 0 auto;
+  z-index: 9;
   display: flex;
   align-items: center;
   gap: 4px;
   min-width: 0;
-  max-width: min(52vw, 720px);
-  overflow: hidden;
+  height: 34px;
+  padding: 0 12px;
+  background: var(--ds-bg-primary);
   color: var(--ds-text-muted);
   -webkit-app-region: no-drag;
   app-region: no-drag;
 }
 
-.task-context-chip {
+.task-context-details {
+  display: flex;
+  gap: 4px;
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.chat-surface:has(> .task-context-bar) .thread-content {
+  padding-top: calc(var(--ds-toolbar-height) + 34px);
+}
+
+.chat-surface:has(> .task-context-bar) .home-main-content {
+  padding-top: 34px;
+}
+
+.task-context-chip,
+.task-context-status {
   display: inline-flex;
   align-items: center;
   gap: 4px;
   min-width: 0;
+  flex: 0 0 auto;
   max-width: 180px;
   padding: 3px 7px;
   border: 1px solid var(--ds-border-subtle);
@@ -512,22 +533,22 @@
   color: var(--ds-text-secondary);
 }
 
-.task-context-chip.is-running {
+.task-context-status.is-running {
   border-color: color-mix(in oklab, var(--ds-accent) 48%, var(--ds-border-subtle));
   color: var(--ds-accent);
 }
 
-.task-context-chip.is-permission {
+.task-context-status.is-permission {
   border-color: color-mix(in oklab, var(--ds-warning) 48%, var(--ds-border-subtle));
   color: var(--ds-warning);
 }
 
-.task-context-chip.is-completed {
+.task-context-status.is-completed {
   border-color: color-mix(in oklab, var(--ds-success) 42%, var(--ds-border-subtle));
   color: var(--ds-success);
 }
 
-.task-context-chip.is-failed {
+.task-context-status.is-failed {
   border-color: color-mix(in oklab, var(--ds-error) 42%, var(--ds-border-subtle));
   color: var(--ds-error);
 }

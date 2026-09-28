@@ -73,6 +73,7 @@ export function ModelConfigPage() {
   // null = closed, "" = add flow, provider id = edit flow.
   const [copyDraft, setCopyDraft] = useState<ProviderCopyDraft | null>(null);
   const [setupFor, setSetupFor] = useState<string | null>(null);
+  const [tuziService, setTuziService] = useState<string | undefined>();
   const [pickingDefault, setPickingDefault] = useState(false);
   const [defaultModelQuery, setDefaultModelQuery] = useState("");
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -179,6 +180,7 @@ export function ModelConfigPage() {
       }
       setSetupFor(null);
       setCopyDraft(null);
+      setTuziService(undefined);
       await refreshProviders();
     } catch (error) {
       showToast(error instanceof Error ? error.message : String(error), {
@@ -682,7 +684,15 @@ export function ModelConfigPage() {
         </div>
       </section>
 
-      <TuziConfigurationCard />
+      <TuziConfigurationCard
+        busyId={busyId}
+        onMakeDefault={(provider) => setDefaultModel(provider, defaultModelIdOf(provider) ?? "")}
+        onConfigure={(presetId, provider) => {
+          setCopyDraft(null);
+          setTuziService(provider ? undefined : presetId);
+          setSetupFor(provider?.id ?? "");
+        }}
+      />
 
       <VendorAccountsSection />
 
@@ -721,7 +731,8 @@ export function ModelConfigPage() {
         <ProviderSetupDialog
           provider={editingProvider}
           initialDraft={copyDraft}
-          onClose={() => { setSetupFor(null); setCopyDraft(null); }}
+          initialServiceId={tuziService}
+          onClose={() => { setSetupFor(null); setCopyDraft(null); setTuziService(undefined); }}
           onSaved={(saved, models) => void afterSaved(saved, models)}
         />
       ) : null}

@@ -115,6 +115,13 @@ export const en = {
     devDisabled: "Updates are disabled in development builds.",
   },
   nav: {
+    filterSessions: "Filter tasks",
+    filterAll: "All",
+    filterRunning: "Running",
+    filterPermission: "Needs approval",
+    filterCompleted: "Completed",
+    filterFailed: "Failed",
+    noMatchingSessions: "No tasks match this filter",
     "pinnedSessions": "Pinned",
     home: "Home",
     newTask: "New task",
@@ -463,6 +470,21 @@ export const en = {
     thinkingHide: "Hide thinking",
     untitledTask: "New task",
   },
+  taskContext: {
+    ariaLabel: "Task context",
+    project: "Project",
+    provider: "Provider",
+    model: "Model",
+    reasoning: "Reasoning",
+    permission: "Permission",
+    status: {
+      idle: "Ready",
+      running: "Running",
+      permission: "Needs approval",
+      completed: "Completed",
+      failed: "Failed",
+    },
+  },
   session: {
     renameTitle: "Rename task",
     renameAction: "Rename task {{title}}",
@@ -517,6 +539,16 @@ export const en = {
     dismiss: "Dismiss",
   },
   settings: {
+    tuziEndpointOnly: "Endpoint reachable; credential not verified.",
+    tuziCredentialInvalid: "The service rejected this API key.",
+    tuziModelsUpdated: "Model list refreshed.",
+    tuziTitle: "Tuzi / GAC configuration",
+    tuziDescription: "Configure your API key and models, test Responses access, and open your service portal.",
+    tuziConfigured: "Key saved",
+    tuziNeedsKey: "Needs API key",
+    tuziRefreshModels: "Refresh models",
+    tuziOpenPortal: "Service portal",
+    tuziUsageHint: "Usage and limits belong to the account associated with this API key. View quota and billing in the service portal.",
 
 sklm: {
       browse: "Market",

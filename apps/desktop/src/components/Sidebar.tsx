@@ -41,6 +41,8 @@ import {
   sidebarSessionStatus,
   type SidebarSessionStatus,
 } from "../lib/sidebar-session-status";
+import { matchesTaskFilter, taskContextStatus, taskOutcomes, type TaskStatusFilter } from "../lib/task-context";
+import { TaskStatusFilterControl } from "./TaskStatusFilterControl";
 import { ErrorCodes } from "@pi-desktop/shared";
 import type { SessionSummary } from "@pi-desktop/shared";
 import type {
@@ -94,8 +96,6 @@ type ProjectEntry = {
   /** Best-effort git branch from the project workspace, if known. */
   branch?: string;
 };
-
-type SidebarStatusFilter = "all" | "running" | "permission" | "completed" | "failed";
 
 const VIEWPORT_PADDING = 8;
 const SIDEBAR_RESIZE_STEP = 16;
@@ -228,6 +228,9 @@ export function Sidebar({
   const projectSort = useAppStore((s) => s.projectSort);
   const runningSessions = useAppStore((s) => s.runningSessions);
   const sessionOutcomes = useAppStore((s) => s.sessionOutcomes);
+  const latestTurnResults = useAppStore((s) => s.latestTurnResults);
+  const notifications = useAppStore((s) => s.notifications);
+  const planningStates = useAppStore((s) => s.planningStates);
   const pendingPermissions = useAppStore((s) => s.pendingPermissions);
   const setPage = useAppStore((s) => s.setPage);
   const navBack = useAppStore((s) => s.navBack);
@@ -266,7 +269,7 @@ export function Sidebar({
   const update = useUpdateState();
 
   const [sortOpen, setSortOpen] = useState(false);
-  const [statusFilter, setStatusFilter] = useState<SidebarStatusFilter>("all");
+  const [statusFilter, setStatusFilter] = useState<TaskStatusFilter>("all");
   const [sessionMenu, setSessionMenu] = useState<string | null>(null);
   const [renameFor, setRenameFor] = useState<SessionSummary | null>(null);
   const [editProjectFor, setEditProjectFor] = useState<ProjectEntry | null>(null);
@@ -294,6 +297,11 @@ export function Sidebar({
   const [draggingProjectKey, setDraggingProjectKey] = useState<string | null>(null);
   const [dropIndicator, setDropIndicator] = useState<{ key: string; insertAfter: boolean } | null>(null);
   const [windowFocused, setWindowFocused] = useState(true);
+
+  const taskOutcomesBySession = useMemo(
+    () => taskOutcomes(notifications, latestTurnResults),
+    [latestTurnResults, notifications],
+  );
 
   const menuTriggerRef = useRef<HTMLButtonElement | null>(null);
   const menuFirstItemRef = useRef<HTMLButtonElement | null>(null);
@@ -1605,14 +1613,12 @@ export function Sidebar({
   });
 
   const matchesStatusFilter = (session: SessionSummary) => {
-    if (statusFilter === "all") return true;
-    const status = sidebarSessionStatus({
+    const status = taskContextStatus({
       running: Boolean(runningSessions[session.id]),
-      selected: false,
-      outcome: sessionOutcomes[session.id],
-      hasPendingPermission: (pendingPermissions[session.id]?.length ?? 0) > 0,
+      outcome: taskOutcomesBySession[session.id],
+      hasPendingPermission: (pendingPermissions[session.id]?.length ?? 0) > 0 || planningStates[session.id] === "awaiting_approval",
     });
-    return status === statusFilter;
+    return matchesTaskFilter(statusFilter, status, Boolean(sessionOutcomes[session.id]));
   };
 
   const renderProjectGroup = (entry: ProjectEntry) => {
@@ -1646,7 +1652,7 @@ export function Sidebar({
             </div>
           );
         }
-        result.push(...renderSessionRows(groupSessions.filter(matchesStatusFilter), { projectPath: entry.path }));
+        result.push(...renderSessionRows(groupSessions, { projectPath: entry.path }));
       }
       // Add "load more" button if there are hidden sessions
       if (hiddenCount > 0) {
@@ -2115,8 +2121,9 @@ export function Sidebar({
       </div>
 
       <div className="sidebar-body no-drag">
+        <TaskStatusFilterControl value={statusFilter} onChange={setStatusFilter} />
 
-        {pinnedSessions.length > 0 ? (
+        {pinnedSessions.some(matchesStatusFilter) ? (
           <section
             className="sidebar-pinned-sessions"
             aria-labelledby="sidebar-pinned-label"
@@ -2155,18 +2162,6 @@ export function Sidebar({
               {t("nav.sessions", { defaultValue: "Sessions" })}
             </span>
             <div className="sidebar-toolbar-actions">
-              <select
-                className="sidebar-status-filter"
-                aria-label={t("nav.filterSessions", { defaultValue: "Filter sessions" })}
-                value={statusFilter}
-                onChange={(event) => setStatusFilter(event.target.value as SidebarStatusFilter)}
-              >
-                <option value="all">{t("nav.filterAll", { defaultValue: "All" })}</option>
-                <option value="running">{t("nav.filterRunning", { defaultValue: "Running" })}</option>
-                <option value="permission">{t("nav.filterPermission", { defaultValue: "Needs approval" })}</option>
-                <option value="completed">{t("nav.filterCompleted", { defaultValue: "Completed" })}</option>
-                <option value="failed">{t("nav.filterFailed", { defaultValue: "Failed" })}</option>
-              </select>
               <div className="sidebar-menu-wrap">
                 <TooltipButton
                   type="button"
@@ -2222,7 +2217,7 @@ export function Sidebar({
               <div className="sidebar-session-empty">{t("nav.noTemporarySessions")}</div>
             ) : statusFilter !== "all" ? (
               <div className="sidebar-session-empty">
-                {t("nav.noMatchingSessions", { defaultValue: "No sessions match this filter" })}
+                {t("nav.noMatchingSessions")}
               </div>
             ) : null}
           </div>

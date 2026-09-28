@@ -107,6 +107,13 @@ export const es = {
     "devDisabled": "Las actualizaciones están deshabilitadas en las compilaciones de desarrollo."
   },
   "nav": {
+    filterSessions: "Filtrar tareas",
+    filterAll: "Todas",
+    filterRunning: "En ejecución",
+    filterPermission: "Requiere aprobación",
+    filterCompleted: "Completadas",
+    filterFailed: "Fallidas",
+    noMatchingSessions: "Ninguna tarea coincide con este filtro",
     "pinnedSessions": "Fijadas",
     "home": "Inicio",
     "newTask": "Nueva tarea",
@@ -455,6 +462,21 @@ export const es = {
     "thinkingHide": "Ocultar pensamiento",
     "untitledTask": "Nueva tarea"
   },
+  taskContext: {
+    ariaLabel: "Contexto de la tarea",
+    project: "Proyecto",
+    provider: "Proveedor",
+    model: "Modelo",
+    reasoning: "Razonamiento",
+    permission: "Permisos",
+    status: {
+      idle: "Lista",
+      running: "En ejecución",
+      permission: "Requiere aprobación",
+      completed: "Completadas",
+      failed: "Fallidas",
+    },
+  },
   "session": {
     "renameTitle": "Cambiar nombre de tarea",
     "renameAction": "Cambiar nombre de tarea {{title}}",
@@ -509,6 +531,16 @@ export const es = {
     "dismiss": "Descartar"
   },
   "settings": {
+    tuziEndpointOnly: "Servidor accesible; credenciales sin verificar.",
+    tuziCredentialInvalid: "El servicio rechazó esta clave API.",
+    tuziModelsUpdated: "Lista de modelos actualizada.",
+    tuziTitle: "Configuración de Tuzi / GAC",
+    tuziDescription: "Configura tu clave API y modelos, prueba el acceso a Responses y abre el portal del servicio.",
+    tuziConfigured: "Clave guardada",
+    tuziNeedsKey: "Falta clave API",
+    tuziRefreshModels: "Actualizar modelos",
+    tuziOpenPortal: "Portal del servicio",
+    tuziUsageHint: "El uso y los límites corresponden a la cuenta asociada a esta clave API. Consulta la cuota y facturación en el portal.",
 
 sklm: {
       browse: "Mercado",

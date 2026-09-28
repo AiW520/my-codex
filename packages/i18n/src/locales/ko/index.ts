@@ -116,6 +116,13 @@ export const ko = {
     devDisabled: "개발 빌드에서는 업데이트가 비활성화됩니다.",
   },
   nav: {
+    filterSessions: "작업 필터",
+    filterAll: "전체",
+    filterRunning: "실행 중",
+    filterPermission: "승인 필요",
+    filterCompleted: "완료",
+    filterFailed: "실패",
+    noMatchingSessions: "필터에 맞는 작업이 없습니다",
     "pinnedSessions": "고정됨",
     home: "홈",
     newTask: "새 작업",
@@ -464,6 +471,21 @@ export const ko = {
     thinkingHide: "생각 숨기기",
     untitledTask: "새 작업",
   },
+  taskContext: {
+    ariaLabel: "작업 컨텍스트",
+    project: "프로젝트",
+    provider: "공급자",
+    model: "모델",
+    reasoning: "추론",
+    permission: "권한",
+    status: {
+      idle: "준비됨",
+      running: "실행 중",
+      permission: "승인 필요",
+      completed: "완료",
+      failed: "실패",
+    },
+  },
   session: {
     renameTitle: "작업 이름 바꾸기",
     renameAction: "작업 이름 바꾸기 {{title}}",
@@ -518,6 +540,16 @@ export const ko = {
     dismiss: "닫기",
   },
   settings: {
+    tuziEndpointOnly: "엔드포인트에 연결되었지만 인증 정보는 확인되지 않았습니다.",
+    tuziCredentialInvalid: "서비스에서 이 API 키를 거부했습니다.",
+    tuziModelsUpdated: "모델 목록을 새로 고쳤습니다.",
+    tuziTitle: "Tuzi / GAC 설정",
+    tuziDescription: "API 키와 모델을 설정하고 Responses 접근을 테스트한 다음 서비스 포털을 엽니다.",
+    tuziConfigured: "키 저장됨",
+    tuziNeedsKey: "API 키 필요",
+    tuziRefreshModels: "모델 새로 고침",
+    tuziOpenPortal: "서비스 포털",
+    tuziUsageHint: "사용량과 제한은 이 API 키에 연결된 계정에 속합니다. 서비스 포털에서 할당량과 청구 내역을 확인하세요.",
 
 sklm: {
       browse: "마켓",

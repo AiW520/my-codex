@@ -56,6 +56,20 @@ jobs:
       - name: Unit tests
         run: pnpm -r --if-present test
 
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: desktop-smoke
+
+      - name: Build Host for desktop startup probe
+        run: cargo build -p host-core --locked
+
+      - name: Desktop startup and task configuration journeys
+        run: |
+          xvfb-run -a node scripts/e2e-electron-boot.mjs
+          xvfb-run -a node scripts/e2e-provider-api-style.mjs --task-tuzi
+
   rust:
     name: Rust host-core format / lint / test
     runs-on: ubuntu-latest

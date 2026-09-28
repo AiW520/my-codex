@@ -10,6 +10,7 @@ import { ProductOnboardingDialog } from "./settings/ProductOnboardingDialog";
 import { WorkbenchLauncher } from "./WorkbenchLauncher";
 import { CustomWorkbenchHome } from "./workbenches/CustomWorkbenchHome";
 import { SessionPane } from "./SessionPane";
+import { TaskContextBar } from "./TaskContextBar";
 import { ConversationWidthHandles } from "./ConversationWidthHandles";
 import { useAppStore } from "../stores/app-store";
 import { useWorkbenchStore } from "../stores/workbench-store";
@@ -140,6 +141,7 @@ export const ChatSurface = memo(function ChatSurface() {
         </div>
       ) : null}
       <ConversationWidthHandles />
+      <TaskContextBar />
       {showEmptyState ? (
         <div
           className="home-main-content"

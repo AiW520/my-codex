@@ -107,6 +107,13 @@ export const fr = {
     "devDisabled": "Les mises à jour sont désactivées dans les versions de développement."
   },
   "nav": {
+    filterSessions: "Filtrer les tâches",
+    filterAll: "Toutes",
+    filterRunning: "En cours",
+    filterPermission: "Approbation requise",
+    filterCompleted: "Terminées",
+    filterFailed: "Échec",
+    noMatchingSessions: "Aucune tâche ne correspond à ce filtre",
     "pinnedSessions": "Épinglées",
     "home": "Accueil",
     "newTask": "Nouvelle tâche",
@@ -455,6 +462,21 @@ export const fr = {
     "thinkingHide": "Masquer la réflexion",
     "untitledTask": "Nouvelle tâche"
   },
+  taskContext: {
+    ariaLabel: "Contexte de la tâche",
+    project: "Projet",
+    provider: "Fournisseur",
+    model: "Modèle",
+    reasoning: "Raisonnement",
+    permission: "Autorisations",
+    status: {
+      idle: "Prête",
+      running: "En cours",
+      permission: "Approbation requise",
+      completed: "Terminées",
+      failed: "Échec",
+    },
+  },
   "session": {
     "renameTitle": "Renommer la tâche",
     "renameAction": "Renommer la tâche {{title}}",
@@ -509,6 +531,16 @@ export const fr = {
     "dismiss": "Ignorer"
   },
   "settings": {
+    tuziEndpointOnly: "Point d’accès joignable ; identifiants non vérifiés.",
+    tuziCredentialInvalid: "Le service a refusé cette clé API.",
+    tuziModelsUpdated: "Liste des modèles actualisée.",
+    tuziTitle: "Configuration Tuzi / GAC",
+    tuziDescription: "Configurez votre clé API et vos modèles, testez l’accès Responses et ouvrez le portail du service.",
+    tuziConfigured: "Clé enregistrée",
+    tuziNeedsKey: "Clé API requise",
+    tuziRefreshModels: "Actualiser les modèles",
+    tuziOpenPortal: "Portail du service",
+    tuziUsageHint: "L’utilisation et les limites dépendent du compte associé à cette clé API. Consultez les quotas et la facturation sur le portail.",
 
 sklm: {
       browse: "Marché",

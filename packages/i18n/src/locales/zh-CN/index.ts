@@ -109,6 +109,13 @@ export const zhCN = {
     devDisabled: "开发版本不支持自动更新。",
   },
   nav: {
+    filterSessions: "筛选任务",
+    filterAll: "全部",
+    filterRunning: "运行中",
+    filterPermission: "等待授权",
+    filterCompleted: "已完成",
+    filterFailed: "失败",
+    noMatchingSessions: "没有符合筛选条件的任务",
     pinnedSessions: "置顶",
     home: "首页",
     newTask: "新建任务",
@@ -460,6 +467,21 @@ export const zhCN = {
     thinkingHide: "隐藏思考过程",
     untitledTask: "新建任务",
   },
+  taskContext: {
+    ariaLabel: "任务上下文",
+    project: "项目",
+    provider: "服务商",
+    model: "模型",
+    reasoning: "推理",
+    permission: "权限",
+    status: {
+      idle: "就绪",
+      running: "运行中",
+      permission: "等待授权",
+      completed: "已完成",
+      failed: "失败",
+    },
+  },
   session: {
     renameTitle: "重命名任务",
     renameAction: "重命名任务“{{title}}”",
@@ -514,6 +536,16 @@ export const zhCN = {
     dismiss: "关闭",
   },
   settings: {
+    tuziEndpointOnly: "端点可达；凭据尚未验证。",
+    tuziCredentialInvalid: "服务拒绝了此 API Key。",
+    tuziModelsUpdated: "模型列表已刷新。",
+    tuziTitle: "Tuzi / GAC 专属配置",
+    tuziDescription: "配置 API Key 和模型、测试 Responses 访问，并打开服务门户。",
+    tuziConfigured: "已保存密钥",
+    tuziNeedsKey: "需要 API Key",
+    tuziRefreshModels: "刷新模型",
+    tuziOpenPortal: "服务门户",
+    tuziUsageHint: "用量和限制归属于此 API Key 对应的账户。额度与账单请在服务门户查看。",
 
 sklm: {
       browse: "市场",

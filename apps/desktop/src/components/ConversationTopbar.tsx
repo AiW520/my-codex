@@ -7,7 +7,6 @@ import {
 } from "./icons";
 import { TooltipButton } from "./ui";
 import { WorkbenchSwitcher } from "./WorkbenchSwitcher";
-import { TaskContextBar } from "./TaskContextBar";
 
 function projectName(path?: string | null, name?: string | null) {
   if (name) return name;
@@ -48,7 +47,6 @@ export function ConversationTopbar({
   const activeSessionId = useAppStore((s) => s.activeSessionId);
   const sessions = useAppStore((s) => s.sessions);
   const workspace = useAppStore((s) => s.workspace);
-  const providers = useAppStore((s) => s.providers);
 
   const activeSession = sessions.find((session) => session.id === activeSessionId);
 
@@ -57,9 +55,6 @@ export function ConversationTopbar({
     : activeSession?.title || t("chat.untitledTask");
   const taskTitle = truncateTopbarTitle(fullTaskTitle);
   const project = projectName(workspace?.path, workspace?.name);
-  const provider = activeSession?.providerId
-    ? providers.find((candidate) => candidate.id === activeSession.providerId)
-    : undefined;
 
   return (
     <div
@@ -94,12 +89,6 @@ export function ConversationTopbar({
           <span className="ct-title">{taskTitle}</span>
         </div>
       </div>
-
-      <TaskContextBar
-        session={activeSession}
-        workspace={workspace}
-        provider={provider}
-      />
 
       <WorkbenchSwitcher />
 
